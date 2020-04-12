@@ -7,7 +7,7 @@
   "module": "register.module.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "microbundle --no-compress --no-sourcemap",
+    "build": "microbundle --no-compress --no-sourcemap --jsx",
     "dev": "microbundle watch"
   },
   "keywords": [
