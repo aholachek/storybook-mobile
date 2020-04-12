@@ -1,6 +1,6 @@
 {
   "name": "storybook-mobile-audit",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A storybook addon to help you catch mobile usability problems",
   "source": "src/register.js",
   "main": "register.js",
