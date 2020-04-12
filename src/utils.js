@@ -20,7 +20,7 @@ export const getActiveStyles = function (container, el) {
   return result.length ? result : null
 }
 
-const getElements = (container, tag) => [...container.querySelectorAll(tag)]
+const getElements = (container, tag) => Array.from(container.querySelectorAll(tag))
 
 export const getActiveWarnings = (container) => {
   const buttons = getElements(container, 'button')

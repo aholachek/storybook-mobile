@@ -48,7 +48,8 @@
     var activeRegex = /:active$/;
     Object.keys(sheets).forEach(function (k) {
       var rules = sheets[k].rules || sheets[k].cssRules;
-      rules.filter(Boolean).forEach(function (rule) {
+      rules.forEach(function (rule) {
+        if (!rule) { return; }
         if (!rule.selectorText || !rule.selectorText.match(activeRegex)) { return; }
         var ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '');
 
@@ -152,7 +153,9 @@
     var result = [];
     Object.keys(sheets).forEach(function (k) {
       var rules = sheets[k].rules || sheets[k].cssRules;
-      rules.filter(Boolean).forEach(function (rule) {
+      rules.forEach(function (rule) {
+        if (!rule) { return; }
+
         if (el.matches(rule.selectorText)) {
           result.push(rule);
         }
