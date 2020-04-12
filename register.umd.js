@@ -48,8 +48,8 @@
     var activeRegex = /:active$/;
     Object.keys(sheets).forEach(function (k) {
       var rules = sheets[k].rules || sheets[k].cssRules;
-      rules.forEach(function (rule) {
-        if (!rule.selectorText.match(activeRegex)) { return; }
+      rules.filter(Boolean).forEach(function (rule) {
+        if (!rule.selectorText || !rule.selectorText.match(activeRegex)) { return; }
         var ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '');
 
         if (el.matches(ruleNoPseudoClass)) {
@@ -152,7 +152,7 @@
     var result = [];
     Object.keys(sheets).forEach(function (k) {
       var rules = sheets[k].rules || sheets[k].cssRules;
-      rules.forEach(function (rule) {
+      rules.filter(Boolean).forEach(function (rule) {
         if (el.matches(rule.selectorText)) {
           result.push(rule);
         }
