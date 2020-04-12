@@ -3,11 +3,11 @@
   "version": "0.0.1",
   "description": "A storybook addon to help you catch mobile usability problems",
   "source": "src/register.js",
-  "main": "dist/storybook-mobile-audit.js",
-  "module": "dist/storybook-mobile-audit.module.js",
+  "main": "register.js",
+  "module": "register.module.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "microbundle",
+    "build": "microbundle --no-compress --no-sourcemap",
     "dev": "microbundle watch"
   },
   "keywords": [
@@ -22,16 +22,20 @@
   ],
   "author": "Alex Holachek",
   "license": "ISC",
+  "devDependencies": {
+    "microbundle": "^0.11.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
   "peerDependencies": {
-    "@storybook/addon-viewport": "^5.3.18",
+    "react": "*"
+  },
+  "dependencies": {
     "@emotion/styled": "^10.0.27",
+    "@storybook/addon-viewport": "^5.3.18",
     "@storybook/addons": "^5.3.18",
     "@storybook/api": "^5.3.18",
     "@storybook/components": "^5.3.18",
     "@storybook/core-events": "^5.3.18"
-  },
-  "devDependencies": {
-    "microbundle": "^0.11.0"
-  },
-  "dependencies": {}
+  }
 }
