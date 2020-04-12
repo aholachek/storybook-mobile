@@ -1,0 +1,37 @@
+{
+  "name": "storybook-mobile-audit",
+  "version": "0.0.1",
+  "description": "A storybook addon to help you catch mobile usability problems",
+  "source": "src/register.js",
+  "main": "dist/storybook-mobile-audit.js",
+  "module": "dist/storybook-mobile-audit.module.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "microbundle",
+    "dev": "microbundle watch"
+  },
+  "keywords": [
+    "storybook",
+    "react-storybook",
+    "mobile",
+    "ux",
+    "responsive",
+    "responsive design",
+    "audit",
+    "lint"
+  ],
+  "author": "Alex Holachek",
+  "license": "ISC",
+  "peerDependencies": {
+    "@storybook/addon-viewport": "^5.3.18",
+    "@emotion/styled": "^10.0.27",
+    "@storybook/addons": "^5.3.18",
+    "@storybook/api": "^5.3.18",
+    "@storybook/components": "^5.3.18",
+    "@storybook/core-events": "^5.3.18"
+  },
+  "devDependencies": {
+    "microbundle": "^0.11.0"
+  },
+  "dependencies": {}
+}
