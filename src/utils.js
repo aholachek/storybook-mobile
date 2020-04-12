@@ -8,8 +8,8 @@ export const getActiveStyles = function (container, el) {
 
   Object.keys(sheets).forEach((k) => {
     const rules = sheets[k].rules || sheets[k].cssRules
-    rules.forEach((rule) => {
-      if (!rule.selectorText.match(activeRegex)) return
+    rules.filter(Boolean).forEach((rule) => {
+      if (!rule.selectorText || !rule.selectorText.match(activeRegex)) return
       const ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '')
       if (el.matches(ruleNoPseudoClass)) {
         result.push(rule)
@@ -127,7 +127,7 @@ export const getOriginalStyles = function (container, el) {
   const result = []
   Object.keys(sheets).forEach((k) => {
     const rules = sheets[k].rules || sheets[k].cssRules
-    rules.forEach((rule) => {
+    rules.filter(Boolean).forEach((rule) => {
       if (el.matches(rule.selectorText)) {
         result.push(rule)
       }
