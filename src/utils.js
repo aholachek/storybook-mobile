@@ -20,7 +20,8 @@ export const getActiveStyles = function (container, el) {
   return result.length ? result : null
 }
 
-const getElements = (container, tag) => Array.from(container.querySelectorAll(tag))
+const getElements = (container, tag) =>
+  Array.from(container.querySelectorAll(tag))
 
 export const getActiveWarnings = (container) => {
   const buttons = getElements(container, 'button')
@@ -29,6 +30,12 @@ export const getActiveWarnings = (container) => {
   const filterActiveStyles = (el) => {
     const activeStyles = getActiveStyles(container, el)
     if (activeStyles) return false
+    // hacky, let's assume this is for a fancy material-style active state animation,
+    // since tragically we cannot access ontouchstart or onpointerstart listeners
+    const hasPseudoEl =
+      getComputedStyle(el, ':before').content !== 'none' ||
+      getComputedStyle(el, ':after').content !== 'none'
+    if (hasPseudoEl) return false
     return true
   }
   return buttons
@@ -161,25 +168,58 @@ export const getInputTypeWarnings = (container) => {
   return attachLabels(inputs, container)
 }
 
-const minSize = 40
+export const getTouchTargetSizeWarning = ({
+  container,
+  minSize,
+  recommendedSize,
+  recommendedDistance,
+}) => {
+  const els = getElements(container, 'button')
+    .concat(getElements(container, 'a'))
+    .map((el) => [el, el.getBoundingClientRect()])
 
-export const getTouchTargetSizeWarning = (container) => {
-  const buttons = getElements(container, 'button')
-  const links = getElements(container, 'a')
-  const tooSmall = (el) => {
-    const { width, height } = el.getBoundingClientRect()
-    if (width < minSize || height < minSize) {
-      return {
-        type: el.nodeName === 'A' ? 'Link' : 'Button',
-        path: getDomPath(el),
-        text: el.innerText,
-        width: Math.floor(width),
-        height: Math.floor(height),
+  const elsWithClose = els.map(([el1, bounding1], i1) => {
+    const close = els.filter(([, bounding2], i2) => {
+      if (i2 === i1) return
+      if (
+        bounding2.right - bounding1.left < recommendedDistance ||
+        bounding2.bottom - bounding1.top < recommendedDistance ||
+        bounding1.right - bounding2.left < recommendedDistance ||
+        bounding1.bottom - bounding2.bottom < recommendedDistance
+      ) {
+        return true
       }
+    })
+    return { close: close ? close : null, el: el1, boundingBox: bounding1 }
+  })
+
+  const underMinSize = elsWithClose.filter(
+    ({ boundingBox: { width, height } }) => {
+      return width < minSize || height < minSize
     }
-    return null
+  )
+
+  const tooClose = elsWithClose.filter(
+    ({ boundingBox: { width, height }, close }) => {
+      return (
+        close.length && (width < recommendedSize || height < recommendedSize)
+      )
+    }
+  )
+
+  const present = ({ el, boundingBox: { width, height }, close }) => {
+    return {
+      type: el.nodeName === 'A' ? 'Link' : 'Button',
+      path: getDomPath(el),
+      text: el.innerText,
+      width: Math.floor(width),
+      height: Math.floor(height),
+      close,
+    }
   }
-  const tooSmallButtons = buttons.map(tooSmall).filter(Boolean)
-  const tooSmallLinks = links.map(tooSmall).filter(Boolean)
-  return tooSmallButtons.concat(tooSmallLinks)
+
+  return {
+    underMinSize: underMinSize.map(present),
+    tooClose: tooClose.map(present),
+  }
 }

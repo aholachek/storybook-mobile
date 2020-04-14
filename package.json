@@ -1,15 +1,15 @@
 {
-  "name": "storybook-mobile-audit",
-  "version": "0.0.8",
+  "name": "storybook-mobile-hints",
+  "version": "0.0.1",
   "description": "A storybook addon to help you catch mobile usability problems",
   "source": "src/register.js",
   "main": "register.js",
   "module": "register.module.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "microbundle --no-compress --no-sourcemap --jsx React.createElement",
     "prepublish": "npm run build",
-    "dev": "microbundle watch"
+    "dev": "microbundle watch --jsx React.createElement",
+    "storybook": "start-storybook"
   },
   "keywords": [
     "storybook",
@@ -24,6 +24,9 @@
   "author": "Alex Holachek",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@storybook/react": "^5.3.18",
+    "babel-loader": "^8.1.0",
     "microbundle": "^0.11.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
@@ -37,6 +40,8 @@
     "@storybook/addons": "^5.3.18",
     "@storybook/api": "^5.3.18",
     "@storybook/components": "^5.3.18",
-    "@storybook/core-events": "^5.3.18"
+    "@storybook/core-events": "^5.3.18",
+    "emotion": "^10.0.27",
+    "emotion-theming": "^10.0.27"
   }
 }
