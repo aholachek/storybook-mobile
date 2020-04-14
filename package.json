@@ -1,6 +1,6 @@
 {
   "name": "storybook-mobile-hints",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A storybook addon to help you catch mobile usability problems",
   "source": "src/register.js",
   "main": "register.js",
