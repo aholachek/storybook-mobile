@@ -87,9 +87,11 @@ const textInputs = [
 const attachLabels = (inputs, container) => {
   return inputs.map((input) => {
     let labelText = ''
-    if (input.parentElement.nodeName === 'LABEL')
+    if (input.labels && input.labels[0]) {
+      labelText = input.labels[0].innerText
+    } else if (input.parentElement.nodeName === 'LABEL')
       labelText = input.parentElement.innerText
-    if (input.id) {
+    else if (input.id) {
       const label = container.querySelector(`label for="${input.id}"`)
       if (label) labelText = label.innerText
     }

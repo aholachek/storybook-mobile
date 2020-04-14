@@ -35,13 +35,13 @@
     "react": "*"
   },
   "dependencies": {
-    "@emotion/styled": "^10.0.27",
     "@storybook/addon-viewport": "^5.3.18",
     "@storybook/addons": "^5.3.18",
     "@storybook/api": "^5.3.18",
     "@storybook/components": "^5.3.18",
     "@storybook/core-events": "^5.3.18",
     "emotion": "^10.0.27",
-    "emotion-theming": "^10.0.27"
+    "emotion-theming": "^10.0.27",
+    "styled-components": "^5.1.0"
   }
 }

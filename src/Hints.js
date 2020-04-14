@@ -1,8 +1,6 @@
-/** @jsx jsx */
 import React from 'react'
-import { jsx, css } from '@emotion/core'
+import styled from 'styled-components'
 import { withTheme } from 'emotion-theming'
-
 import {
   getActiveWarnings,
   getAutocompleteWarnings,
@@ -19,33 +17,33 @@ const recommendedDistance = 8
 
 const accessibleBlue = '#0965df'
 
-const noWarningStyles = css`
+const NoWarning = styled.div`
   padding: 1rem;
   font-weight: bold;
 `
 
-const demoImgStyles = css`
+const DemoImg = styled.img`
   height: 4rem;
   width: auto;
   max-width: 100%;
 `
 
-const entryStyles = css`
+const ListEntry = styled.li`
   margin-bottom: 0.5rem;
 `
 
-const containerStyles = (theme) => css`
+const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
 
-  font-size: ${theme.typography.size.s2}px;
+  font-size: ${(props) => props.theme.typography.size.s2}px;
 
   p {
     line-height: 1.4;
   }
 
   h3 {
-    font-size: ${theme.typography.size.s2}px;
+    font-size: ${(props) => props.theme.typography.size.s2}px;
     font-weight: bold;
     margin-bottom: 0.5rem;
     margin-top: 0;
@@ -64,7 +62,7 @@ const containerStyles = (theme) => css`
     color: ${accessibleBlue};
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 3px ${theme.color.mediumlight};
+      box-shadow: 0 0 0 3px ${(props) => props.theme.color.mediumlight};
     }
   }
 
@@ -80,8 +78,8 @@ const containerStyles = (theme) => css`
   }
   > div {
     padding: 1rem;
-    border-bottom: 1px solid ${theme.color.medium};
-    border-right: 1px solid ${theme.color.medium};
+    border-bottom: 1px solid ${(props) => props.theme.color.medium};
+    border-right: 1px solid ${(props) => props.theme.color.medium};
   }
 `
 
@@ -101,9 +99,9 @@ const ActiveWarnings = ({ warnings }) => {
       <ul>
         {warnings.map((w, i) => {
           return (
-            <li css={entryStyles} key={i}>
+            <ListEntry key={i}>
               {w.type} with text <b>{w.text}</b>
-            </li>
+            </ListEntry>
           )
         })}
       </ul>
@@ -123,7 +121,7 @@ const AutocompleteWarnings = ({ warnings }) => {
   return (
     <div>
       <h3>
-        No <code>autocomplete</code> prop detected
+        Input with no <code>autocomplete</code> prop detected
       </h3>
       <p>
         Most textual inputs should have an explicit <code>autocomplete</code>{' '}
@@ -132,9 +130,9 @@ const AutocompleteWarnings = ({ warnings }) => {
       <ul>
         {warnings.map((w, i) => {
           return (
-            <li css={entryStyles} key={i}>
+            <ListEntry key={i}>
               <code>input type="{w.type}"</code> and label <b>{w.labelText}</b>
-            </li>
+            </ListEntry>
           )
         })}
       </ul>
@@ -164,17 +162,17 @@ const InputTypeWarnings = ({ warnings }) => {
       </h3>
       <p>
         This will render the default text keyboard on mobile (which could very
-        well be what you want!){' '}
-        <a href="https://better-mobile-inputs.netlify.com/">
-          If you haven't already, take a moment to make sure this is correct.{' '}
-        </a>
+        well be what you want!) If you haven't already, take a moment to make
+        sure this is correct. You can use
+        <a href="https://better-mobile-inputs.netlify.com/">this tool</a> to
+        explore keyboard options.
       </p>
       <ul>
         {warnings.map((w, i) => {
           return (
-            <li css={entryStyles} key={i}>
+            <ListEntry key={i}>
               <code>input type="{w.type}"</code> and label <b>{w.labelText}</b>
-            </li>
+            </ListEntry>
           )
         })}
       </ul>
@@ -195,9 +193,9 @@ const OverflowWarning = ({ warnings }) => {
       <ul>
         {warnings.map(({ path }, i) => {
           return (
-            <li css={entryStyles} key={i}>
+            <ListEntry key={i}>
               <code>{path}</code>
-            </li>
+            </ListEntry>
           )
         })}
       </ul>
@@ -235,9 +233,9 @@ const HeightWarnings = ({ warnings }) => {
       <ul>
         {warnings.map(({ path }, i) => {
           return (
-            <li css={entryStyles} key={i}>
+            <ListEntry key={i}>
               <code>{path}</code>
-            </li>
+            </ListEntry>
           )
         })}
       </ul>
@@ -261,11 +259,11 @@ const SrcsetWarnings = ({ warnings }) => {
       <ul>
         {warnings.map(({ src, alt }, i) => {
           return (
-            <li css={entryStyles} key={i}>
+            <ListEntry key={i}>
               <div>
-                <img css={demoImgStyles} src={src} alt={alt} />
+                <DemoImg src={src} alt={alt} />
               </div>
-            </li>
+            </ListEntry>
           )
         })}
       </ul>
@@ -298,14 +296,14 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
           <ul>
             {underMinSize.map((w, i) => {
               return (
-                <li css={entryStyles} key={i}>
+                <ListEntry key={i}>
                   <div>
                     {w.type} with text <b>{w.text}</b>
                   </div>
                   {w.width < minSize && <div>width: {w.width}px</div>}
                   {w.height < minSize && <div>height: {w.height}px</div>}
                   {}
-                </li>
+                </ListEntry>
               )
             })}
           </ul>
@@ -322,11 +320,11 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
           <ul>
             {tooClose.map((w, i) => {
               return (
-                <li css={entryStyles} key={i}>
+                <ListEntry key={i}>
                   <div>
                     {w.type} with text <b>{w.text}</b>
                   </div>
-                </li>
+                </ListEntry>
               )
             })}
           </ul>
@@ -383,9 +381,9 @@ const Hints = ({ container, theme }) => {
   })
 
   if (!warningCount)
-    return <div css={noWarningStyles}>Looking good! No issues detected.</div>
+    return <NoWarning>Looking good! No issues detected.</NoWarning>
   return (
-    <div css={containerStyles(theme)}>
+    <Container theme={theme}>
       <ActiveWarnings warnings={activeWarnings} />
       <TouchTargetWarnings warnings={touchTargetWarnings} />
       <AutocompleteWarnings warnings={autocompleteWarnings} />
@@ -393,7 +391,7 @@ const Hints = ({ container, theme }) => {
       <OverflowWarning warnings={overflowWarnings} />
       <InputTypeWarnings warnings={inputTypeWarnings} />
       <HeightWarnings warnings={heightWarnings} />
-    </div>
+    </Container>
   )
 }
 

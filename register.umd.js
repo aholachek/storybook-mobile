@@ -1,10 +1,47 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('@storybook/addons'), require('@storybook/core-events'), require('@storybook/api'), require('@storybook/components'), require('@emotion/styled'), require('react'), require('emotion-theming')) :
-  typeof define === 'function' && define.amd ? define(['@storybook/addons', '@storybook/core-events', '@storybook/api', '@storybook/components', '@emotion/styled', 'react', 'emotion-theming'], factory) :
-  (factory(global.addons,global.coreEvents,global.api,global.components,global.styled,global.react,global.emotionTheming));
-}(this, (function (addons,coreEvents,api,components,styled,React,emotionTheming) {
-  styled = styled && styled.hasOwnProperty('default') ? styled['default'] : styled;
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('@storybook/addons'), require('@storybook/core-events'), require('@storybook/api'), require('@storybook/components'), require('react'), require('styled-components'), require('emotion-theming')) :
+  typeof define === 'function' && define.amd ? define(['@storybook/addons', '@storybook/core-events', '@storybook/api', '@storybook/components', 'react', 'styled-components', 'emotion-theming'], factory) :
+  (factory(global.addons,global.coreEvents,global.api,global.components,global.react,global.styled,global.emotionTheming));
+}(this, (function (addons,coreEvents,api,components,React,styled,emotionTheming) {
   var React__default = 'default' in React ? React['default'] : React;
+  styled = styled && styled.hasOwnProperty('default') ? styled['default'] : styled;
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  var defineProperty = _defineProperty;
+
+  function memoize(fn) {
+    var cache = {};
+    return function (arg) {
+      if (cache[arg] === undefined) cache[arg] = fn(arg);
+      return cache[arg];
+    };
+  }
+
+  var reactPropsRegex = /^((children|dangerouslySetInnerHTML|key|ref|autoFocus|defaultValue|defaultChecked|innerHTML|suppressContentEditableWarning|suppressHydrationWarning|valueLink|accept|acceptCharset|accessKey|action|allow|allowUserMedia|allowPaymentRequest|allowFullScreen|allowTransparency|alt|async|autoComplete|autoPlay|capture|cellPadding|cellSpacing|challenge|charSet|checked|cite|classID|className|cols|colSpan|content|contentEditable|contextMenu|controls|controlsList|coords|crossOrigin|data|dateTime|decoding|default|defer|dir|disabled|disablePictureInPicture|download|draggable|encType|form|formAction|formEncType|formMethod|formNoValidate|formTarget|frameBorder|headers|height|hidden|high|href|hrefLang|htmlFor|httpEquiv|id|inputMode|integrity|is|keyParams|keyType|kind|label|lang|list|loading|loop|low|marginHeight|marginWidth|max|maxLength|media|mediaGroup|method|min|minLength|multiple|muted|name|nonce|noValidate|open|optimum|pattern|placeholder|playsInline|poster|preload|profile|radioGroup|readOnly|referrerPolicy|rel|required|reversed|role|rows|rowSpan|sandbox|scope|scoped|scrolling|seamless|selected|shape|size|sizes|slot|span|spellCheck|src|srcDoc|srcLang|srcSet|start|step|style|summary|tabIndex|target|title|type|useMap|value|width|wmode|wrap|about|datatype|inlist|prefix|property|resource|typeof|vocab|autoCapitalize|autoCorrect|autoSave|color|inert|itemProp|itemScope|itemType|itemID|itemRef|on|results|security|unselectable|accentHeight|accumulate|additive|alignmentBaseline|allowReorder|alphabetic|amplitude|arabicForm|ascent|attributeName|attributeType|autoReverse|azimuth|baseFrequency|baselineShift|baseProfile|bbox|begin|bias|by|calcMode|capHeight|clip|clipPathUnits|clipPath|clipRule|colorInterpolation|colorInterpolationFilters|colorProfile|colorRendering|contentScriptType|contentStyleType|cursor|cx|cy|d|decelerate|descent|diffuseConstant|direction|display|divisor|dominantBaseline|dur|dx|dy|edgeMode|elevation|enableBackground|end|exponent|externalResourcesRequired|fill|fillOpacity|fillRule|filter|filterRes|filterUnits|floodColor|floodOpacity|focusable|fontFamily|fontSize|fontSizeAdjust|fontStretch|fontStyle|fontVariant|fontWeight|format|from|fr|fx|fy|g1|g2|glyphName|glyphOrientationHorizontal|glyphOrientationVertical|glyphRef|gradientTransform|gradientUnits|hanging|horizAdvX|horizOriginX|ideographic|imageRendering|in|in2|intercept|k|k1|k2|k3|k4|kernelMatrix|kernelUnitLength|kerning|keyPoints|keySplines|keyTimes|lengthAdjust|letterSpacing|lightingColor|limitingConeAngle|local|markerEnd|markerMid|markerStart|markerHeight|markerUnits|markerWidth|mask|maskContentUnits|maskUnits|mathematical|mode|numOctaves|offset|opacity|operator|order|orient|orientation|origin|overflow|overlinePosition|overlineThickness|panose1|paintOrder|pathLength|patternContentUnits|patternTransform|patternUnits|pointerEvents|points|pointsAtX|pointsAtY|pointsAtZ|preserveAlpha|preserveAspectRatio|primitiveUnits|r|radius|refX|refY|renderingIntent|repeatCount|repeatDur|requiredExtensions|requiredFeatures|restart|result|rotate|rx|ry|scale|seed|shapeRendering|slope|spacing|specularConstant|specularExponent|speed|spreadMethod|startOffset|stdDeviation|stemh|stemv|stitchTiles|stopColor|stopOpacity|strikethroughPosition|strikethroughThickness|string|stroke|strokeDasharray|strokeDashoffset|strokeLinecap|strokeLinejoin|strokeMiterlimit|strokeOpacity|strokeWidth|surfaceScale|systemLanguage|tableValues|targetX|targetY|textAnchor|textDecoration|textRendering|textLength|to|transform|u1|u2|underlinePosition|underlineThickness|unicode|unicodeBidi|unicodeRange|unitsPerEm|vAlphabetic|vHanging|vIdeographic|vMathematical|values|vectorEffect|version|vertAdvY|vertOriginX|vertOriginY|viewBox|viewTarget|visibility|widths|wordSpacing|writingMode|x|xHeight|x1|x2|xChannelSelector|xlinkActuate|xlinkArcrole|xlinkHref|xlinkRole|xlinkShow|xlinkTitle|xlinkType|xmlBase|xmlns|xmlnsXlink|xmlLang|xmlSpace|y|y1|y2|yChannelSelector|z|zoomAndPan|for|class|autofocus)|(([Dd][Aa][Tt][Aa]|[Aa][Rr][Ii][Aa]|x)-.*))$/; // https://esbench.com/bench/5bfee68a4cd7e6009ef61d23
+
+  var index = memoize(function (prop) {
+    return reactPropsRegex.test(prop) || prop.charCodeAt(0) === 111
+    /* o */
+    && prop.charCodeAt(1) === 110
+    /* n */
+    && prop.charCodeAt(2) < 91;
+  }
+  /* Z+1 */
+  );
 
   function _inheritsLoose(subClass, superClass) {
     subClass.prototype = Object.create(superClass.prototype);
@@ -1109,14 +1146,6 @@
     strokeWidth: 1
   };
 
-  function memoize(fn) {
-    var cache = {};
-    return function (arg) {
-      if (cache[arg] === undefined) cache[arg] = fn(arg);
-      return cache[arg];
-    };
-  }
-
   var ILLEGAL_ESCAPE_SEQUENCE_ERROR = "You have illegal escape sequence in your template literal, most likely inside content's property value.\nBecause you write your CSS inside a JavaScript string you actually have to do double escaping, so for example \"content: '\\00d7';\" should become \"content: '\\\\00d7';\".\nYou can read more about this here:\nhttps://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#ES2018_revision_of_illegal_escape_sequences";
   var UNDEFINED_AS_OBJECT_KEY_ERROR = "You have passed in falsy value as style object's key (can happen when in example you pass unexported component as computed key).";
   var hyphenateRegex = /[A-Z]|^ms/g;
@@ -1434,14 +1463,6 @@
     };
   };
 
-  function css() {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return serializeStyles(args);
-  }
-
   var EmotionCacheContext = React.createContext( // we're doing this to avoid preconstruct's dead code elimination in this one case
   // because this module is primarily intended for the browser and node
   // but it's also required in react native and similar environments sometimes
@@ -1460,12 +1481,6 @@
 
 
     return React.forwardRef(render);
-  };
-
-  // thus we only need to replace what is a valid character for JS, but not for CSS
-
-  var sanitizeIdentifier = function sanitizeIdentifier(identifier) {
-    return identifier.replace(/\$/g, '-');
   };
 
   var typePropName = '__EMOTION_TYPE_PLEASE_DO_NOT_USE__';
@@ -1534,61 +1549,6 @@
   if (process.env.NODE_ENV !== 'production') {
     Emotion.displayName = 'EmotionCssPropInternal';
   } // $FlowFixMe
-
-
-  var jsx = function jsx(type, props) {
-    var args = arguments;
-
-    if (props == null || !hasOwnProperty.call(props, 'css')) {
-      // $FlowFixMe
-      return React.createElement.apply(undefined, args);
-    }
-
-    if (process.env.NODE_ENV !== 'production' && typeof props.css === 'string' && // check if there is a css declaration
-    props.css.indexOf(':') !== -1) {
-      throw new Error("Strings are not allowed as css prop values, please wrap it in a css template literal from '@emotion/css' like this: css`" + props.css + "`");
-    }
-
-    var argsLength = args.length;
-    var createElementArgArray = new Array(argsLength);
-    createElementArgArray[0] = Emotion;
-    var newProps = {};
-
-    for (var key in props) {
-      if (hasOwnProperty.call(props, key)) {
-        newProps[key] = props[key];
-      }
-    }
-
-    newProps[typePropName] = type;
-
-    if (process.env.NODE_ENV !== 'production') {
-      var error = new Error();
-
-      if (error.stack) {
-        // chrome
-        var match = error.stack.match(/at (?:Object\.|)jsx.*\n\s+at ([A-Z][A-Za-z$]+) /);
-
-        if (!match) {
-          // safari and firefox
-          match = error.stack.match(/.*\n([A-Z][A-Za-z$]+)@/);
-        }
-
-        if (match) {
-          newProps[labelPropName] = sanitizeIdentifier(match[1]);
-        }
-      }
-    }
-
-    createElementArgArray[1] = newProps;
-
-    for (var i = 2; i < argsLength; i++) {
-      createElementArgArray[i] = args[i];
-    } // $FlowFixMe
-
-
-    return React.createElement.apply(null, createElementArgArray);
-  };
 
   var warnedAboutCssPropForGlobal = false;
   var Global =
@@ -1794,6 +1754,170 @@
     });
   });
 
+  var testOmitPropsOnStringTag = index;
+
+  var testOmitPropsOnComponent = function testOmitPropsOnComponent(key) {
+    return key !== 'theme' && key !== 'innerRef';
+  };
+
+  var getDefaultShouldForwardProp = function getDefaultShouldForwardProp(tag) {
+    return typeof tag === 'string' && // 96 is one less than the char code
+    // for "a" so this is checking that
+    // it's a lowercase character
+    tag.charCodeAt(0) > 96 ? testOmitPropsOnStringTag : testOmitPropsOnComponent;
+  };
+
+  function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  var ILLEGAL_ESCAPE_SEQUENCE_ERROR$1 = "You have illegal escape sequence in your template literal, most likely inside content's property value.\nBecause you write your CSS inside a JavaScript string you actually have to do double escaping, so for example \"content: '\\00d7';\" should become \"content: '\\\\00d7';\".\nYou can read more about this here:\nhttps://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#ES2018_revision_of_illegal_escape_sequences";
+
+  var createStyled = function createStyled(tag, options) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (tag === undefined) {
+        throw new Error('You are trying to create a styled element with an undefined component.\nYou may have forgotten to import it.');
+      }
+    }
+
+    var identifierName;
+    var shouldForwardProp;
+    var targetClassName;
+
+    if (options !== undefined) {
+      identifierName = options.label;
+      targetClassName = options.target;
+      shouldForwardProp = tag.__emotion_forwardProp && options.shouldForwardProp ? function (propName) {
+        return tag.__emotion_forwardProp(propName) && // $FlowFixMe
+        options.shouldForwardProp(propName);
+      } : options.shouldForwardProp;
+    }
+
+    var isReal = tag.__emotion_real === tag;
+    var baseTag = isReal && tag.__emotion_base || tag;
+
+    if (typeof shouldForwardProp !== 'function' && isReal) {
+      shouldForwardProp = tag.__emotion_forwardProp;
+    }
+
+    var defaultShouldForwardProp = shouldForwardProp || getDefaultShouldForwardProp(baseTag);
+    var shouldUseAs = !defaultShouldForwardProp('as');
+    return function () {
+      var args = arguments;
+      var styles = isReal && tag.__emotion_styles !== undefined ? tag.__emotion_styles.slice(0) : [];
+
+      if (identifierName !== undefined) {
+        styles.push("label:" + identifierName + ";");
+      }
+
+      if (args[0] == null || args[0].raw === undefined) {
+        styles.push.apply(styles, args);
+      } else {
+        if (process.env.NODE_ENV !== 'production' && args[0][0] === undefined) {
+          console.error(ILLEGAL_ESCAPE_SEQUENCE_ERROR$1);
+        }
+
+        styles.push(args[0][0]);
+        var len = args.length;
+        var i = 1;
+
+        for (; i < len; i++) {
+          if (process.env.NODE_ENV !== 'production' && args[0][i] === undefined) {
+            console.error(ILLEGAL_ESCAPE_SEQUENCE_ERROR$1);
+          }
+
+          styles.push(args[i], args[0][i]);
+        }
+      } // $FlowFixMe: we need to cast StatelessFunctionalComponent to our PrivateStyledComponent class
+
+
+      var Styled = withEmotionCache(function (props, context, ref) {
+        return React.createElement(ThemeContext.Consumer, null, function (theme) {
+          var finalTag = shouldUseAs && props.as || baseTag;
+          var className = '';
+          var classInterpolations = [];
+          var mergedProps = props;
+
+          if (props.theme == null) {
+            mergedProps = {};
+
+            for (var key in props) {
+              mergedProps[key] = props[key];
+            }
+
+            mergedProps.theme = theme;
+          }
+
+          if (typeof props.className === 'string') {
+            className = getRegisteredStyles(context.registered, classInterpolations, props.className);
+          } else if (props.className != null) {
+            className = props.className + " ";
+          }
+
+          var serialized = serializeStyles(styles.concat(classInterpolations), context.registered, mergedProps);
+          var rules = insertStyles(context, serialized, typeof finalTag === 'string');
+          className += context.key + "-" + serialized.name;
+
+          if (targetClassName !== undefined) {
+            className += " " + targetClassName;
+          }
+
+          var finalShouldForwardProp = shouldUseAs && shouldForwardProp === undefined ? getDefaultShouldForwardProp(finalTag) : defaultShouldForwardProp;
+          var newProps = {};
+
+          for (var _key in props) {
+            if (shouldUseAs && _key === 'as') continue;
+
+            if ( // $FlowFixMe
+            finalShouldForwardProp(_key)) {
+              newProps[_key] = props[_key];
+            }
+          }
+
+          newProps.className = className;
+          newProps.ref = ref || props.innerRef;
+
+          if (process.env.NODE_ENV !== 'production' && props.innerRef) {
+            console.error('`innerRef` is deprecated and will be removed in a future major version of Emotion, please use the `ref` prop instead' + (identifierName === undefined ? '' : " in the usage of `" + identifierName + "`"));
+          }
+
+          var ele = React.createElement(finalTag, newProps);
+
+          return ele;
+        });
+      });
+      Styled.displayName = identifierName !== undefined ? identifierName : "Styled(" + (typeof baseTag === 'string' ? baseTag : baseTag.displayName || baseTag.name || 'Component') + ")";
+      Styled.defaultProps = tag.defaultProps;
+      Styled.__emotion_real = Styled;
+      Styled.__emotion_base = baseTag;
+      Styled.__emotion_styles = styles;
+      Styled.__emotion_forwardProp = shouldForwardProp;
+      Object.defineProperty(Styled, 'toString', {
+        value: function value() {
+          if (targetClassName === undefined && process.env.NODE_ENV !== 'production') {
+            return 'NO_COMPONENT_SELECTOR';
+          } // $FlowFixMe: coerce undefined to string
+
+
+          return "." + targetClassName;
+        }
+      });
+
+      Styled.withComponent = function (nextTag, nextOptions) {
+        return createStyled(nextTag, nextOptions !== undefined ? _objectSpread({}, options || {}, {}, nextOptions) : options).apply(void 0, styles);
+      };
+
+      return Styled;
+    };
+  };
+
+  var tags = ['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base', 'bdi', 'bdo', 'big', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li', 'link', 'main', 'map', 'mark', 'marquee', 'menu', 'menuitem', 'meta', 'meter', 'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small', 'source', 'span', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'u', 'ul', 'var', 'video', 'wbr', // SVG
+  'circle', 'clipPath', 'defs', 'ellipse', 'foreignObject', 'g', 'image', 'line', 'linearGradient', 'mask', 'path', 'pattern', 'polygon', 'polyline', 'radialGradient', 'rect', 'stop', 'svg', 'text', 'tspan'];
+
+  var newStyled = createStyled.bind();
+  tags.forEach(function (tagName) {
+    newStyled[tagName] = newStyled(tagName);
+  });
+
   function getDomPath(el) {
     var stack = [];
 
@@ -1896,9 +2020,10 @@
   var attachLabels = function (inputs, container) {
     return inputs.map(function (input) {
       var labelText = '';
-      if (input.parentElement.nodeName === 'LABEL') { labelText = input.parentElement.innerText; }
 
-      if (input.id) {
+      if (input.labels && input.labels[0]) {
+        labelText = input.labels[0].innerText;
+      } else if (input.parentElement.nodeName === 'LABEL') { labelText = input.parentElement.innerText; }else if (input.id) {
         var label = container.querySelector(("label for=\"" + (input.id) + "\""));
         if (label) { labelText = label.innerText; }
       }
@@ -1986,7 +2111,7 @@
       var close = els.filter(function (ref, i2) {
         var bounding2 = ref[1];
 
-        if (i2 <= i1) { return; }
+        if (i2 === i1) { return; }
 
         if (bounding2.right - bounding1.left < recommendedDistance || bounding2.bottom - bounding1.top < recommendedDistance || bounding1.right - bounding2.left < recommendedDistance || bounding1.bottom - bounding2.bottom < recommendedDistance) {
           return true;
@@ -2037,7 +2162,6 @@
     };
   };
 
-  /** @jsx jsx */
   var templateObject$3 = Object.freeze(["\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));\n\n  font-size: ", "px;\n\n  p {\n    line-height: 1.4;\n  }\n\n  h3 {\n    font-size: ", "px;\n    font-weight: bold;\n    margin-bottom: 0.5rem;\n    margin-top: 0;\n  }\n\n  code {\n    background: hsla(0, 0%, 50%, 0.1);\n    border-radius: 3px;\n  }\n\n  summary {\n    cursor: pointer;\n    display: inline-block;\n    padding: 0.2rem 0.3rem;\n    border-radius: 5px;\n    color: ", ";\n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 3px ", ";\n    }\n  }\n\n  ul {\n    padding-left: 1.25rem;\n  }\n  a {\n    text-decoration: none;\n    color: ", ";\n    &:hover {\n      border-bottom: 1px solid ", ";\n    }\n  }\n  > div {\n    padding: 1rem;\n    border-bottom: 1px solid ", ";\n    border-right: 1px solid ", ";\n  }\n"]);
   var templateObject$2 = Object.freeze(["\n  margin-bottom: 0.5rem;\n"]);
   var templateObject$1 = Object.freeze(["\n  height: 4rem;\n  width: auto;\n  max-width: 100%;\n"]);
@@ -2046,32 +2170,30 @@
   var minSize = 32;
   var recommendedDistance = 8;
   var accessibleBlue = '#0965df';
-  var noWarningStyles = css(templateObject);
-  var demoImgStyles = css(templateObject$1);
-  var entryStyles = css(templateObject$2);
-
-  var containerStyles = function (theme) { return css(templateObject$3, theme.typography.size.s2, theme.typography.size.s2, accessibleBlue, theme.color.mediumlight, accessibleBlue, accessibleBlue, theme.color.medium, theme.color.medium); };
-
+  var NoWarning = styled.div(templateObject);
+  var DemoImg = styled.img(templateObject$1);
+  var ListEntry = styled.li(templateObject$2);
+  var Container = styled.div(templateObject$3, theme.typography.size.s2, theme.typography.size.s2, accessibleBlue, theme.color.mediumlight, accessibleBlue, accessibleBlue, theme.color.medium, theme.color.medium);
   var fixText = 'Learn more';
 
   var ActiveWarnings = function (ref) {
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return jsx( 'div', null,
-        jsx( 'h3', null, "No ", jsx( 'code', null, ":active" ), " style detected" ),
-        jsx( 'p', null, "Clear ", jsx( 'code', null, ":active" ), " styles are key to ensuring users on mobile get instantaneous feedback on tap, even on slower devices." ),
-        jsx( 'ul', null,
+    return React__default.createElement( 'div', null,
+        React__default.createElement( 'h3', null, "No ", React__default.createElement( 'code', null, ":active" ), " style detected" ),
+        React__default.createElement( 'p', null, "Clear ", React__default.createElement( 'code', null, ":active" ), " styles are key to ensuring users on mobile get instantaneous feedback on tap, even on slower devices." ),
+        React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
-          return jsx( 'li', { css: entryStyles, key: i },
-                w.type, " with text ", jsx( 'b', null, w.text ), " ", jsx( 'code', null, w.path )
+          return React__default.createElement( ListEntry, { key: i },
+                w.type, " with text ", React__default.createElement( 'b', null, w.text )
               );
         })
         ),
-        jsx( 'details', null,
-          jsx( 'summary', null, fixText ),
-          jsx( 'p', null,
-            jsx( 'a', { href: "https://fvsch.com/styling-buttons/#states" }, "This article"), ' ', "offers a great overview of how to style buttons." )
+        React__default.createElement( 'details', null,
+          React__default.createElement( 'summary', null, fixText ),
+          React__default.createElement( 'p', null,
+            React__default.createElement( 'a', { href: "https://fvsch.com/styling-buttons/#states" }, "This article"), ' ', "offers a great overview of how to style buttons." )
         )
       );
   };
@@ -2080,23 +2202,23 @@
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return jsx( 'div', null,
-        jsx( 'h3', null, "No ", jsx( 'code', null, "autocomplete" ), " prop detected" ),
-        jsx( 'p', null, "Most textual inputs should have an explicit ", jsx( 'code', null, "autocomplete" ), ' ', "prop (even if it's just ", jsx( 'code', null, "autocomplete=\"off\"" ), ")." ),
-        jsx( 'ul', null,
+    return React__default.createElement( 'div', null,
+        React__default.createElement( 'h3', null, "Input with no ", React__default.createElement( 'code', null, "autocomplete" ), " prop detected" ),
+        React__default.createElement( 'p', null, "Most textual inputs should have an explicit ", React__default.createElement( 'code', null, "autocomplete" ), ' ', "prop (even if it's just ", React__default.createElement( 'code', null, "autocomplete=\"off\"" ), ")." ),
+        React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
-          return jsx( 'li', { css: entryStyles, key: i }, "Input with type ", jsx( 'code', null, w.type ), " and label", ' ',
-                jsx( 'b', null, w.labelText )
+          return React__default.createElement( ListEntry, { key: i },
+                React__default.createElement( 'code', null, "input type=\"", w.type, "\"" ), " and label ", React__default.createElement( 'b', null, w.labelText )
               );
         })
         ),
-        jsx( 'details', null,
-          jsx( 'summary', null, fixText ),
-          jsx( 'p', null,
-            jsx( 'a', { href: "https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill" }, "Google's autocomplete documentation")
+        React__default.createElement( 'details', null,
+          React__default.createElement( 'summary', null, fixText ),
+          React__default.createElement( 'p', null,
+            React__default.createElement( 'a', { href: "https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill" }, "Google's autocomplete documentation")
           ),
-          jsx( 'p', null,
-            jsx( 'a', { href: "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete" }, "Mozilla's autocomplete documentation")
+          React__default.createElement( 'p', null,
+            React__default.createElement( 'a', { href: "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete" }, "Mozilla's autocomplete documentation")
           )
         )
       );
@@ -2106,17 +2228,14 @@
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return jsx( 'div', null,
-        jsx( 'h3', null, "Input type ", jsx( 'code', null, "text" ), " with no ", jsx( 'code', null, "inputmode" ), ' '
+    return React__default.createElement( 'div', null,
+        React__default.createElement( 'h3', null, "Input type ", React__default.createElement( 'code', null, "text" ), " with no ", React__default.createElement( 'code', null, "inputmode" ), ' '
         ),
-        jsx( 'p', null, "This will render the default text keyboard on mobile (which could very well be what you want!)", ' ',
-          jsx( 'a', { href: "https://better-mobile-inputs.netlify.com/" }, "If you haven't already, take a moment to make sure this is correct.", ' '
-          )
-        ),
-        jsx( 'ul', null,
+        React__default.createElement( 'p', null, "This will render the default text keyboard on mobile (which could very well be what you want!) If you haven't already, take a moment to make sure this is correct. You can use ", React__default.createElement( 'a', { href: "https://better-mobile-inputs.netlify.com/" }, "this tool"), " to explore keyboard options." ),
+        React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
-          return jsx( 'li', { css: entryStyles, key: i }, "Input with type ", jsx( 'code', null, w.type ), " and label", ' ',
-                jsx( 'b', null, w.labelText )
+          return React__default.createElement( ListEntry, { key: i },
+                React__default.createElement( 'code', null, "input type=\"", w.type, "\"" ), " and label ", React__default.createElement( 'b', null, w.labelText )
               );
         })
         )
@@ -2127,25 +2246,25 @@
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return jsx( 'div', null,
-        jsx( 'h3', null, "Scrollable container without", ' ',
-          jsx( 'code', null, "-webkit-overflow-scrolling:touch" )
+    return React__default.createElement( 'div', null,
+        React__default.createElement( 'h3', null, "Scrollable container without", ' ',
+          React__default.createElement( 'code', null, "-webkit-overflow-scrolling:touch" )
         ),
-        jsx( 'p', null, "This element will scroll awkwardly and abruptly on iOS." ),
-        jsx( 'ul', null,
+        React__default.createElement( 'p', null, "This element will scroll awkwardly and abruptly on iOS." ),
+        React__default.createElement( 'ul', null,
           warnings.map(function (ref, i) {
           var path = ref.path;
 
-          return jsx( 'li', { css: entryStyles, key: i },
-                jsx( 'code', null, path )
+          return React__default.createElement( ListEntry, { key: i },
+                React__default.createElement( 'code', null, path )
               );
         })
         ),
-        jsx( 'details', null,
-          jsx( 'summary', null, fixText ),
-          jsx( 'p', null, "To ensure your users benefit from momentum scrolling, add this line of CSS: ", jsx( 'code', null, "-webkit-overflow-scrolling:touch" ), " to any container with a style of ", jsx( 'code', null, "overflow: auto" ), " or", ' ',
-            jsx( 'code', null, "overflow: scroll" ), ".", ' ',
-            jsx( 'a', { href: "https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling" }, "Learn more about the property here.")
+        React__default.createElement( 'details', null,
+          React__default.createElement( 'summary', null, fixText ),
+          React__default.createElement( 'p', null, "To ensure your users benefit from momentum scrolling, add this line of CSS: ", React__default.createElement( 'code', null, "-webkit-overflow-scrolling:touch" ), " to any container with a style of ", React__default.createElement( 'code', null, "overflow: auto" ), " or", ' ',
+            React__default.createElement( 'code', null, "overflow: scroll" ), ".", ' ',
+            React__default.createElement( 'a', { href: "https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling" }, "Learn more about the property here.")
           )
         )
       );
@@ -2155,17 +2274,17 @@
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return jsx( 'div', null,
-        jsx( 'h3', null, "Usage of ", jsx( 'code', null, "100vh" ), " CSS" ),
-        jsx( 'p', null, "Viewport units are", ' ',
-          jsx( 'a', { href: "https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html" }, "tricky on mobile."), ' ', "On some mobile browers, depending on scroll position and direction,", ' ',
-          jsx( 'code', null, "100vh" ), " might take up more than 100% of screen height." ),
-        jsx( 'ul', null,
+    return React__default.createElement( 'div', null,
+        React__default.createElement( 'h3', null, "Usage of ", React__default.createElement( 'code', null, "100vh" ), " CSS" ),
+        React__default.createElement( 'p', null, "Viewport units are", ' ',
+          React__default.createElement( 'a', { href: "https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html" }, "tricky on mobile."), ' ', "On some mobile browers, depending on scroll position and direction,", ' ',
+          React__default.createElement( 'code', null, "100vh" ), " might take up more than 100% of screen height." ),
+        React__default.createElement( 'ul', null,
           warnings.map(function (ref, i) {
           var path = ref.path;
 
-          return jsx( 'li', { css: entryStyles, key: i },
-                jsx( 'code', null, path )
+          return React__default.createElement( ListEntry, { key: i },
+                React__default.createElement( 'code', null, path )
               );
         })
         )
@@ -2176,27 +2295,27 @@
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return jsx( 'div', null,
-        jsx( 'h3', null, "Large image without ", jsx( 'code', null, "srscset" )
+    return React__default.createElement( 'div', null,
+        React__default.createElement( 'h3', null, "Large image without ", React__default.createElement( 'code', null, "srscset" )
         ),
-        jsx( 'p', null, "Asking your users on phones to download huge images will slow them down, both in terms of network downloads and image decoding. Compress images as much as possible and then use ", jsx( 'code', null, "srcset" ), " to customize image sizes." ),
-        jsx( 'ul', null,
+        React__default.createElement( 'p', null, "Asking your users on phones to download huge images will slow them down, both in terms of network downloads and image decoding. Compress images as much as possible and then use ", React__default.createElement( 'code', null, "srcset" ), " to customize image sizes." ),
+        React__default.createElement( 'ul', null,
           warnings.map(function (ref, i) {
           var src = ref.src;
           var alt = ref.alt;
 
-          return jsx( 'li', { css: entryStyles, key: i },
-                jsx( 'div', null,
-                  jsx( 'img', { css: demoImgStyles, src: src, alt: alt })
+          return React__default.createElement( ListEntry, { key: i },
+                React__default.createElement( 'div', null,
+                  React__default.createElement( DemoImg, { src: src, alt: alt })
                 )
               );
         })
         ),
-        jsx( 'details', null,
-          jsx( 'summary', null, fixText ),
-          jsx( 'p', null, "Here's a", ' ',
-            jsx( 'a', { href: "https://cloudfour.com/thinks/responsive-images-the-simple-way" }, "good overview of the problem and how to solve it with", ' ',
-              jsx( 'code', null, "srcset" )
+        React__default.createElement( 'details', null,
+          React__default.createElement( 'summary', null, fixText ),
+          React__default.createElement( 'p', null, "Here's a", ' ',
+            React__default.createElement( 'a', { href: "https://cloudfour.com/thinks/responsive-images-the-simple-way" }, "good overview of the problem and how to solve it with", ' ',
+              React__default.createElement( 'code', null, "srcset" )
             ), "." )
         )
       );
@@ -2208,43 +2327,40 @@
     var tooClose = ref_warnings.tooClose;
 
     if (!underMinSize.length && !tooClose.length) { return null; }
-    return jsx( 'div', null,
-        Boolean(underMinSize.length) && jsx( 'div', null,
-            jsx( 'h3', null, "Touch target too small " ),
-            jsx( 'p', null, "It's important that tappable elements are large enough for users to easily trigger on mobile. With dimensions of less than ", minSize, "px, these tappable elements could be difficult for users to press:" ),
-            jsx( 'ul', null,
+    return React__default.createElement( 'div', null,
+        Boolean(underMinSize.length) && React__default.createElement( 'div', null,
+            React__default.createElement( 'h3', null, "Touch target too small " ),
+            React__default.createElement( 'p', null, "With dimensions of less than ", minSize, "px, these tappable elements could be difficult for users to press:" ),
+            React__default.createElement( 'ul', null,
               underMinSize.map(function (w, i) {
-            return jsx( 'li', { css: entryStyles, key: i },
-                    jsx( 'div', null,
-                      w.type, " with text ", jsx( 'b', null, w.text ), " ", jsx( 'code', null, w.path )
+            return React__default.createElement( ListEntry, { key: i },
+                    React__default.createElement( 'div', null,
+                      w.type, " with text ", React__default.createElement( 'b', null, w.text )
                     ),
-                    w.width < minSize && jsx( 'div', null, "width: ", w.width, "px" ),
-                    w.height < minSize && jsx( 'div', null, "height: ", w.height, "px" )
+                    w.width < minSize && React__default.createElement( 'div', null, "width: ", w.width, "px" ),
+                    w.height < minSize && React__default.createElement( 'div', null, "height: ", w.height, "px" )
                     
                   );
           })
             )
           ),
-        Boolean(tooClose.length) && jsx( 'div', null,
-            jsx( 'h3', null, "Touch targets too close together " ),
-            jsx( 'p', null, "For elements with dimensions smaller than ", recommendedSize, "px, it's recommended that they be at least ", recommendedDistance, "px apart. These elements were close to other tappable elements:" ),
-            jsx( 'ul', null,
+        Boolean(tooClose.length) && React__default.createElement( 'div', null,
+            React__default.createElement( 'h3', null, "Touch targets too close together " ),
+            React__default.createElement( 'p', null, "These elements have dimensions smaller than ", recommendedSize, "px and are less than ", recommendedDistance, "px from at least one other tappable element:" ),
+            React__default.createElement( 'ul', null,
               tooClose.map(function (w, i) {
-            return jsx( 'li', { css: entryStyles, key: i },
-                    jsx( 'div', null,
-                      w.type, " with text ", jsx( 'b', null, w.text ), " ", jsx( 'code', null, w.path )
-                    ),
-                    w.width < minSize && jsx( 'div', null, "width: ", w.width, "px" ),
-                    w.height < minSize && jsx( 'div', null, "height: ", w.height, "px" )
-                    
+            return React__default.createElement( ListEntry, { key: i },
+                    React__default.createElement( 'div', null,
+                      w.type, " with text ", React__default.createElement( 'b', null, w.text )
+                    )
                   );
           })
             )
           ),
-        jsx( 'details', null,
-          jsx( 'summary', null, fixText ),
-          jsx( 'p', null,
-            jsx( 'a', { href: "https://material.io/design/usability/accessibility.html#layout-typography" }, "Material design accessibility guidelines")
+        React__default.createElement( 'details', null,
+          React__default.createElement( 'summary', null, fixText ),
+          React__default.createElement( 'p', null,
+            React__default.createElement( 'a', { href: "https://material.io/design/usability/accessibility.html#layout-typography" }, "Material design accessibility guidelines")
           )
         )
       );
@@ -2278,22 +2394,22 @@
         }
       }
     });
-    if (!warningCount) { return jsx( 'div', { css: noWarningStyles }, "Looking good! No issues detected."); }
-    return jsx( 'div', { css: containerStyles(theme) },
-        jsx( ActiveWarnings, { warnings: activeWarnings }),
-        jsx( TouchTargetWarnings, { warnings: touchTargetWarnings }),
-        jsx( AutocompleteWarnings, { warnings: autocompleteWarnings }),
-        jsx( SrcsetWarnings, { warnings: srcsetWarnings }),
-        jsx( OverflowWarning, { warnings: overflowWarnings }),
-        jsx( InputTypeWarnings, { warnings: inputTypeWarnings }),
-        jsx( HeightWarnings, { warnings: heightWarnings })
+    if (!warningCount) { return React__default.createElement( NoWarning, null, "Looking good! No issues detected." ); }
+    return React__default.createElement( Container, { theme: theme },
+        React__default.createElement( ActiveWarnings, { warnings: activeWarnings }),
+        React__default.createElement( TouchTargetWarnings, { warnings: touchTargetWarnings }),
+        React__default.createElement( AutocompleteWarnings, { warnings: autocompleteWarnings }),
+        React__default.createElement( SrcsetWarnings, { warnings: srcsetWarnings }),
+        React__default.createElement( OverflowWarning, { warnings: overflowWarnings }),
+        React__default.createElement( InputTypeWarnings, { warnings: inputTypeWarnings }),
+        React__default.createElement( HeightWarnings, { warnings: heightWarnings })
       );
   };
 
   var Hints$1 = emotionTheming.withTheme(Hints);
 
   var templateObject$4 = Object.freeze(["\n  padding: 1rem;\n  font-weight: bold;\n"]);
-  var StyledLoading = styled.div(templateObject$4);
+  var StyledLoading = newStyled.div(templateObject$4);
   var ADDON_ID = 'mobile-hints';
   var PARAM_KEY = 'mobile-hints';
   var PANEL_ID = ADDON_ID + "/panel";
