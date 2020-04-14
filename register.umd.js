@@ -2173,7 +2173,7 @@
   var NoWarning = styled.div(templateObject);
   var DemoImg = styled.img(templateObject$1);
   var ListEntry = styled.li(templateObject$2);
-  var Container = styled.div(templateObject$3, theme.typography.size.s2, theme.typography.size.s2, accessibleBlue, theme.color.mediumlight, accessibleBlue, accessibleBlue, theme.color.medium, theme.color.medium);
+  var Container = styled.div(templateObject$3, function (props) { return props.theme.typography.size.s2; }, function (props) { return props.theme.typography.size.s2; }, accessibleBlue, function (props) { return props.theme.color.mediumlight; }, accessibleBlue, accessibleBlue, function (props) { return props.theme.color.medium; }, function (props) { return props.theme.color.medium; });
   var fixText = 'Learn more';
 
   var ActiveWarnings = function (ref) {

@@ -24,26 +24,28 @@ const getElements = (container, tag) =>
   Array.from(container.querySelectorAll(tag))
 
 export const getActiveWarnings = (container) => {
-  const buttons = getElements(container, 'button')
+  const buttons = getElements(container, 'button').concat(
+    getElements(container, '[role="button"]')
+  )
   const links = getElements(container, 'a')
 
   const filterActiveStyles = (el) => {
     const activeStyles = getActiveStyles(container, el)
     if (activeStyles) return false
-    // hacky, let's assume this is for a fancy material-style active state animation,
-    // since tragically we cannot access ontouchstart or onpointerstart listeners
-    const hasPseudoEl =
-      getComputedStyle(el, ':before').content !== 'none' ||
-      getComputedStyle(el, ':after').content !== 'none'
-    if (hasPseudoEl) return false
     return true
   }
   return buttons
     .concat(links)
     .filter(filterActiveStyles)
     .map((el) => ({
-      type: el.nodeName === 'A' ? 'Link' : 'Button',
+      type:
+        el.nodeName === 'A'
+          ? 'a'
+          : el.nodeName === 'BUTTON'
+          ? 'button'
+          : `${el.nodeName.toLowerCase()}[role="button"]`,
       text: el.innerText,
+      html: el.innerHTML,
       path: getDomPath(el),
     }))
 }
@@ -177,6 +179,7 @@ export const getTouchTargetSizeWarning = ({
   recommendedDistance,
 }) => {
   const els = getElements(container, 'button')
+    .concat(getElements(container, '[role="button"]'))
     .concat(getElements(container, 'a'))
     .map((el) => [el, el.getBoundingClientRect()])
 
@@ -211,9 +214,15 @@ export const getTouchTargetSizeWarning = ({
 
   const present = ({ el, boundingBox: { width, height }, close }) => {
     return {
-      type: el.nodeName === 'A' ? 'Link' : 'Button',
+      type:
+        el.nodeName === 'A'
+          ? 'a'
+          : el.nodeName === 'BUTTON'
+          ? 'button'
+          : `${el.nodeName.toLowerCase()}[role="button"]`,
       path: getDomPath(el),
       text: el.innerText,
+      html: el.innerHTML,
       width: Math.floor(width),
       height: Math.floor(height),
       close,

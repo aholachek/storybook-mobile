@@ -12,7 +12,7 @@ import {
 } from './utils'
 
 const recommendedSize = 44
-const minSize = 32
+const minSize = 30
 const recommendedDistance = 8
 
 const accessibleBlue = '#0965df'
@@ -22,10 +22,21 @@ const NoWarning = styled.div`
   font-weight: bold;
 `
 
+const StyledTappableContents = styled.div`
+  padding-top: 0.25rem;
+  height: 2rem;
+  width: auto;
+  img {
+    height: 2rem !important;
+    width: auto !important;
+  }
+`
+
 const DemoImg = styled.img`
   height: 4rem;
   width: auto;
   max-width: 100%;
+  background-color: hsla(0, 0%, 0%, 0.2);
 `
 
 const ListEntry = styled.li`
@@ -100,11 +111,28 @@ const ActiveWarnings = ({ warnings }) => {
         {warnings.map((w, i) => {
           return (
             <ListEntry key={i}>
-              {w.type} with text <b>{w.text}</b>
+              {w.type} with content{' '}
+              {w.text ? (
+                <b>{w.text}</b>
+              ) : w.html ? (
+                <StyledTappableContents
+                  dangerouslySetInnerHTML={{ __html: w.html }}
+                />
+              ) : (
+                '[no text found]'
+              )}
             </ListEntry>
           )
         })}
       </ul>
+      <p>
+        <b>Note:</b> This check is not sophisticated enough to pick up active
+        styles added with JavaScript, e.g. the{' '}
+        <a href="https://material.io/design/interaction/states.html#pressed">
+          material ripple effect
+        </a>
+        .
+      </p>
       <details>
         <summary>{fixText}</summary>
         <p>
@@ -163,7 +191,7 @@ const InputTypeWarnings = ({ warnings }) => {
       <p>
         This will render the default text keyboard on mobile (which could very
         well be what you want!) If you haven't already, take a moment to make
-        sure this is correct. You can use
+        sure this is correct. You can use{' '}
         <a href="https://better-mobile-inputs.netlify.com/">this tool</a> to
         explore keyboard options.
       </p>
@@ -251,10 +279,10 @@ const SrcsetWarnings = ({ warnings }) => {
         Large image without <code>srscset</code>
       </h3>
       <p>
-        Asking your users on phones to download huge images will slow them down,
-        both in terms of network downloads and image decoding. Compress images
-        as much as possible and then use <code>srcset</code> to customize image
-        sizes.
+        Asking your users on phones to download larger-than-necessary images
+        will slow them down, both in terms of network downloads and image
+        decoding. Compress images as much as possible and then use{' '}
+        <code>srcset</code> to customize image sizes.
       </p>
       <ul>
         {warnings.map(({ src, alt }, i) => {
@@ -288,7 +316,7 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
     <div>
       {Boolean(underMinSize.length) && (
         <div>
-          <h3>Touch target too small </h3>
+          <h3>Small touch target</h3>
           <p>
             With dimensions of less than {minSize}px, these tappable elements
             could be difficult for users to press:
@@ -297,12 +325,16 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
             {underMinSize.map((w, i) => {
               return (
                 <ListEntry key={i}>
-                  <div>
-                    {w.type} with text <b>{w.text}</b>
-                  </div>
-                  {w.width < minSize && <div>width: {w.width}px</div>}
-                  {w.height < minSize && <div>height: {w.height}px</div>}
-                  {}
+                  <code>{w.type}</code> with content{' '}
+                  {w.text ? (
+                    <b>{w.text}</b>
+                  ) : w.html ? (
+                    <StyledTappableContents
+                      dangerouslySetInnerHTML={{ __html: w.html }}
+                    />
+                  ) : (
+                    '[no text found]'
+                  )}
                 </ListEntry>
               )
             })}
@@ -311,7 +343,7 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
       )}
       {Boolean(tooClose.length) && (
         <div>
-          <h3>Touch targets too close together </h3>
+          <h3>Touch targets close together </h3>
           <p>
             These elements have dimensions smaller than {recommendedSize}px and
             are less than {recommendedDistance}px from at least one other
@@ -321,9 +353,16 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
             {tooClose.map((w, i) => {
               return (
                 <ListEntry key={i}>
-                  <div>
-                    {w.type} with text <b>{w.text}</b>
-                  </div>
+                  <code>{w.type}</code> with content{' '}
+                  {w.text ? (
+                    <b>{w.text}</b>
+                  ) : w.html ? (
+                    <StyledTappableContents
+                      dangerouslySetInnerHTML={{ __html: w.html }}
+                    />
+                  ) : (
+                    '[no text found]'
+                  )}
                 </ListEntry>
               )
             })}
@@ -368,9 +407,10 @@ const Hints = ({ container, theme }) => {
     heightWarnings.length
 
   React.useEffect(() => {
+    debugger
     const tab = Array.from(
       document.querySelectorAll('button[role="tab"]')
-    ).find((el) => /^Mobile(\s\(\d\))?$/.test(el.innerText))
+    ).find((el) => /^Mobile(\s\(\d+\))?$/.test(el.innerText))
     if (tab) {
       if (warningCount === 0) {
         tab.innerText = 'Mobile'
@@ -384,13 +424,13 @@ const Hints = ({ container, theme }) => {
     return <NoWarning>Looking good! No issues detected.</NoWarning>
   return (
     <Container theme={theme}>
-      <ActiveWarnings warnings={activeWarnings} />
       <TouchTargetWarnings warnings={touchTargetWarnings} />
       <AutocompleteWarnings warnings={autocompleteWarnings} />
       <SrcsetWarnings warnings={srcsetWarnings} />
       <OverflowWarning warnings={overflowWarnings} />
       <InputTypeWarnings warnings={inputTypeWarnings} />
       <HeightWarnings warnings={heightWarnings} />
+      <ActiveWarnings warnings={activeWarnings} />
     </Container>
   )
 }

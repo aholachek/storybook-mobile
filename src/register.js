@@ -60,7 +60,7 @@ const getContainer = () => {
   return iframe.contentDocument
 }
 
-const delay = 1000
+const delay = 2500
 const MyPanel = ({ storyId }) => {
   const [html, setHTML] = React.useState('')
 
