@@ -407,7 +407,6 @@ const Hints = ({ container, theme }) => {
     heightWarnings.length
 
   React.useEffect(() => {
-    debugger
     const tab = Array.from(
       document.querySelectorAll('button[role="tab"]')
     ).find((el) => /^Mobile(\s\(\d+\))?$/.test(el.innerText))
