@@ -24,6 +24,15 @@ const tagStyles = `
   display:inline-block;
   border-radius: 10px;
   margin-bottom: .5rem;
+  svg {
+    margin-right: .25rem;
+    display: inline-block;
+    height: .7rem;
+    line-height: 1;
+    position: relative;
+    top: .03rem;
+    letter-spacing: .01rem;
+  }
 `
 
 const StyledWarningTag = styled.div`
@@ -33,7 +42,23 @@ const StyledWarningTag = styled.div`
 `
 
 const Warning = () => {
-  return <StyledWarningTag>warning</StyledWarningTag>
+  return (
+    <StyledWarningTag>
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        role="img"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 576 512"
+      >
+        <path
+          fill="currentColor"
+          d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
+        ></path>
+      </svg>
+      warning
+    </StyledWarningTag>
+  )
 }
 
 const StyledInfoTag = styled.div`
@@ -42,7 +67,27 @@ const StyledInfoTag = styled.div`
  background-color: hsla(214, 92%, 45%, 0.1);
 `
 const Info = () => {
-  return <StyledInfoTag>hint</StyledInfoTag>
+  return (
+    <StyledInfoTag>
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        data-prefix="fas"
+        data-icon="magic"
+        role="img"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+        class="svg-inline--fa fa-magic fa-w-16 fa-5x"
+      >
+        <path
+          fill="currentColor"
+          d="M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.66-53.33L160 80l-53.34-26.67L80 0 53.34 53.33 0 80l53.34 26.67L80 160zm352 128l-26.66 53.33L352 368l53.34 26.67L432 448l26.66-53.33L512 368l-53.34-26.67L432 288zm70.62-193.77L417.77 9.38C411.53 3.12 403.34 0 395.15 0c-8.19 0-16.38 3.12-22.63 9.38L9.38 372.52c-12.5 12.5-12.5 32.76 0 45.25l84.85 84.85c6.25 6.25 14.44 9.37 22.62 9.37 8.19 0 16.38-3.12 22.63-9.37l363.14-363.15c12.5-12.48 12.5-32.75 0-45.24zM359.45 203.46l-50.91-50.91 86.6-86.6 50.91 50.91-86.6 86.6z"
+          class=""
+        ></path>
+      </svg>
+      hint
+    </StyledInfoTag>
+  )
 }
 
 const NoWarning = styled.div`
@@ -55,6 +100,7 @@ const Spacer = styled.div`
 `
 
 const StyledTappableContents = styled.div`
+  display: inline-block;
   padding-top: 0.25rem;
   height: 2rem;
   width: auto;
@@ -139,6 +185,14 @@ const ActiveWarnings = ({ warnings }) => {
         Clear <code>:active</code> styles help users on mobile get instantaneous
         feedback on tap, even on slower devices.
       </p>
+      <p>
+        <b>Note:</b> This check only check CSS styles and as such cannot detect
+        active states added with with JavaScript, e.g. the{' '}
+        <a href="https://material.io/design/interaction/states.html#pressed">
+          material ripple effect
+        </a>
+        .
+      </p>
       <ul>
         {warnings.map((w, i) => {
           return (
@@ -157,14 +211,6 @@ const ActiveWarnings = ({ warnings }) => {
           )
         })}
       </ul>
-      <p>
-        <b>Note:</b> This check is not sophisticated enough to pick up active
-        styles added with JavaScript, e.g. the{' '}
-        <a href="https://material.io/design/interaction/states.html#pressed">
-          material ripple effect
-        </a>
-        .
-      </p>
       <details>
         <summary>{fixText}</summary>
         <p>
@@ -182,7 +228,7 @@ const AutocompleteWarnings = ({ warnings }) => {
     <Spacer>
       <Warning />
       <h3>
-        Input with no <code>autocomplete</code> prop detected
+        Input with no <code>autocomplete</code> prop
       </h3>
       <p>
         Most textual inputs should have an explicit <code>autocomplete</code>{' '}
@@ -358,8 +404,8 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
         <div>
           <h3>Small touch target</h3>
           <p>
-            With dimensions of less than {minSize}px, these tappable elements
-            could be difficult for users to press:
+            With heights and/or widths of less than {minSize}px, these tappable
+            elements could be difficult for users to press:
           </p>
           <ul>
             {underMinSize.map((w, i) => {

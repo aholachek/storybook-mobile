@@ -4,7 +4,7 @@
   (factory(global.addons,global.coreEvents,global.api,global.components,global.react,global.styled,global.emotionTheming));
 }(this, (function (addons,coreEvents,api,components,React,styled,emotionTheming) {
   var React__default = 'default' in React ? React['default'] : React;
-  styled = styled && styled.hasOwnProperty('default') ? styled['default'] : styled;
+  var styled__default = 'default' in styled ? styled['default'] : styled;
 
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -2000,7 +2000,7 @@
       if (srcSet) { return false; }
       var isSVG = Boolean(src.match(/svg$/));
       if (isSVG) { return false; }
-      var isLarge = parseInt(getComputedStyle(img).width, 10) > 300 || img.naturalWidth > 300;
+      var isLarge = parseInt(getComputedStyle(img).width, 10) > 400 || img.naturalWidth > 400;
       if (!isLarge) { return false; }
       return true;
     }).map(function (img) {
@@ -2091,7 +2091,7 @@
       {path: getDomPath(data.el)})); });
   };
   var getInputTypeWarnings = function (container) {
-    var inputs = getElements(container, 'input[type="text"]').filter(function (input) { return !input.getAttribute('inputmode'); });
+    var inputs = getElements(container, 'input[type="text"]').concat(getElements(container, 'input:not([type])')).filter(function (input) { return !input.getAttribute('inputmode'); });
     return attachLabels(inputs, container);
   };
   var getTouchTargetSizeWarning = function (ref) {
@@ -2110,7 +2110,7 @@
 
         if (i2 === i1) { return; }
 
-        if (bounding2.right - bounding1.left < recommendedDistance || bounding2.bottom - bounding1.top < recommendedDistance || bounding1.right - bounding2.left < recommendedDistance || bounding1.bottom - bounding2.bottom < recommendedDistance) {
+        if (bounding2.right - bounding1.left < recommendedDistance || bounding2.bottom - bounding1.top < recommendedDistance || bounding1.right - bounding2.left < recommendedDistance || bounding1.bottom - bounding2.top < recommendedDistance) {
           return true;
         }
       });
@@ -2160,42 +2160,67 @@
     };
   };
 
-  var templateObject$4 = Object.freeze(["\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));\n\n  font-size: ", "px;\n\n  p {\n    line-height: 1.4;\n  }\n\n  h3 {\n    font-size: ", "px;\n    font-weight: bold;\n    margin-bottom: 0.5rem;\n    margin-top: 0;\n  }\n\n  code {\n    background: hsla(0, 0%, 50%, 0.1);\n    border-radius: 3px;\n  }\n\n  summary {\n    cursor: pointer;\n    display: inline-block;\n    padding: 0.2rem 0.3rem;\n    border-radius: 5px;\n    color: ", ";\n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 3px ", ";\n    }\n  }\n\n  ul {\n    padding-left: 1.25rem;\n  }\n  a {\n    text-decoration: none;\n    color: ", ";\n    &:hover {\n      border-bottom: 1px solid ", ";\n    }\n  }\n  > div {\n    padding: 1rem;\n    border-bottom: 1px solid ", ";\n    border-right: 1px solid ", ";\n  }\n"]);
-  var templateObject$3 = Object.freeze(["\n  margin-bottom: 0.5rem;\n"]);
-  var templateObject$2 = Object.freeze(["\n  height: 4rem;\n  width: auto;\n  max-width: 100%;\n  background-color: hsla(0, 0%, 0%, 0.2);\n"]);
-  var templateObject$1 = Object.freeze(["\n  padding-top: 0.25rem;\n  height: 2rem;\n  width: auto;\n  img {\n    height: 2rem !important;\n    width: auto !important;\n  }\n"]);
-  var templateObject = Object.freeze(["\n  padding: 1rem;\n  font-weight: bold;\n"]);
+  var templateObject$7 = Object.freeze(["\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));\n\n  font-size: ", "px;\n\n  p {\n    line-height: 1.4;\n  }\n\n  h3 {\n    font-size: ", "px;\n    font-weight: bold;\n    margin-bottom: 0.5rem;\n    margin-top: 0;\n  }\n\n  code {\n    background: hsla(0, 0%, 50%, 0.1);\n    border-radius: 3px;\n  }\n\n  summary {\n    cursor: pointer;\n    display: inline-block;\n    padding: 0.2rem 0.3rem;\n    border-radius: 5px;\n    color: ", ";\n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 3px ", ";\n    }\n  }\n\n  ul {\n    padding-left: 1.25rem;\n  }\n  a {\n    text-decoration: none;\n    color: ", ";\n    &:hover {\n      border-bottom: 1px solid ", ";\n    }\n  }\n  > div {\n    border-bottom: 1px solid ", ";\n    border-right: 1px solid ", ";\n  }\n"]);
+  var templateObject$6 = Object.freeze(["\n  margin-bottom: 0.5rem;\n"]);
+  var templateObject$5 = Object.freeze(["\n  height: 4rem;\n  width: auto;\n  max-width: 100%;\n  background-color: hsla(0, 0%, 0%, 0.2);\n"]);
+  var templateObject$4 = Object.freeze(["\n  display: inline-block;\n  padding-top: 0.25rem;\n  height: 2rem;\n  width: auto;\n  img {\n    height: 2rem !important;\n    width: auto !important;\n  }\n"]);
+  var templateObject$3 = Object.freeze(["\n  padding: 1rem;\n"]);
+  var templateObject$2 = Object.freeze(["\n  padding: 1rem;\n  font-weight: bold;\n"]);
+  var templateObject$1 = Object.freeze(["\n  ", "\n color: ", ";\n background-color: hsla(214, 92%, 45%, 0.1);\n"]);
+  var templateObject = Object.freeze(["\n  color: ", ";\n  background-color: hsl(41, 100%, 92%);\n  ", "\n"]);
   var recommendedSize = 44;
   var minSize = 30;
   var recommendedDistance = 8;
   var accessibleBlue = '#0965df';
-  var NoWarning = styled.div(templateObject);
-  var StyledTappableContents = styled.div(templateObject$1);
-  var DemoImg = styled.img(templateObject$2);
-  var ListEntry = styled.li(templateObject$3);
-  var Container = styled.div(templateObject$4, function (props) { return props.theme.typography.size.s2; }, function (props) { return props.theme.typography.size.s2; }, accessibleBlue, function (props) { return props.theme.color.mediumlight; }, accessibleBlue, accessibleBlue, function (props) { return props.theme.color.medium; }, function (props) { return props.theme.color.medium; });
+  var warning = '#bd4700';
+  var tagStyles = "\n  padding: .25rem .5rem;\n  font-weight: bold;\n  display:inline-block;\n  border-radius: 10px;\n  margin-bottom: .5rem;\n  svg {\n    margin-right: .25rem;\n    display: inline-block;\n    height: .7rem;\n    line-height: 1;\n    position: relative;\n    top: .03rem;\n    letter-spacing: .01rem;\n  }\n";
+  var StyledWarningTag = styled__default.div(templateObject, warning, tagStyles);
+
+  var Warning = function () {
+    return React__default.createElement( StyledWarningTag, null,
+        React__default.createElement( 'svg', { 'aria-hidden': "true", focusable: "false", role: "img", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 576 512" },
+          React__default.createElement( 'path', { fill: "currentColor", d: "M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z" })
+        ), "warning" );
+  };
+
+  var StyledInfoTag = styled__default.div(templateObject$1, tagStyles, accessibleBlue);
+
+  var Info = function () {
+    return React__default.createElement( StyledInfoTag, null,
+        React__default.createElement( 'svg', { 'aria-hidden': "true", focusable: "false", 'data-prefix': "fas", 'data-icon': "magic", role: "img", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 512 512", class: "svg-inline--fa fa-magic fa-w-16 fa-5x" },
+          React__default.createElement( 'path', { fill: "currentColor", d: "M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.66-53.33L160 80l-53.34-26.67L80 0 53.34 53.33 0 80l53.34 26.67L80 160zm352 128l-26.66 53.33L352 368l53.34 26.67L432 448l26.66-53.33L512 368l-53.34-26.67L432 288zm70.62-193.77L417.77 9.38C411.53 3.12 403.34 0 395.15 0c-8.19 0-16.38 3.12-22.63 9.38L9.38 372.52c-12.5 12.5-12.5 32.76 0 45.25l84.85 84.85c6.25 6.25 14.44 9.37 22.62 9.37 8.19 0 16.38-3.12 22.63-9.37l363.14-363.15c12.5-12.48 12.5-32.75 0-45.24zM359.45 203.46l-50.91-50.91 86.6-86.6 50.91 50.91-86.6 86.6z", class: "" })
+        ), "hint" );
+  };
+
+  var NoWarning = styled__default.div(templateObject$2);
+  var Spacer = styled__default.div(templateObject$3);
+  var StyledTappableContents = styled__default.div(templateObject$4);
+  var DemoImg = styled__default.img(templateObject$5);
+  var ListEntry = styled__default.li(templateObject$6);
+  var Container = styled__default.div(templateObject$7, function (props) { return props.theme.typography.size.s2; }, function (props) { return props.theme.typography.size.s2; }, accessibleBlue, function (props) { return props.theme.color.mediumlight; }, accessibleBlue, accessibleBlue, function (props) { return props.theme.color.medium; }, function (props) { return props.theme.color.medium; });
   var fixText = 'Learn more';
 
   var ActiveWarnings = function (ref) {
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return React__default.createElement( 'div', null,
-        React__default.createElement( 'h3', null, "No ", React__default.createElement( 'code', null, ":active" ), " style detected" ),
-        React__default.createElement( 'p', null, "Clear ", React__default.createElement( 'code', null, ":active" ), " styles are key to ensuring users on mobile get instantaneous feedback on tap, even on slower devices." ),
+    return React__default.createElement( Spacer, null,
+        React__default.createElement( Info, null ),
+        React__default.createElement( 'h3', null, "No CSS ", React__default.createElement( 'code', null, ":active" ), " style detected" ),
+        React__default.createElement( 'p', null, "Clear ", React__default.createElement( 'code', null, ":active" ), " styles help users on mobile get instantaneous feedback on tap, even on slower devices." ),
+        React__default.createElement( 'p', null,
+          React__default.createElement( 'b', null, "Note:" ), " This check only check CSS styles and as such cannot detect active states added with with JavaScript, e.g. the", ' ',
+          React__default.createElement( 'a', { href: "https://material.io/design/interaction/states.html#pressed" }, "material ripple effect"), "." ),
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },
-                w.type, " with content", ' ',
+                React__default.createElement( 'code', null, w.type ), " with content", ' ',
                 w.text ? React__default.createElement( 'b', null, w.text ) : w.html ? React__default.createElement( StyledTappableContents, { dangerouslySetInnerHTML: {
               __html: w.html
             } }) : '[no text found]'
               );
         })
         ),
-        React__default.createElement( 'p', null,
-          React__default.createElement( 'b', null, "Note:" ), " This check is not sophisticated enough to pick up active styles added with JavaScript, e.g. the", ' ',
-          React__default.createElement( 'a', { href: "https://material.io/design/interaction/states.html#pressed" }, "material ripple effect"), "." ),
         React__default.createElement( 'details', null,
           React__default.createElement( 'summary', null, fixText ),
           React__default.createElement( 'p', null,
@@ -2208,8 +2233,9 @@
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return React__default.createElement( 'div', null,
-        React__default.createElement( 'h3', null, "Input with no ", React__default.createElement( 'code', null, "autocomplete" ), " prop detected" ),
+    return React__default.createElement( Spacer, null,
+        React__default.createElement( Warning, null ),
+        React__default.createElement( 'h3', null, "Input with no ", React__default.createElement( 'code', null, "autocomplete" ), " prop" ),
         React__default.createElement( 'p', null, "Most textual inputs should have an explicit ", React__default.createElement( 'code', null, "autocomplete" ), ' ', "prop (even if it's just ", React__default.createElement( 'code', null, "autocomplete=\"off\"" ), ")." ),
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
@@ -2234,7 +2260,9 @@
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return React__default.createElement( 'div', null,
+    return React__default.createElement( Spacer, null,
+        React__default.createElement( Info, null ),
+
         React__default.createElement( 'h3', null, "Input type ", React__default.createElement( 'code', null, "text" ), " with no ", React__default.createElement( 'code', null, "inputmode" ), ' '
         ),
         React__default.createElement( 'p', null, "This will render the default text keyboard on mobile (which could very well be what you want!) If you haven't already, take a moment to make sure this is correct. You can use", ' ',
@@ -2253,7 +2281,8 @@
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return React__default.createElement( 'div', null,
+    return React__default.createElement( Spacer, null,
+        React__default.createElement( Warning, null ),
         React__default.createElement( 'h3', null, "Scrollable container without", ' ',
           React__default.createElement( 'code', null, "-webkit-overflow-scrolling:touch" )
         ),
@@ -2281,7 +2310,8 @@
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return React__default.createElement( 'div', null,
+    return React__default.createElement( Spacer, null,
+        React__default.createElement( Info, null ),
         React__default.createElement( 'h3', null, "Usage of ", React__default.createElement( 'code', null, "100vh" ), " CSS" ),
         React__default.createElement( 'p', null, "Viewport units are", ' ',
           React__default.createElement( 'a', { href: "https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html" }, "tricky on mobile."), ' ', "On some mobile browers, depending on scroll position and direction,", ' ',
@@ -2302,11 +2332,11 @@
     var warnings = ref.warnings;
 
     if (!warnings.length) { return null; }
-    return React__default.createElement( 'div', null,
+    return React__default.createElement( Spacer, null,
+        React__default.createElement( Warning, null ),
         React__default.createElement( 'h3', null, "Large image without ", React__default.createElement( 'code', null, "srscset" )
         ),
-        React__default.createElement( 'p', null, "Asking your users on phones to download larger-than-necessary images will slow them down, both in terms of network downloads and image decoding. Compress images as much as possible and then use", ' ',
-          React__default.createElement( 'code', null, "srcset" ), " to customize image sizes." ),
+        React__default.createElement( 'p', null, "Asking your users on phones to download larger-than-necessary images will slow them down, both in terms of network downloads and image decoding. You can use ", React__default.createElement( 'code', null, "srcset" ), " to customize image sizes for different devices." ),
         React__default.createElement( 'ul', null,
           warnings.map(function (ref, i) {
           var src = ref.src;
@@ -2335,10 +2365,12 @@
     var tooClose = ref_warnings.tooClose;
 
     if (!underMinSize.length && !tooClose.length) { return null; }
-    return React__default.createElement( 'div', null,
+    return React__default.createElement( Spacer, null,
+        React__default.createElement( Warning, null ),
+
         Boolean(underMinSize.length) && React__default.createElement( 'div', null,
             React__default.createElement( 'h3', null, "Small touch target" ),
-            React__default.createElement( 'p', null, "With dimensions of less than ", minSize, "px, these tappable elements could be difficult for users to press:" ),
+            React__default.createElement( 'p', null, "With heights and/or widths of less than ", minSize, "px, these tappable elements could be difficult for users to press:" ),
             React__default.createElement( 'ul', null,
               underMinSize.map(function (w, i) {
             return React__default.createElement( ListEntry, { key: i },
@@ -2351,7 +2383,10 @@
             )
           ),
         Boolean(tooClose.length) && React__default.createElement( 'div', null,
-            React__default.createElement( 'h3', null, "Touch targets close together " ),
+            React__default.createElement( 'h3', { style: {
+          marginTop: Boolean(underMinSize.length) ? '.5rem' : '0'
+        } }, "Touch targets close together", ' '
+            ),
             React__default.createElement( 'p', null, "These elements have dimensions smaller than ", recommendedSize, "px and are less than ", recommendedDistance, "px from at least one other tappable element:" ),
             React__default.createElement( 'ul', null,
               tooClose.map(function (w, i) {
@@ -2377,6 +2412,7 @@
     var container = ref.container;
     var theme = ref.theme;
 
+    console.log(theme);
     var activeWarnings = getActiveWarnings(container);
     var autocompleteWarnings = getAutocompleteWarnings(container);
     var inputTypeWarnings = getInputTypeWarnings(container);
@@ -2401,22 +2437,24 @@
         }
       }
     });
-    if (!warningCount) { return React__default.createElement( NoWarning, null, "Looking good! No issues detected." ); }
-    return React__default.createElement( Container, { theme: theme },
-        React__default.createElement( TouchTargetWarnings, { warnings: touchTargetWarnings }),
-        React__default.createElement( AutocompleteWarnings, { warnings: autocompleteWarnings }),
-        React__default.createElement( SrcsetWarnings, { warnings: srcsetWarnings }),
-        React__default.createElement( OverflowWarning, { warnings: overflowWarnings }),
-        React__default.createElement( InputTypeWarnings, { warnings: inputTypeWarnings }),
-        React__default.createElement( HeightWarnings, { warnings: heightWarnings }),
-        React__default.createElement( ActiveWarnings, { warnings: activeWarnings })
+    if (!warningCount) { return React__default.createElement( NoWarning, null, "Looking good! No mobile hints available." ); }
+    return React__default.createElement( styled.ThemeProvider, { theme: theme },
+        React__default.createElement( Container, null,
+          React__default.createElement( TouchTargetWarnings, { warnings: touchTargetWarnings }),
+          React__default.createElement( AutocompleteWarnings, { warnings: autocompleteWarnings }),
+          React__default.createElement( SrcsetWarnings, { warnings: srcsetWarnings }),
+          React__default.createElement( OverflowWarning, { warnings: overflowWarnings }),
+          React__default.createElement( InputTypeWarnings, { warnings: inputTypeWarnings }),
+          React__default.createElement( HeightWarnings, { warnings: heightWarnings }),
+          React__default.createElement( ActiveWarnings, { warnings: activeWarnings })
+        )
       );
   };
 
   var Hints$1 = emotionTheming.withTheme(Hints);
 
-  var templateObject$5 = Object.freeze(["\n  padding: 1rem;\n  font-weight: bold;\n"]);
-  var StyledLoading = newStyled.div(templateObject$5);
+  var templateObject$8 = Object.freeze(["\n  padding: 2rem;\n  font-weight: bold;\n"]);
+  var StyledLoading = newStyled.div(templateObject$8);
   var ADDON_ID = 'mobile-hints';
   var PARAM_KEY = 'mobile-hints';
   var PANEL_ID = ADDON_ID + "/panel";
