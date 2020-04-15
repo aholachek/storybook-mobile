@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { ThemeProvider } from 'styled-components'
 import { withTheme } from 'emotion-theming'
 import {
   getActiveWarnings,
@@ -16,10 +16,42 @@ const minSize = 30
 const recommendedDistance = 8
 
 const accessibleBlue = '#0965df'
+const warning = '#bd4700'
+
+const tagStyles = `
+  padding: .25rem .5rem;
+  font-weight: bold;
+  display:inline-block;
+  border-radius: 10px;
+  margin-bottom: .5rem;
+`
+
+const StyledWarningTag = styled.div`
+  color: ${warning};
+  background-color: hsl(41, 100%, 92%);
+  ${tagStyles}
+`
+
+const Warning = () => {
+  return <StyledWarningTag>warning</StyledWarningTag>
+}
+
+const StyledInfoTag = styled.div`
+  ${tagStyles}
+ color: ${accessibleBlue};
+ background-color: hsla(214, 92%, 45%, 0.1);
+`
+const Info = () => {
+  return <StyledInfoTag>hint</StyledInfoTag>
+}
 
 const NoWarning = styled.div`
   padding: 1rem;
   font-weight: bold;
+`
+
+const Spacer = styled.div`
+  padding: 1rem;
 `
 
 const StyledTappableContents = styled.div`
@@ -88,7 +120,6 @@ const Container = styled.div`
     }
   }
   > div {
-    padding: 1rem;
     border-bottom: 1px solid ${(props) => props.theme.color.medium};
     border-right: 1px solid ${(props) => props.theme.color.medium};
   }
@@ -99,19 +130,20 @@ const fixText = 'Learn more'
 const ActiveWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
-    <div>
+    <Spacer>
+      <Info />
       <h3>
-        No <code>:active</code> style detected
+        No CSS <code>:active</code> style detected
       </h3>
       <p>
-        Clear <code>:active</code> styles are key to ensuring users on mobile
-        get instantaneous feedback on tap, even on slower devices.
+        Clear <code>:active</code> styles help users on mobile get instantaneous
+        feedback on tap, even on slower devices.
       </p>
       <ul>
         {warnings.map((w, i) => {
           return (
             <ListEntry key={i}>
-              {w.type} with content{' '}
+              <code>{w.type}</code> with content{' '}
               {w.text ? (
                 <b>{w.text}</b>
               ) : w.html ? (
@@ -140,14 +172,15 @@ const ActiveWarnings = ({ warnings }) => {
           offers a great overview of how to style buttons.
         </p>
       </details>
-    </div>
+    </Spacer>
   )
 }
 
 const AutocompleteWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
-    <div>
+    <Spacer>
+      <Warning />
       <h3>
         Input with no <code>autocomplete</code> prop detected
       </h3>
@@ -177,14 +210,16 @@ const AutocompleteWarnings = ({ warnings }) => {
           </a>
         </p>
       </details>
-    </div>
+    </Spacer>
   )
 }
 
 const InputTypeWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
-    <div>
+    <Spacer>
+      <Info />
+
       <h3>
         Input type <code>text</code> with no <code>inputmode</code>{' '}
       </h3>
@@ -204,7 +239,7 @@ const InputTypeWarnings = ({ warnings }) => {
           )
         })}
       </ul>
-    </div>
+    </Spacer>
   )
 }
 
@@ -212,7 +247,8 @@ const OverflowWarning = ({ warnings }) => {
   if (!warnings.length) return null
 
   return (
-    <div>
+    <Spacer>
+      <Warning />
       <h3>
         Scrollable container without{' '}
         <code>-webkit-overflow-scrolling:touch</code>
@@ -239,14 +275,15 @@ const OverflowWarning = ({ warnings }) => {
           </a>
         </p>
       </details>
-    </div>
+    </Spacer>
   )
 }
 
 const HeightWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
-    <div>
+    <Spacer>
+      <Info />
       <h3>
         Usage of <code>100vh</code> CSS
       </h3>
@@ -267,22 +304,23 @@ const HeightWarnings = ({ warnings }) => {
           )
         })}
       </ul>
-    </div>
+    </Spacer>
   )
 }
 
 const SrcsetWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
-    <div>
+    <Spacer>
+      <Warning />
       <h3>
         Large image without <code>srscset</code>
       </h3>
       <p>
         Asking your users on phones to download larger-than-necessary images
         will slow them down, both in terms of network downloads and image
-        decoding. Compress images as much as possible and then use{' '}
-        <code>srcset</code> to customize image sizes.
+        decoding. You can use <code>srcset</code> to customize image sizes for
+        different devices.
       </p>
       <ul>
         {warnings.map(({ src, alt }, i) => {
@@ -306,14 +344,16 @@ const SrcsetWarnings = ({ warnings }) => {
           .
         </p>
       </details>
-    </div>
+    </Spacer>
   )
 }
 
 const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
   if (!underMinSize.length && !tooClose.length) return null
   return (
-    <div>
+    <Spacer>
+      <Warning />
+
       {Boolean(underMinSize.length) && (
         <div>
           <h3>Small touch target</h3>
@@ -343,7 +383,13 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
       )}
       {Boolean(tooClose.length) && (
         <div>
-          <h3>Touch targets close together </h3>
+          <h3
+            style={{
+              marginTop: Boolean(underMinSize.length) ? '.5rem' : '0',
+            }}
+          >
+            Touch targets close together{' '}
+          </h3>
           <p>
             These elements have dimensions smaller than {recommendedSize}px and
             are less than {recommendedDistance}px from at least one other
@@ -377,11 +423,12 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
           </a>
         </p>
       </details>
-    </div>
+    </Spacer>
   )
 }
 
 const Hints = ({ container, theme }) => {
+  console.log(theme)
   const activeWarnings = getActiveWarnings(container)
   const autocompleteWarnings = getAutocompleteWarnings(container)
   const inputTypeWarnings = getInputTypeWarnings(container)
@@ -420,17 +467,19 @@ const Hints = ({ container, theme }) => {
   })
 
   if (!warningCount)
-    return <NoWarning>Looking good! No issues detected.</NoWarning>
+    return <NoWarning>Looking good! No mobile hints available.</NoWarning>
   return (
-    <Container theme={theme}>
-      <TouchTargetWarnings warnings={touchTargetWarnings} />
-      <AutocompleteWarnings warnings={autocompleteWarnings} />
-      <SrcsetWarnings warnings={srcsetWarnings} />
-      <OverflowWarning warnings={overflowWarnings} />
-      <InputTypeWarnings warnings={inputTypeWarnings} />
-      <HeightWarnings warnings={heightWarnings} />
-      <ActiveWarnings warnings={activeWarnings} />
-    </Container>
+    <ThemeProvider theme={theme}>
+      <Container>
+        <TouchTargetWarnings warnings={touchTargetWarnings} />
+        <AutocompleteWarnings warnings={autocompleteWarnings} />
+        <SrcsetWarnings warnings={srcsetWarnings} />
+        <OverflowWarning warnings={overflowWarnings} />
+        <InputTypeWarnings warnings={inputTypeWarnings} />
+        <HeightWarnings warnings={heightWarnings} />
+        <ActiveWarnings warnings={activeWarnings} />
+      </Container>
+    </ThemeProvider>
   )
 }
 

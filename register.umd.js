@@ -1976,22 +1976,19 @@
   var getElements = function (container, tag) { return Array.from(container.querySelectorAll(tag)); };
 
   var getActiveWarnings = function (container) {
-    var buttons = getElements(container, 'button');
+    var buttons = getElements(container, 'button').concat(getElements(container, '[role="button"]'));
     var links = getElements(container, 'a');
 
     var filterActiveStyles = function (el) {
       var activeStyles = getActiveStyles(container, el);
-      if (activeStyles) { return false; } // hacky, let's assume this is for a fancy material-style active state animation,
-      // since tragically we cannot access ontouchstart or onpointerstart listeners
-
-      var hasPseudoEl = getComputedStyle(el, ':before').content !== 'none' || getComputedStyle(el, ':after').content !== 'none';
-      if (hasPseudoEl) { return false; }
+      if (activeStyles) { return false; }
       return true;
     };
 
     return buttons.concat(links).filter(filterActiveStyles).map(function (el) { return ({
-      type: el.nodeName === 'A' ? 'Link' : 'Button',
+      type: el.nodeName === 'A' ? 'a' : el.nodeName === 'BUTTON' ? 'button' : ((el.nodeName.toLowerCase()) + "[role=\"button\"]"),
       text: el.innerText,
+      html: el.innerHTML,
       path: getDomPath(el)
     }); });
   };
@@ -2103,7 +2100,7 @@
     var recommendedSize = ref.recommendedSize;
     var recommendedDistance = ref.recommendedDistance;
 
-    var els = getElements(container, 'button').concat(getElements(container, 'a')).map(function (el) { return [el, el.getBoundingClientRect()]; });
+    var els = getElements(container, 'button').concat(getElements(container, '[role="button"]')).concat(getElements(container, 'a')).map(function (el) { return [el, el.getBoundingClientRect()]; });
     var elsWithClose = els.map(function (ref, i1) {
       var el1 = ref[0];
       var bounding1 = ref[1];
@@ -2147,9 +2144,10 @@
       var close = ref.close;
 
       return {
-        type: el.nodeName === 'A' ? 'Link' : 'Button',
+        type: el.nodeName === 'A' ? 'a' : el.nodeName === 'BUTTON' ? 'button' : ((el.nodeName.toLowerCase()) + "[role=\"button\"]"),
         path: getDomPath(el),
         text: el.innerText,
+        html: el.innerHTML,
         width: Math.floor(width),
         height: Math.floor(height),
         close: close
@@ -2162,18 +2160,20 @@
     };
   };
 
-  var templateObject$3 = Object.freeze(["\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));\n\n  font-size: ", "px;\n\n  p {\n    line-height: 1.4;\n  }\n\n  h3 {\n    font-size: ", "px;\n    font-weight: bold;\n    margin-bottom: 0.5rem;\n    margin-top: 0;\n  }\n\n  code {\n    background: hsla(0, 0%, 50%, 0.1);\n    border-radius: 3px;\n  }\n\n  summary {\n    cursor: pointer;\n    display: inline-block;\n    padding: 0.2rem 0.3rem;\n    border-radius: 5px;\n    color: ", ";\n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 3px ", ";\n    }\n  }\n\n  ul {\n    padding-left: 1.25rem;\n  }\n  a {\n    text-decoration: none;\n    color: ", ";\n    &:hover {\n      border-bottom: 1px solid ", ";\n    }\n  }\n  > div {\n    padding: 1rem;\n    border-bottom: 1px solid ", ";\n    border-right: 1px solid ", ";\n  }\n"]);
-  var templateObject$2 = Object.freeze(["\n  margin-bottom: 0.5rem;\n"]);
-  var templateObject$1 = Object.freeze(["\n  height: 4rem;\n  width: auto;\n  max-width: 100%;\n"]);
+  var templateObject$4 = Object.freeze(["\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));\n\n  font-size: ", "px;\n\n  p {\n    line-height: 1.4;\n  }\n\n  h3 {\n    font-size: ", "px;\n    font-weight: bold;\n    margin-bottom: 0.5rem;\n    margin-top: 0;\n  }\n\n  code {\n    background: hsla(0, 0%, 50%, 0.1);\n    border-radius: 3px;\n  }\n\n  summary {\n    cursor: pointer;\n    display: inline-block;\n    padding: 0.2rem 0.3rem;\n    border-radius: 5px;\n    color: ", ";\n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 3px ", ";\n    }\n  }\n\n  ul {\n    padding-left: 1.25rem;\n  }\n  a {\n    text-decoration: none;\n    color: ", ";\n    &:hover {\n      border-bottom: 1px solid ", ";\n    }\n  }\n  > div {\n    padding: 1rem;\n    border-bottom: 1px solid ", ";\n    border-right: 1px solid ", ";\n  }\n"]);
+  var templateObject$3 = Object.freeze(["\n  margin-bottom: 0.5rem;\n"]);
+  var templateObject$2 = Object.freeze(["\n  height: 4rem;\n  width: auto;\n  max-width: 100%;\n  background-color: hsla(0, 0%, 0%, 0.2);\n"]);
+  var templateObject$1 = Object.freeze(["\n  padding-top: 0.25rem;\n  height: 2rem;\n  width: auto;\n  img {\n    height: 2rem !important;\n    width: auto !important;\n  }\n"]);
   var templateObject = Object.freeze(["\n  padding: 1rem;\n  font-weight: bold;\n"]);
   var recommendedSize = 44;
-  var minSize = 32;
+  var minSize = 30;
   var recommendedDistance = 8;
   var accessibleBlue = '#0965df';
   var NoWarning = styled.div(templateObject);
-  var DemoImg = styled.img(templateObject$1);
-  var ListEntry = styled.li(templateObject$2);
-  var Container = styled.div(templateObject$3, function (props) { return props.theme.typography.size.s2; }, function (props) { return props.theme.typography.size.s2; }, accessibleBlue, function (props) { return props.theme.color.mediumlight; }, accessibleBlue, accessibleBlue, function (props) { return props.theme.color.medium; }, function (props) { return props.theme.color.medium; });
+  var StyledTappableContents = styled.div(templateObject$1);
+  var DemoImg = styled.img(templateObject$2);
+  var ListEntry = styled.li(templateObject$3);
+  var Container = styled.div(templateObject$4, function (props) { return props.theme.typography.size.s2; }, function (props) { return props.theme.typography.size.s2; }, accessibleBlue, function (props) { return props.theme.color.mediumlight; }, accessibleBlue, accessibleBlue, function (props) { return props.theme.color.medium; }, function (props) { return props.theme.color.medium; });
   var fixText = 'Learn more';
 
   var ActiveWarnings = function (ref) {
@@ -2186,10 +2186,16 @@
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },
-                w.type, " with text ", React__default.createElement( 'b', null, w.text )
+                w.type, " with content", ' ',
+                w.text ? React__default.createElement( 'b', null, w.text ) : w.html ? React__default.createElement( StyledTappableContents, { dangerouslySetInnerHTML: {
+              __html: w.html
+            } }) : '[no text found]'
               );
         })
         ),
+        React__default.createElement( 'p', null,
+          React__default.createElement( 'b', null, "Note:" ), " This check is not sophisticated enough to pick up active styles added with JavaScript, e.g. the", ' ',
+          React__default.createElement( 'a', { href: "https://material.io/design/interaction/states.html#pressed" }, "material ripple effect"), "." ),
         React__default.createElement( 'details', null,
           React__default.createElement( 'summary', null, fixText ),
           React__default.createElement( 'p', null,
@@ -2231,7 +2237,8 @@
     return React__default.createElement( 'div', null,
         React__default.createElement( 'h3', null, "Input type ", React__default.createElement( 'code', null, "text" ), " with no ", React__default.createElement( 'code', null, "inputmode" ), ' '
         ),
-        React__default.createElement( 'p', null, "This will render the default text keyboard on mobile (which could very well be what you want!) If you haven't already, take a moment to make sure this is correct. You can use ", React__default.createElement( 'a', { href: "https://better-mobile-inputs.netlify.com/" }, "this tool"), " to explore keyboard options." ),
+        React__default.createElement( 'p', null, "This will render the default text keyboard on mobile (which could very well be what you want!) If you haven't already, take a moment to make sure this is correct. You can use", ' ',
+          React__default.createElement( 'a', { href: "https://better-mobile-inputs.netlify.com/" }, "this tool"), " to explore keyboard options." ),
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },
@@ -2298,7 +2305,8 @@
     return React__default.createElement( 'div', null,
         React__default.createElement( 'h3', null, "Large image without ", React__default.createElement( 'code', null, "srscset" )
         ),
-        React__default.createElement( 'p', null, "Asking your users on phones to download huge images will slow them down, both in terms of network downloads and image decoding. Compress images as much as possible and then use ", React__default.createElement( 'code', null, "srcset" ), " to customize image sizes." ),
+        React__default.createElement( 'p', null, "Asking your users on phones to download larger-than-necessary images will slow them down, both in terms of network downloads and image decoding. Compress images as much as possible and then use", ' ',
+          React__default.createElement( 'code', null, "srcset" ), " to customize image sizes." ),
         React__default.createElement( 'ul', null,
           warnings.map(function (ref, i) {
           var src = ref.src;
@@ -2329,30 +2337,29 @@
     if (!underMinSize.length && !tooClose.length) { return null; }
     return React__default.createElement( 'div', null,
         Boolean(underMinSize.length) && React__default.createElement( 'div', null,
-            React__default.createElement( 'h3', null, "Touch target too small " ),
+            React__default.createElement( 'h3', null, "Small touch target" ),
             React__default.createElement( 'p', null, "With dimensions of less than ", minSize, "px, these tappable elements could be difficult for users to press:" ),
             React__default.createElement( 'ul', null,
               underMinSize.map(function (w, i) {
             return React__default.createElement( ListEntry, { key: i },
-                    React__default.createElement( 'div', null,
-                      w.type, " with text ", React__default.createElement( 'b', null, w.text )
-                    ),
-                    w.width < minSize && React__default.createElement( 'div', null, "width: ", w.width, "px" ),
-                    w.height < minSize && React__default.createElement( 'div', null, "height: ", w.height, "px" )
-                    
+                    React__default.createElement( 'code', null, w.type ), " with content", ' ',
+                    w.text ? React__default.createElement( 'b', null, w.text ) : w.html ? React__default.createElement( StyledTappableContents, { dangerouslySetInnerHTML: {
+                __html: w.html
+              } }) : '[no text found]'
                   );
           })
             )
           ),
         Boolean(tooClose.length) && React__default.createElement( 'div', null,
-            React__default.createElement( 'h3', null, "Touch targets too close together " ),
+            React__default.createElement( 'h3', null, "Touch targets close together " ),
             React__default.createElement( 'p', null, "These elements have dimensions smaller than ", recommendedSize, "px and are less than ", recommendedDistance, "px from at least one other tappable element:" ),
             React__default.createElement( 'ul', null,
               tooClose.map(function (w, i) {
             return React__default.createElement( ListEntry, { key: i },
-                    React__default.createElement( 'div', null,
-                      w.type, " with text ", React__default.createElement( 'b', null, w.text )
-                    )
+                    React__default.createElement( 'code', null, w.type ), " with content", ' ',
+                    w.text ? React__default.createElement( 'b', null, w.text ) : w.html ? React__default.createElement( StyledTappableContents, { dangerouslySetInnerHTML: {
+                __html: w.html
+              } }) : '[no text found]'
                   );
           })
             )
@@ -2384,7 +2391,7 @@
     var heightWarnings = get100vhWarning(container);
     var warningCount = activeWarnings.length + autocompleteWarnings.length + touchTargetWarnings.underMinSize.length + touchTargetWarnings.tooClose.length + overflowWarnings.length + srcsetWarnings.length + inputTypeWarnings.length + overflowWarnings.length + heightWarnings.length;
     React__default.useEffect(function () {
-      var tab = Array.from(document.querySelectorAll('button[role="tab"]')).find(function (el) { return /^Mobile(\s\(\d\))?$/.test(el.innerText); });
+      var tab = Array.from(document.querySelectorAll('button[role="tab"]')).find(function (el) { return /^Mobile(\s\(\d+\))?$/.test(el.innerText); });
 
       if (tab) {
         if (warningCount === 0) {
@@ -2396,20 +2403,20 @@
     });
     if (!warningCount) { return React__default.createElement( NoWarning, null, "Looking good! No issues detected." ); }
     return React__default.createElement( Container, { theme: theme },
-        React__default.createElement( ActiveWarnings, { warnings: activeWarnings }),
         React__default.createElement( TouchTargetWarnings, { warnings: touchTargetWarnings }),
         React__default.createElement( AutocompleteWarnings, { warnings: autocompleteWarnings }),
         React__default.createElement( SrcsetWarnings, { warnings: srcsetWarnings }),
         React__default.createElement( OverflowWarning, { warnings: overflowWarnings }),
         React__default.createElement( InputTypeWarnings, { warnings: inputTypeWarnings }),
-        React__default.createElement( HeightWarnings, { warnings: heightWarnings })
+        React__default.createElement( HeightWarnings, { warnings: heightWarnings }),
+        React__default.createElement( ActiveWarnings, { warnings: activeWarnings })
       );
   };
 
   var Hints$1 = emotionTheming.withTheme(Hints);
 
-  var templateObject$4 = Object.freeze(["\n  padding: 1rem;\n  font-weight: bold;\n"]);
-  var StyledLoading = newStyled.div(templateObject$4);
+  var templateObject$5 = Object.freeze(["\n  padding: 1rem;\n  font-weight: bold;\n"]);
+  var StyledLoading = newStyled.div(templateObject$5);
   var ADDON_ID = 'mobile-hints';
   var PARAM_KEY = 'mobile-hints';
   var PANEL_ID = ADDON_ID + "/panel";
@@ -2467,7 +2474,7 @@
     return iframe.contentDocument;
   };
 
-  var delay = 1000;
+  var delay = 2500;
 
   var MyPanel = function (ref) {
     var storyId = ref.storyId;

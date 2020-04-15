@@ -61,8 +61,8 @@ export const getSrcsetWarnings = (container) => {
       const isSVG = Boolean(src.match(/svg$/))
       if (isSVG) return false
       const isLarge =
-        parseInt(getComputedStyle(img).width, 10) > 300 ||
-        img.naturalWidth > 300
+        parseInt(getComputedStyle(img).width, 10) > 400 ||
+        img.naturalWidth > 400
       if (!isLarge) return false
       return true
     })
@@ -166,9 +166,9 @@ export const get100vhWarning = (container) => {
 }
 
 export const getInputTypeWarnings = (container) => {
-  const inputs = getElements(container, 'input[type="text"]').filter(
-    (input) => !input.getAttribute('inputmode')
-  )
+  const inputs = getElements(container, 'input[type="text"]')
+    .concat(getElements(container, 'input:not([type])'))
+    .filter((input) => !input.getAttribute('inputmode'))
   return attachLabels(inputs, container)
 }
 
@@ -190,7 +190,7 @@ export const getTouchTargetSizeWarning = ({
         bounding2.right - bounding1.left < recommendedDistance ||
         bounding2.bottom - bounding1.top < recommendedDistance ||
         bounding1.right - bounding2.left < recommendedDistance ||
-        bounding1.bottom - bounding2.bottom < recommendedDistance
+        bounding1.bottom - bounding2.top < recommendedDistance
       ) {
         return true
       }
