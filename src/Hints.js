@@ -179,19 +179,19 @@ const ActiveWarnings = ({ warnings }) => {
     <Spacer>
       <Info />
       <h3>
-        No CSS <code>:active</code> style detected
+        No CSS <code>:active</code> style detected on tappable element
       </h3>
       <p>
         Clear <code>:active</code> styles help users on mobile get instantaneous
         feedback on tap, even on slower devices.
       </p>
       <p>
-        <b>Note:</b> This check only check CSS styles and as such cannot detect
-        active states added with with JavaScript, e.g. the{' '}
+        This check only looks at CSS. If your active states are added with JS,
+        e.g.{' '}
         <a href="https://material.io/design/interaction/states.html#pressed">
           material ripple effect
         </a>
-        .
+        , feel free to ignore this!
       </p>
       <ul>
         {warnings.map((w, i) => {
