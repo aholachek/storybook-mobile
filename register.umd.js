@@ -2238,7 +2238,7 @@
         React__default.createElement( 'h3', null, "No CSS ", React__default.createElement( 'code', null, ":active" ), " style detected on tappable element" ),
         React__default.createElement( 'p', null, "Clear ", React__default.createElement( 'code', null, ":active" ), " styles help users on mobile get instantaneous feedback on tap, even on slower devices." ),
         React__default.createElement( 'p', null,
-          React__default.createElement( 'b', null, "This check only looks at CSS." ), " If your active states are added with JS, e.g. the", ' ',
+          React__default.createElement( 'b', null, "Note:" ), " This check only looks at CSS. If your active states are added with JS, e.g. the", ' ',
           React__default.createElement( 'a', { href: "https://material.io/design/interaction/states.html#pressed" }, "material ripple effect"), ", feel free to ignore this hint!" ),
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
@@ -2317,7 +2317,8 @@
 
         React__default.createElement( 'h3', null, "Input type ", React__default.createElement( 'code', null, "number" ), " used" ),
         React__default.createElement( 'p', null, "Often,", ' ',
-          React__default.createElement( 'code', null, "<input type=\"text\" inputmode=\"decimal\"/>" ), ' ', "will give you improved usability over ", React__default.createElement( 'code', null, "<input type=\"number\" />" ), "." ),
+          React__default.createElement( 'code', null, "<input type=\"text\" inputmode=\"decimal\"/>" ), ' ', "will give you improved usability over", ' ',
+          React__default.createElement( 'code', null, "<input type=\"number\" />" ), "." ),
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },
@@ -2460,9 +2461,15 @@
           ),
         React__default.createElement( 'details', null,
           React__default.createElement( 'summary', null, fixText ),
-          React__default.createElement( 'p', null,
-            React__default.createElement( 'a', { href: "https://material.io/design/usability/accessibility.html#layout-typography" }, "Material design accessibility guidelines")
-          )
+          React__default.createElement( 'ul', null,
+            React__default.createElement( 'li', null,
+              React__default.createElement( 'a', { href: "https://www.nngroup.com/articles/touch-target-size/" }, "Touch target size article from the Nielsen Normal Group")
+            ),
+            React__default.createElement( 'li', null,
+              React__default.createElement( 'a', { href: "https://developers.google.com/web/fundamentals/accessibility/accessible-styles" }, "Google's tap target size accessibility recommendations")
+            )
+          ),
+          React__default.createElement( 'p', null )
         )
       );
   };

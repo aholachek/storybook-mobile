@@ -52,6 +52,8 @@ export const getActiveWarnings = (container) => {
     }))
 }
 
+const maxWidth = 500
+
 export const getSrcsetWarnings = (container) => {
   const images = getElements(container, 'img')
 
@@ -63,8 +65,8 @@ export const getSrcsetWarnings = (container) => {
       const isSVG = Boolean(src.match(/svg$/))
       if (isSVG) return false
       const isLarge =
-        parseInt(getComputedStyle(img).width, 10) > 400 ||
-        img.naturalWidth > 400
+        parseInt(getComputedStyle(img).width, 10) > maxWidth ||
+        img.naturalWidth > maxWidth
       if (!isLarge) return false
       return true
     })
