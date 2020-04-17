@@ -2206,11 +2206,10 @@
     if (!warnings.length) { return null; }
     return React__default.createElement( Spacer, null,
         React__default.createElement( Info, null ),
-        React__default.createElement( 'h3', null, "No CSS ", React__default.createElement( 'code', null, ":active" ), " style detected" ),
+        React__default.createElement( 'h3', null, "No CSS ", React__default.createElement( 'code', null, ":active" ), " style detected on tappable element" ),
         React__default.createElement( 'p', null, "Clear ", React__default.createElement( 'code', null, ":active" ), " styles help users on mobile get instantaneous feedback on tap, even on slower devices." ),
-        React__default.createElement( 'p', null,
-          React__default.createElement( 'b', null, "Note:" ), " This check only check CSS styles and as such cannot detect active states added with with JavaScript, e.g. the", ' ',
-          React__default.createElement( 'a', { href: "https://material.io/design/interaction/states.html#pressed" }, "material ripple effect"), "." ),
+        React__default.createElement( 'p', null, "This check only looks at CSS. If your active states are added with JS, e.g.", ' ',
+          React__default.createElement( 'a', { href: "https://material.io/design/interaction/states.html#pressed" }, "material ripple effect"), ", feel free to ignore this!" ),
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },

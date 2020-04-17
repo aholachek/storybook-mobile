@@ -118,6 +118,11 @@ export const getAutocompleteWarnings = (container) => {
   return attachLabels(warnings, container)
 }
 
+export const getInputTypeNumberWarnings = (container) => {
+  const inputs = getElements(container, 'input[type="number"]')
+  return attachLabels(inputs)
+}
+
 export const getOverflowAutoWarnings = (container) => {
   return getElements(container, '#root *')
     .filter((el) => {
@@ -172,6 +177,21 @@ export const getInputTypeWarnings = (container) => {
   return attachLabels(inputs, container)
 }
 
+const makePoints = ({ top, right, bottom, left }) => {
+  return [
+    [top, right],
+    [top, left],
+    [bottom, right],
+    [bottom, left],
+  ]
+}
+
+const findDistance = (point1, point2) => {
+  return Math.sqrt(
+    Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2)
+  )
+}
+
 export const getTouchTargetSizeWarning = ({
   container,
   minSize,
@@ -184,16 +204,25 @@ export const getTouchTargetSizeWarning = ({
     .map((el) => [el, el.getBoundingClientRect()])
 
   const elsWithClose = els.map(([el1, bounding1], i1) => {
-    const close = els.filter(([, bounding2], i2) => {
+    const close = els.filter(([el2, bounding2], i2) => {
       if (i2 === i1) return
-      if (
-        bounding2.right - bounding1.left < recommendedDistance ||
-        bounding2.bottom - bounding1.top < recommendedDistance ||
-        bounding1.right - bounding2.left < recommendedDistance ||
-        bounding1.bottom - bounding2.top < recommendedDistance
-      ) {
-        return true
-      }
+
+      const points1 = makePoints(bounding1)
+      const points2 = makePoints(bounding2)
+
+      let isTooClose = false
+
+      points1.forEach((point1) => {
+        points2.forEach((point2) => {
+          const distance = findDistance(point1, point2)
+          if (distance < recommendedDistance) {
+            debugger
+            console.log(el1, el2, bounding1, bounding2, points1, points2)
+            isTooClose = true
+          }
+        })
+      })
+      return isTooClose
     })
     return { close: close ? close : null, el: el1, boundingBox: bounding1 }
   })

@@ -9,6 +9,7 @@ import {
   getSrcsetWarnings,
   getTouchTargetSizeWarning,
   get100vhWarning,
+  getInputTypeNumberWarnings,
 } from './utils'
 
 const recommendedSize = 44
@@ -238,7 +239,8 @@ const AutocompleteWarnings = ({ warnings }) => {
         {warnings.map((w, i) => {
           return (
             <ListEntry key={i}>
-              <code>input type="{w.type}"</code> and label <b>{w.labelText}</b>
+              <code>input type="{w.type}"</code> and label{' '}
+              <b>{w.labelText || '[no label found]'}</b>
             </ListEntry>
           )
         })}
@@ -280,11 +282,52 @@ const InputTypeWarnings = ({ warnings }) => {
         {warnings.map((w, i) => {
           return (
             <ListEntry key={i}>
-              <code>input type="{w.type}"</code> and label <b>{w.labelText}</b>
+              <code>input type="{w.type}"</code> and label{' '}
+              <b>{w.labelText || '[no label found]'}</b>
             </ListEntry>
           )
         })}
       </ul>
+    </Spacer>
+  )
+}
+
+const InputTypeNumberWarnings = ({ warnings }) => {
+  if (!warnings.length) return null
+  return (
+    <Spacer>
+      <Info />
+
+      <h3>
+        Input type <code>number</code> used
+      </h3>
+      <p>
+        Often,{' '}
+        <code>
+          &lt;input type=&quot;text&quot; inputmode=&quot;decimal&quot;/&gt;
+        </code>{' '}
+        will give you improved usability over
+        <code>&lt;input type=&quot;number&quot; /&gt;</code>.
+      </p>
+      <ul>
+        {warnings.map((w, i) => {
+          return (
+            <ListEntry key={i}>
+              <code>input type="{w.type}"</code> and label{' '}
+              <b>{w.labelText || '[no label found]'}</b>
+            </ListEntry>
+          )
+        })}
+      </ul>
+      <details>
+        <summary>{fixText}</summary>
+        <p>
+          <a href="https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/">
+            This article has a good overview of the issues with{' '}
+            <code>input type=&quot;number&quot;</code>.
+          </a>
+        </p>
+      </details>
     </Spacer>
   )
 }
@@ -474,7 +517,6 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
 }
 
 const Hints = ({ container, theme }) => {
-  console.log(theme)
   const activeWarnings = getActiveWarnings(container)
   const autocompleteWarnings = getAutocompleteWarnings(container)
   const inputTypeWarnings = getInputTypeWarnings(container)
@@ -487,6 +529,7 @@ const Hints = ({ container, theme }) => {
   const overflowWarnings = getOverflowAutoWarnings(container)
   const srcsetWarnings = getSrcsetWarnings(container)
   const heightWarnings = get100vhWarning(container)
+  const inputTypeNumberWarnings = getInputTypeNumberWarnings(container)
 
   const warningCount =
     activeWarnings.length +
@@ -497,7 +540,8 @@ const Hints = ({ container, theme }) => {
     srcsetWarnings.length +
     inputTypeWarnings.length +
     overflowWarnings.length +
-    heightWarnings.length
+    heightWarnings.length +
+    inputTypeNumberWarnings.length
 
   React.useEffect(() => {
     const tab = Array.from(
@@ -522,6 +566,7 @@ const Hints = ({ container, theme }) => {
         <SrcsetWarnings warnings={srcsetWarnings} />
         <OverflowWarning warnings={overflowWarnings} />
         <InputTypeWarnings warnings={inputTypeWarnings} />
+        <InputTypeNumberWarnings warnings={inputTypeNumberWarnings} />
         <HeightWarnings warnings={heightWarnings} />
         <ActiveWarnings warnings={activeWarnings} />
       </Container>

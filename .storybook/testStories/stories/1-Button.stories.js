@@ -12,7 +12,7 @@ export const Text = () => <Button>Hello Button</Button>
 
 export const Emoji = () => (
   <div className="overflow">
-    {/* <button
+    <button
       onTouchStart={() => {
         console.log('foo')
       }}
@@ -21,7 +21,7 @@ export const Emoji = () => (
       <span role="img" aria-label="so cool">
         😀 😎 👍 💯
       </span>
-    </button> */}
+    </button>
     <a href="/foo">test</a>
     <div role="button">
       <img src={cat} alt="" style={{ width: '20px' }} />
@@ -36,5 +36,7 @@ export const Emoji = () => (
       whooaaa
       <input type="text" inputMode="decimal" />
     </label>
+
+    <input type="number" />
   </div>
 )

@@ -7,7 +7,7 @@ import styled from '@emotion/styled'
 import Hints from './Hints'
 
 const StyledLoading = styled.div`
-  padding: 2rem;
+  padding: 1rem;
   font-weight: bold;
 `
 
