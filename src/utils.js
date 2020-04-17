@@ -32,6 +32,8 @@ export const getActiveWarnings = (container) => {
   const filterActiveStyles = (el) => {
     const activeStyles = getActiveStyles(container, el)
     if (activeStyles) return false
+    // hack :(
+    if (el.querySelector('canvas')) return false
     return true
   }
   return buttons
@@ -216,8 +218,6 @@ export const getTouchTargetSizeWarning = ({
         points2.forEach((point2) => {
           const distance = findDistance(point1, point2)
           if (distance < recommendedDistance) {
-            debugger
-            console.log(el1, el2, bounding1, bounding2, points1, points2)
             isTooClose = true
           }
         })

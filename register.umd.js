@@ -2047,6 +2047,10 @@
     });
     return attachLabels(warnings, container);
   };
+  var getInputTypeNumberWarnings = function (container) {
+    var inputs = getElements(container, 'input[type="number"]');
+    return attachLabels(inputs);
+  };
   var getOverflowAutoWarnings = function (container) {
     return getElements(container, '#root *').filter(function (el) {
       var style = getComputedStyle(el);
@@ -2094,6 +2098,20 @@
     var inputs = getElements(container, 'input[type="text"]').concat(getElements(container, 'input:not([type])')).filter(function (input) { return !input.getAttribute('inputmode'); });
     return attachLabels(inputs, container);
   };
+
+  var makePoints = function (ref) {
+    var top = ref.top;
+    var right = ref.right;
+    var bottom = ref.bottom;
+    var left = ref.left;
+
+    return [[top, right], [top, left], [bottom, right], [bottom, left]];
+  };
+
+  var findDistance = function (point1, point2) {
+    return Math.sqrt(Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2));
+  };
+
   var getTouchTargetSizeWarning = function (ref) {
     var container = ref.container;
     var minSize = ref.minSize;
@@ -2106,13 +2124,25 @@
       var bounding1 = ref[1];
 
       var close = els.filter(function (ref, i2) {
+        var el2 = ref[0];
         var bounding2 = ref[1];
 
         if (i2 === i1) { return; }
+        var points1 = makePoints(bounding1);
+        var points2 = makePoints(bounding2);
+        var isTooClose = false;
+        points1.forEach(function (point1) {
+          points2.forEach(function (point2) {
+            var distance = findDistance(point1, point2);
 
-        if (bounding2.right - bounding1.left < recommendedDistance || bounding2.bottom - bounding1.top < recommendedDistance || bounding1.right - bounding2.left < recommendedDistance || bounding1.bottom - bounding2.top < recommendedDistance) {
-          return true;
-        }
+            if (distance < recommendedDistance) {
+              debugger;
+              console.log(el1, el2, bounding1, bounding2, points1, points2);
+              isTooClose = true;
+            }
+          });
+        });
+        return isTooClose;
       });
       return {
         close: close ? close : null,
@@ -2239,7 +2269,8 @@
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },
-                React__default.createElement( 'code', null, "input type=\"", w.type, "\"" ), " and label ", React__default.createElement( 'b', null, w.labelText )
+                React__default.createElement( 'code', null, "input type=\"", w.type, "\"" ), " and label", ' ',
+                React__default.createElement( 'b', null, w.labelText || '[no label found]' )
               );
         })
         ),
@@ -2269,9 +2300,38 @@
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },
-                React__default.createElement( 'code', null, "input type=\"", w.type, "\"" ), " and label ", React__default.createElement( 'b', null, w.labelText )
+                React__default.createElement( 'code', null, "input type=\"", w.type, "\"" ), " and label", ' ',
+                React__default.createElement( 'b', null, w.labelText || '[no label found]' )
               );
         })
+        )
+      );
+  };
+
+  var InputTypeNumberWarnings = function (ref) {
+    var warnings = ref.warnings;
+
+    if (!warnings.length) { return null; }
+    return React__default.createElement( Spacer, null,
+        React__default.createElement( Info, null ),
+
+        React__default.createElement( 'h3', null, "Input type ", React__default.createElement( 'code', null, "number" ), " used" ),
+        React__default.createElement( 'p', null, "Often,", ' ',
+          React__default.createElement( 'code', null, "<input type=\"text\" inputmode=\"decimal\"/>" ), ' ', "will give you improved usability over ", React__default.createElement( 'code', null, "<input type=\"number\" />" ), "." ),
+        React__default.createElement( 'ul', null,
+          warnings.map(function (w, i) {
+          return React__default.createElement( ListEntry, { key: i },
+                React__default.createElement( 'code', null, "input type=\"", w.type, "\"" ), " and label", ' ',
+                React__default.createElement( 'b', null, w.labelText || '[no label found]' )
+              );
+        })
+        ),
+        React__default.createElement( 'details', null,
+          React__default.createElement( 'summary', null, fixText ),
+          React__default.createElement( 'p', null,
+            React__default.createElement( 'a', { href: "https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/" }, "This article has a good overview of the issues with", ' ',
+              React__default.createElement( 'code', null, "input type=\"number\"" ), ".")
+          )
         )
       );
   };
@@ -2411,7 +2471,6 @@
     var container = ref.container;
     var theme = ref.theme;
 
-    console.log(theme);
     var activeWarnings = getActiveWarnings(container);
     var autocompleteWarnings = getAutocompleteWarnings(container);
     var inputTypeWarnings = getInputTypeWarnings(container);
@@ -2424,7 +2483,8 @@
     var overflowWarnings = getOverflowAutoWarnings(container);
     var srcsetWarnings = getSrcsetWarnings(container);
     var heightWarnings = get100vhWarning(container);
-    var warningCount = activeWarnings.length + autocompleteWarnings.length + touchTargetWarnings.underMinSize.length + touchTargetWarnings.tooClose.length + overflowWarnings.length + srcsetWarnings.length + inputTypeWarnings.length + overflowWarnings.length + heightWarnings.length;
+    var inputTypeNumberWarnings = getInputTypeNumberWarnings(container);
+    var warningCount = activeWarnings.length + autocompleteWarnings.length + touchTargetWarnings.underMinSize.length + touchTargetWarnings.tooClose.length + overflowWarnings.length + srcsetWarnings.length + inputTypeWarnings.length + overflowWarnings.length + heightWarnings.length + inputTypeNumberWarnings.length;
     React__default.useEffect(function () {
       var tab = Array.from(document.querySelectorAll('button[role="tab"]')).find(function (el) { return /^Mobile(\s\(\d+\))?$/.test(el.innerText); });
 
@@ -2444,6 +2504,7 @@
           React__default.createElement( SrcsetWarnings, { warnings: srcsetWarnings }),
           React__default.createElement( OverflowWarning, { warnings: overflowWarnings }),
           React__default.createElement( InputTypeWarnings, { warnings: inputTypeWarnings }),
+          React__default.createElement( InputTypeNumberWarnings, { warnings: inputTypeNumberWarnings }),
           React__default.createElement( HeightWarnings, { warnings: heightWarnings }),
           React__default.createElement( ActiveWarnings, { warnings: activeWarnings })
         )
@@ -2452,7 +2513,7 @@
 
   var Hints$1 = emotionTheming.withTheme(Hints);
 
-  var templateObject$8 = Object.freeze(["\n  padding: 2rem;\n  font-weight: bold;\n"]);
+  var templateObject$8 = Object.freeze(["\n  padding: 1rem;\n  font-weight: bold;\n"]);
   var StyledLoading = newStyled.div(templateObject$8);
   var ADDON_ID = 'mobile-hints';
   var PARAM_KEY = 'mobile-hints';

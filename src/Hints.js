@@ -187,12 +187,12 @@ const ActiveWarnings = ({ warnings }) => {
         feedback on tap, even on slower devices.
       </p>
       <p>
-        This check only looks at CSS. If your active states are added with JS,
-        e.g.{' '}
+        <b>This check only looks at CSS.</b> If your active states are added
+        with JS, e.g. the{' '}
         <a href="https://material.io/design/interaction/states.html#pressed">
           material ripple effect
         </a>
-        , feel free to ignore this!
+        , feel free to ignore this hint!
       </p>
       <ul>
         {warnings.map((w, i) => {
@@ -356,7 +356,7 @@ const OverflowWarning = ({ warnings }) => {
         <summary>{fixText}</summary>
         <p>
           To ensure your users benefit from momentum scrolling, add this line of
-          CSS: <code>-webkit-overflow-scrolling:touch</code> to any container
+          CSS: <code>-webkit-overflow-scrolling:touch;</code> to any container
           with a style of <code>overflow: auto</code> or{' '}
           <code>overflow: scroll</code>.{' '}
           <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling">
