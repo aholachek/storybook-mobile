@@ -187,8 +187,8 @@ const ActiveWarnings = ({ warnings }) => {
         feedback on tap, even on slower devices.
       </p>
       <p>
-        <b>This check only looks at CSS.</b> If your active states are added
-        with JS, e.g. the{' '}
+        <b>Note:</b> This check only looks at CSS. If your active states are
+        added with JS, e.g. the{' '}
         <a href="https://material.io/design/interaction/states.html#pressed">
           material ripple effect
         </a>
@@ -306,7 +306,7 @@ const InputTypeNumberWarnings = ({ warnings }) => {
         <code>
           &lt;input type=&quot;text&quot; inputmode=&quot;decimal&quot;/&gt;
         </code>{' '}
-        will give you improved usability over
+        will give you improved usability over{' '}
         <code>&lt;input type=&quot;number&quot; /&gt;</code>.
       </p>
       <ul>
@@ -506,11 +506,19 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
       )}
       <details>
         <summary>{fixText}</summary>
-        <p>
-          <a href="https://material.io/design/usability/accessibility.html#layout-typography">
-            Material design accessibility guidelines
-          </a>
-        </p>
+        <ul>
+          <li>
+            <a href="https://www.nngroup.com/articles/touch-target-size/">
+              Touch target size article from the Nielsen Normal Group
+            </a>
+          </li>
+          <li>
+            <a href="https://developers.google.com/web/fundamentals/accessibility/accessible-styles">
+              Google's tap target size accessibility recommendations
+            </a>
+          </li>
+        </ul>
+        <p></p>
       </details>
     </Spacer>
   )

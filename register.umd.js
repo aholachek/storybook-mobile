@@ -1981,7 +1981,9 @@
 
     var filterActiveStyles = function (el) {
       var activeStyles = getActiveStyles(container, el);
-      if (activeStyles) { return false; }
+      if (activeStyles) { return false; } // hack :(
+
+      if (el.querySelector('canvas')) { return false; }
       return true;
     };
 
@@ -2124,7 +2126,6 @@
       var bounding1 = ref[1];
 
       var close = els.filter(function (ref, i2) {
-        var el2 = ref[0];
         var bounding2 = ref[1];
 
         if (i2 === i1) { return; }
@@ -2136,8 +2137,6 @@
             var distance = findDistance(point1, point2);
 
             if (distance < recommendedDistance) {
-              debugger;
-              console.log(el1, el2, bounding1, bounding2, points1, points2);
               isTooClose = true;
             }
           });
@@ -2238,8 +2237,9 @@
         React__default.createElement( Info, null ),
         React__default.createElement( 'h3', null, "No CSS ", React__default.createElement( 'code', null, ":active" ), " style detected on tappable element" ),
         React__default.createElement( 'p', null, "Clear ", React__default.createElement( 'code', null, ":active" ), " styles help users on mobile get instantaneous feedback on tap, even on slower devices." ),
-        React__default.createElement( 'p', null, "This check only looks at CSS. If your active states are added with JS, e.g.", ' ',
-          React__default.createElement( 'a', { href: "https://material.io/design/interaction/states.html#pressed" }, "material ripple effect"), ", feel free to ignore this!" ),
+        React__default.createElement( 'p', null,
+          React__default.createElement( 'b', null, "This check only looks at CSS." ), " If your active states are added with JS, e.g. the", ' ',
+          React__default.createElement( 'a', { href: "https://material.io/design/interaction/states.html#pressed" }, "material ripple effect"), ", feel free to ignore this hint!" ),
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },
@@ -2357,7 +2357,7 @@
         ),
         React__default.createElement( 'details', null,
           React__default.createElement( 'summary', null, fixText ),
-          React__default.createElement( 'p', null, "To ensure your users benefit from momentum scrolling, add this line of CSS: ", React__default.createElement( 'code', null, "-webkit-overflow-scrolling:touch" ), " to any container with a style of ", React__default.createElement( 'code', null, "overflow: auto" ), " or", ' ',
+          React__default.createElement( 'p', null, "To ensure your users benefit from momentum scrolling, add this line of CSS: ", React__default.createElement( 'code', null, "-webkit-overflow-scrolling:touch;" ), " to any container with a style of ", React__default.createElement( 'code', null, "overflow: auto" ), " or", ' ',
             React__default.createElement( 'code', null, "overflow: scroll" ), ".", ' ',
             React__default.createElement( 'a', { href: "https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling" }, "Learn more about the property here.")
           )
