@@ -179,20 +179,12 @@ const ActiveWarnings = ({ warnings }) => {
   return (
     <Spacer>
       <Info />
-      <h3>
-        No CSS <code>:active</code> style detected on tappable element
-      </h3>
+      <h3>Tap style removed from tappable element</h3>
       <p>
-        Clear <code>:active</code> styles help users on mobile get instantaneous
-        feedback on tap, even on slower devices.
-      </p>
-      <p>
-        <b>Note:</b> This check only looks at CSS. If your active states are
-        added with JS, e.g. the{' '}
-        <a href="https://material.io/design/interaction/states.html#pressed">
-          material ripple effect
-        </a>
-        , feel free to ignore this hint!
+        These elements have an invisible{' '}
+        <code>-webkit-tap-highlight-color</code>. While this might be
+        intentional, please verify that they have appropriate tap indication
+        styles added through other means.
       </p>
       <ul>
         {warnings.map((w, i) => {
@@ -215,8 +207,13 @@ const ActiveWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <p>
-          <a href="https://fvsch.com/styling-buttons/#states">This article</a>{' '}
-          offers a great overview of how to style buttons.
+          Some stylesheets remove the tap indication highlight shown on iOS and
+          Android browsers by adding the code{' '}
+          <code>-webkit-tap-highlight-color: transparent</code>. In order to
+          maintain a good mobile experience, tap styles should be added via
+          appropriate <code>:active</code> CSS styles (though, note{' '}
+          <code>:active</code> styles work inconsistently in iOS), or via
+          JavaScript on the <code>touchstart</code> event.
         </p>
       </details>
     </Spacer>

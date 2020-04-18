@@ -1954,25 +1954,6 @@
     return stack.filter(function (el) { return !toFilter.includes(el); }).join(' > ');
   }
 
-  var getActiveStyles = function (container, el) {
-    var sheets = container.styleSheets;
-    var result = [];
-    var activeRegex = /:active$/;
-    Object.keys(sheets).forEach(function (k) {
-      var rules = sheets[k].rules || sheets[k].cssRules;
-      rules.forEach(function (rule) {
-        if (!rule) { return; }
-        if (!rule.selectorText || !rule.selectorText.match(activeRegex)) { return; }
-        var ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '');
-
-        if (el.matches(ruleNoPseudoClass)) {
-          result.push(rule);
-        }
-      });
-    });
-    return result.length ? result : null;
-  };
-
   var getElements = function (container, tag) { return Array.from(container.querySelectorAll(tag)); };
 
   var getActiveWarnings = function (container) {
@@ -1980,11 +1961,8 @@
     var links = getElements(container, 'a');
 
     var filterActiveStyles = function (el) {
-      var activeStyles = getActiveStyles(container, el);
-      if (activeStyles) { return false; } // hack :(
-
-      if (el.querySelector('canvas')) { return false; }
-      return true;
+      var tapHighlight = getComputedStyle(el)['-webkit-tap-highlight-color'];
+      if (tapHighlight === 'rgba(0, 0, 0, 0)') { return true; }
     };
 
     return buttons.concat(links).filter(filterActiveStyles).map(function (el) { return ({
@@ -1994,6 +1972,7 @@
       path: getDomPath(el)
     }); });
   };
+  var maxWidth = 500;
   var getSrcsetWarnings = function (container) {
     var images = getElements(container, 'img');
     var warnings = images.filter(function (img) {
@@ -2002,7 +1981,7 @@
       if (srcSet) { return false; }
       var isSVG = Boolean(src.match(/svg$/));
       if (isSVG) { return false; }
-      var isLarge = parseInt(getComputedStyle(img).width, 10) > 400 || img.naturalWidth > 400;
+      var isLarge = parseInt(getComputedStyle(img).width, 10) > maxWidth || img.naturalWidth > maxWidth;
       if (!isLarge) { return false; }
       return true;
     }).map(function (img) {
@@ -2235,11 +2214,8 @@
     if (!warnings.length) { return null; }
     return React__default.createElement( Spacer, null,
         React__default.createElement( Info, null ),
-        React__default.createElement( 'h3', null, "No CSS ", React__default.createElement( 'code', null, ":active" ), " style detected on tappable element" ),
-        React__default.createElement( 'p', null, "Clear ", React__default.createElement( 'code', null, ":active" ), " styles help users on mobile get instantaneous feedback on tap, even on slower devices." ),
-        React__default.createElement( 'p', null,
-          React__default.createElement( 'b', null, "Note:" ), " This check only looks at CSS. If your active states are added with JS, e.g. the", ' ',
-          React__default.createElement( 'a', { href: "https://material.io/design/interaction/states.html#pressed" }, "material ripple effect"), ", feel free to ignore this hint!" ),
+        React__default.createElement( 'h3', null, "Tap style removed from tappable element" ),
+        React__default.createElement( 'p', null, "These components have a hidden ", React__default.createElement( 'code', null, "-webkit-tap-highlight-color" ), ". Please verify that they have appropriate tap indication styles added through JavaScript:" ),
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },

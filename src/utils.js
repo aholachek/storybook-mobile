@@ -1,25 +1,5 @@
 import getDomPath from './getDomPath'
 
-export const getActiveStyles = function (container, el) {
-  const sheets = container.styleSheets
-  const result = []
-
-  const activeRegex = /:active$/
-
-  Object.keys(sheets).forEach((k) => {
-    const rules = sheets[k].rules || sheets[k].cssRules
-    rules.forEach((rule) => {
-      if (!rule) return
-      if (!rule.selectorText || !rule.selectorText.match(activeRegex)) return
-      const ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '')
-      if (el.matches(ruleNoPseudoClass)) {
-        result.push(rule)
-      }
-    })
-  })
-  return result.length ? result : null
-}
-
 const getElements = (container, tag) =>
   Array.from(container.querySelectorAll(tag))
 
@@ -30,12 +10,11 @@ export const getActiveWarnings = (container) => {
   const links = getElements(container, 'a')
 
   const filterActiveStyles = (el) => {
-    const activeStyles = getActiveStyles(container, el)
-    if (activeStyles) return false
-    // hack :(
-    if (el.querySelector('canvas')) return false
-    return true
+    const tapHighlight = getComputedStyle(el)['-webkit-tap-highlight-color']
+    console.log(tapHighlight)
+    if (tapHighlight === 'rgba(0, 0, 0, 0)') return true
   }
+
   return buttons
     .concat(links)
     .filter(filterActiveStyles)
