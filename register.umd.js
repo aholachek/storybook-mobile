@@ -1958,6 +1958,38 @@
 
   var getNodeName = function (el) { return el.nodeName === 'A' ? 'a' : el.nodeName === 'BUTTON' ? 'button' : ((el.nodeName.toLowerCase()) + "[role=\"button\"]"); };
 
+  var getActiveStyles = function (container, el) {
+    var sheets = container.styleSheets;
+    var result = [];
+    var activeRegex = /:active$/;
+    Object.keys(sheets).forEach(function (k) {
+      var rules = sheets[k].rules || sheets[k].cssRules;
+      rules.forEach(function (rule) {
+        if (!rule) { return; }
+        if (!rule.selectorText || !rule.selectorText.match(activeRegex)) { return; }
+        var ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '');
+
+        if (el.matches(ruleNoPseudoClass)) {
+          result.push(rule);
+        }
+      });
+    });
+    return result.length ? result : null;
+  };
+  var getActiveWarnings = function (container) {
+    var buttons = getElements(container, 'button').concat(getElements(container, '[role="button"]'));
+    var links = getElements(container, 'a');
+    return buttons.concat(links).map(function (el) { return [el, getActiveStyles(container, el)]; }).filter(function (tup) { return tup[1]; }).map(function (ref) {
+      var el = ref[0];
+
+      return {
+        type: getNodeName(el),
+        text: el.innerText,
+        html: el.innerHTML,
+        path: getDomPath(el)
+      };
+    });
+  };
   var getTapHighlightWarnings = function (container) {
     var buttons = getElements(container, 'button').concat(getElements(container, '[role="button"]'));
     var links = getElements(container, 'a');
@@ -2216,6 +2248,30 @@
     if (!warnings.length) { return null; }
     return React__default.createElement( Spacer, null,
         React__default.createElement( Info, null ),
+        React__default.createElement( 'h3', null,
+          React__default.createElement( 'code', null, ":active" ), " styles on iOS" ),
+        React__default.createElement( 'p', null, "Reminder: for ", React__default.createElement( 'code', null, ":active" ), " styles to show on iOS, you need to", ' ',
+          React__default.createElement( 'a', { href: "https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari" }, "add a touch listener to the element.")
+        ),
+        React__default.createElement( 'ul', null,
+          warnings.map(function (w, i) {
+          return React__default.createElement( ListEntry, { key: i },
+                React__default.createElement( 'code', null, w.type ), " with content", ' ',
+                w.text ? React__default.createElement( 'b', null, w.text ) : w.html ? React__default.createElement( StyledTappableContents, { dangerouslySetInnerHTML: {
+              __html: w.html
+            } }) : '[no text found]'
+              );
+        })
+        )
+      );
+  };
+
+  var TapWarnings = function (ref) {
+    var warnings = ref.warnings;
+
+    if (!warnings.length) { return null; }
+    return React__default.createElement( Spacer, null,
+        React__default.createElement( Info, null ),
         React__default.createElement( 'h3', null, "Tap style removed from tappable element" ),
         React__default.createElement( 'p', null, "These elements have an invisible", ' ',
           React__default.createElement( 'code', null, "-webkit-tap-highlight-color" ), ". While this might be intentional, please verify that they have appropriate tap indication styles added through other means." ),
@@ -2458,7 +2514,8 @@
     var container = ref.container;
     var theme = ref.theme;
 
-    var activeWarnings = getTapHighlightWarnings(container);
+    var tapHighlightWarnings = getTapHighlightWarnings(container);
+    var activeWarnings = getActiveWarnings(container);
     var autocompleteWarnings = getAutocompleteWarnings(container);
     var inputTypeWarnings = getInputTypeWarnings(container);
     var touchTargetWarnings = getTouchTargetSizeWarning({
@@ -2471,7 +2528,7 @@
     var srcsetWarnings = getSrcsetWarnings(container);
     var heightWarnings = get100vhWarning(container);
     var inputTypeNumberWarnings = getInputTypeNumberWarnings(container);
-    var warningCount = activeWarnings.length + autocompleteWarnings.length + touchTargetWarnings.underMinSize.length + touchTargetWarnings.tooClose.length + overflowWarnings.length + srcsetWarnings.length + inputTypeWarnings.length + overflowWarnings.length + heightWarnings.length + inputTypeNumberWarnings.length;
+    var warningCount = tapHighlightWarnings.length + autocompleteWarnings.length + touchTargetWarnings.underMinSize.length + touchTargetWarnings.tooClose.length + overflowWarnings.length + srcsetWarnings.length + inputTypeWarnings.length + overflowWarnings.length + heightWarnings.length + inputTypeNumberWarnings.length + activeWarnings.length;
     React__default.useEffect(function () {
       var tab = Array.from(document.querySelectorAll('button[role="tab"]')).find(function (el) { return /^Mobile(\s\(\d+\))?$/.test(el.innerText); });
 
@@ -2493,6 +2550,7 @@
           React__default.createElement( InputTypeWarnings, { warnings: inputTypeWarnings }),
           React__default.createElement( InputTypeNumberWarnings, { warnings: inputTypeNumberWarnings }),
           React__default.createElement( HeightWarnings, { warnings: heightWarnings }),
+          React__default.createElement( TapWarnings, { warnings: tapHighlightWarnings }),
           React__default.createElement( ActiveWarnings, { warnings: activeWarnings })
         )
       );

@@ -40,7 +40,7 @@ export const getActiveWarnings = (container) => {
     .concat(links)
     .map((el) => [el, getActiveStyles(container, el)])
     .filter((tup) => tup[1])
-    .map(([el, activeStyles]) => {
+    .map(([el]) => {
       return {
         type: getNodeName(el),
         text: el.innerText,
@@ -228,7 +228,7 @@ export const getTouchTargetSizeWarning = ({
     .map((el) => [el, el.getBoundingClientRect()])
 
   const elsWithClose = els.map(([el1, bounding1], i1) => {
-    const close = els.filter(([el2, bounding2], i2) => {
+    const close = els.filter(([, bounding2], i2) => {
       if (i2 === i1) return
 
       const points1 = makePoints(bounding1)

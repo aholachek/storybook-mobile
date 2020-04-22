@@ -9,7 +9,8 @@
     "build": "microbundle --no-compress --no-sourcemap --jsx React.createElement",
     "prepublish": "npm run build",
     "dev": "microbundle watch --jsx React.createElement",
-    "storybook": "start-storybook"
+    "storybook": "start-storybook",
+    "lint": "./node_modules/.bin/eslint src"
   },
   "keywords": [
     "storybook",
@@ -30,6 +31,8 @@
     "@storybook/addon-viewport": "^5.3.18",
     "@storybook/react": "^5.3.18",
     "babel-loader": "^8.1.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.19.0",
     "microbundle": "^0.11.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"

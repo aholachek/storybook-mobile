@@ -79,12 +79,12 @@ const Info = () => {
         role="img"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
-        class="svg-inline--fa fa-magic fa-w-16 fa-5x"
+        className="svg-inline--fa fa-magic fa-w-16 fa-5x"
       >
         <path
           fill="currentColor"
           d="M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.66-53.33L160 80l-53.34-26.67L80 0 53.34 53.33 0 80l53.34 26.67L80 160zm352 128l-26.66 53.33L352 368l53.34 26.67L432 448l26.66-53.33L512 368l-53.34-26.67L432 288zm70.62-193.77L417.77 9.38C411.53 3.12 403.34 0 395.15 0c-8.19 0-16.38 3.12-22.63 9.38L9.38 372.52c-12.5 12.5-12.5 32.76 0 45.25l84.85 84.85c6.25 6.25 14.44 9.37 22.62 9.37 8.19 0 16.38-3.12 22.63-9.37l363.14-363.15c12.5-12.48 12.5-32.75 0-45.24zM359.45 203.46l-50.91-50.91 86.6-86.6 50.91 50.91-86.6 86.6z"
-          class=""
+          className=""
         ></path>
       </svg>
       hint
@@ -268,13 +268,13 @@ const AutocompleteWarnings = ({ warnings }) => {
       </h3>
       <p>
         Most textual inputs should have an explicit <code>autocomplete</code>{' '}
-        prop (even if it's just <code>autocomplete="off"</code>).
+        prop (even if it&apos;s just <code>autocomplete=&quot;off&quot;</code>).
       </p>
       <ul>
         {warnings.map((w, i) => {
           return (
             <ListEntry key={i}>
-              <code>input type="{w.type}"</code> and label{' '}
+              <code>input type=&quot;{w.type}&quot;</code> and label{' '}
               <b>{w.labelText || '[no label found]'}</b>
             </ListEntry>
           )
@@ -284,12 +284,12 @@ const AutocompleteWarnings = ({ warnings }) => {
         <summary>{fixText}</summary>
         <p>
           <a href="https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill">
-            Google's autocomplete documentation
+            Google&apos;s autocomplete documentation
           </a>
         </p>
         <p>
           <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete">
-            Mozilla's autocomplete documentation
+            Mozilla&apos;ss autocomplete documentation
           </a>
         </p>
       </details>
@@ -308,8 +308,8 @@ const InputTypeWarnings = ({ warnings }) => {
       </h3>
       <p>
         This will render the default text keyboard on mobile (which could very
-        well be what you want!) If you haven't already, take a moment to make
-        sure this is correct. You can use{' '}
+        well be what you want!) If you haven&apos;t already, take a moment to
+        make sure this is correct. You can use{' '}
         <a href="https://better-mobile-inputs.netlify.com/">this tool</a> to
         explore keyboard options.
       </p>
@@ -317,7 +317,7 @@ const InputTypeWarnings = ({ warnings }) => {
         {warnings.map((w, i) => {
           return (
             <ListEntry key={i}>
-              <code>input type="{w.type}"</code> and label{' '}
+              <code>input type=&quot;{w.type}&quot;</code> and label{' '}
               <b>{w.labelText || '[no label found]'}</b>
             </ListEntry>
           )
@@ -348,7 +348,7 @@ const InputTypeNumberWarnings = ({ warnings }) => {
         {warnings.map((w, i) => {
           return (
             <ListEntry key={i}>
-              <code>input type="{w.type}"</code> and label{' '}
+              <code>input type=&quot;{w.type}&quot;</code> and label{' '}
               <b>{w.labelText || '[no label found]'}</b>
             </ListEntry>
           )
@@ -460,7 +460,7 @@ const SrcsetWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <p>
-          Here's a{' '}
+          Here&apos;s a{' '}
           <a href="https://cloudfour.com/thinks/responsive-images-the-simple-way">
             good overview of the problem and how to solve it with{' '}
             <code>srcset</code>
@@ -509,7 +509,7 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
         <div>
           <h3
             style={{
-              marginTop: Boolean(underMinSize.length) ? '.5rem' : '0',
+              marginTop: underMinSize.length ? '.5rem' : '0',
             }}
           >
             Touch targets close together{' '}
@@ -549,7 +549,7 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
           </li>
           <li>
             <a href="https://developers.google.com/web/fundamentals/accessibility/accessible-styles">
-              Google's tap target size accessibility recommendations
+              Google&apos;s tap target size accessibility recommendations
             </a>
           </li>
         </ul>
@@ -558,6 +558,8 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
     </Spacer>
   )
 }
+
+const convertToBool = (num)=> num > 0 ? 1 : 0
 
 const Hints = ({ container, theme }) => {
   const tapHighlightWarnings = getTapHighlightWarnings(container)
@@ -576,17 +578,17 @@ const Hints = ({ container, theme }) => {
   const inputTypeNumberWarnings = getInputTypeNumberWarnings(container)
 
   const warningCount =
-    tapHighlightWarnings.length +
-    autocompleteWarnings.length +
-    touchTargetWarnings.underMinSize.length +
-    touchTargetWarnings.tooClose.length +
-    overflowWarnings.length +
-    srcsetWarnings.length +
-    inputTypeWarnings.length +
-    overflowWarnings.length +
-    heightWarnings.length +
-    inputTypeNumberWarnings.length +
-    activeWarnings.length
+    convertToBool(tapHighlightWarnings.length) +
+    convertToBool(autocompleteWarnings.length) +
+    convertToBool(touchTargetWarnings.underMinSize.length) +
+    convertToBool(touchTargetWarnings.tooClose.length) +
+    convertToBool(overflowWarnings.length) +
+    convertToBool(srcsetWarnings.length) +
+    convertToBool(inputTypeWarnings.length) +
+    convertToBool(overflowWarnings.length) +
+    convertToBool(heightWarnings.length) +
+    convertToBool(inputTypeNumberWarnings.length) +
+    convertToBool(activeWarnings.length)
 
   React.useEffect(() => {
     const tab = Array.from(
