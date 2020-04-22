@@ -1956,7 +1956,9 @@
 
   var getElements = function (container, tag) { return Array.from(container.querySelectorAll(tag)); };
 
-  var getActiveWarnings = function (container) {
+  var getNodeName = function (el) { return el.nodeName === 'A' ? 'a' : el.nodeName === 'BUTTON' ? 'button' : ((el.nodeName.toLowerCase()) + "[role=\"button\"]"); };
+
+  var getTapHighlightWarnings = function (container) {
     var buttons = getElements(container, 'button').concat(getElements(container, '[role="button"]'));
     var links = getElements(container, 'a');
 
@@ -1966,7 +1968,7 @@
     };
 
     return buttons.concat(links).filter(filterActiveStyles).map(function (el) { return ({
-      type: el.nodeName === 'A' ? 'a' : el.nodeName === 'BUTTON' ? 'button' : ((el.nodeName.toLowerCase()) + "[role=\"button\"]"),
+      type: getNodeName(el),
       text: el.innerText,
       html: el.innerHTML,
       path: getDomPath(el)
@@ -2215,7 +2217,8 @@
     return React__default.createElement( Spacer, null,
         React__default.createElement( Info, null ),
         React__default.createElement( 'h3', null, "Tap style removed from tappable element" ),
-        React__default.createElement( 'p', null, "These components have a hidden ", React__default.createElement( 'code', null, "-webkit-tap-highlight-color" ), ". Please verify that they have appropriate tap indication styles added through JavaScript:" ),
+        React__default.createElement( 'p', null, "These elements have an invisible", ' ',
+          React__default.createElement( 'code', null, "-webkit-tap-highlight-color" ), ". While this might be intentional, please verify that they have appropriate tap indication styles added through other means." ),
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },
@@ -2228,8 +2231,9 @@
         ),
         React__default.createElement( 'details', null,
           React__default.createElement( 'summary', null, fixText ),
-          React__default.createElement( 'p', null,
-            React__default.createElement( 'a', { href: "https://fvsch.com/styling-buttons/#states" }, "This article"), ' ', "offers a great overview of how to style buttons." )
+          React__default.createElement( 'p', null, "Some stylesheets remove the tap indication highlight shown on iOS and Android browsers by adding the code", ' ',
+            React__default.createElement( 'code', null, "-webkit-tap-highlight-color: transparent" ), ". In order to maintain a good mobile experience, tap styles should be added via appropriate ", React__default.createElement( 'code', null, ":active" ), " CSS styles (though, note", ' ',
+            React__default.createElement( 'code', null, ":active" ), " styles work inconsistently in iOS), or via JavaScript on the ", React__default.createElement( 'code', null, "touchstart" ), " event." )
         )
       );
   };
@@ -2454,7 +2458,7 @@
     var container = ref.container;
     var theme = ref.theme;
 
-    var activeWarnings = getActiveWarnings(container);
+    var activeWarnings = getTapHighlightWarnings(container);
     var autocompleteWarnings = getAutocompleteWarnings(container);
     var inputTypeWarnings = getInputTypeWarnings(container);
     var touchTargetWarnings = getTouchTargetSizeWarning({

@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { ThemeProvider } from 'styled-components'
 import { withTheme } from 'emotion-theming'
 import {
+  getTapHighlightWarnings,
   getActiveWarnings,
   getAutocompleteWarnings,
   getInputTypeWarnings,
@@ -175,6 +176,43 @@ const Container = styled.div`
 const fixText = 'Learn more'
 
 const ActiveWarnings = ({ warnings }) => {
+  if (!warnings.length) return null
+  return (
+    <Spacer>
+      <Info />
+      <h3>
+        <code>:active</code> styles on iOS
+      </h3>
+      <p>
+        Reminder: for
+        <code>:active</code> styles to show on iOS, you need to{' '}
+        <a href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari">
+          add a touch listener to the element.
+        </a>
+      </p>
+      <ul>
+        {warnings.map((w, i) => {
+          return (
+            <ListEntry key={i}>
+              <code>{w.type}</code> with content{' '}
+              {w.text ? (
+                <b>{w.text}</b>
+              ) : w.html ? (
+                <StyledTappableContents
+                  dangerouslySetInnerHTML={{ __html: w.html }}
+                />
+              ) : (
+                '[no text found]'
+              )}
+            </ListEntry>
+          )
+        })}
+      </ul>
+    </Spacer>
+  )
+}
+
+const TapWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
     <Spacer>
@@ -522,6 +560,7 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
 }
 
 const Hints = ({ container, theme }) => {
+  const tapHighlightWarnings = getTapHighlightWarnings(container)
   const activeWarnings = getActiveWarnings(container)
   const autocompleteWarnings = getAutocompleteWarnings(container)
   const inputTypeWarnings = getInputTypeWarnings(container)
@@ -537,7 +576,7 @@ const Hints = ({ container, theme }) => {
   const inputTypeNumberWarnings = getInputTypeNumberWarnings(container)
 
   const warningCount =
-    activeWarnings.length +
+    tapHighlightWarnings.length +
     autocompleteWarnings.length +
     touchTargetWarnings.underMinSize.length +
     touchTargetWarnings.tooClose.length +
@@ -546,7 +585,8 @@ const Hints = ({ container, theme }) => {
     inputTypeWarnings.length +
     overflowWarnings.length +
     heightWarnings.length +
-    inputTypeNumberWarnings.length
+    inputTypeNumberWarnings.length +
+    activeWarnings.length
 
   React.useEffect(() => {
     const tab = Array.from(
@@ -573,6 +613,7 @@ const Hints = ({ container, theme }) => {
         <InputTypeWarnings warnings={inputTypeWarnings} />
         <InputTypeNumberWarnings warnings={inputTypeNumberWarnings} />
         <HeightWarnings warnings={heightWarnings} />
+        <TapWarnings warnings={tapHighlightWarnings} />
         <ActiveWarnings warnings={activeWarnings} />
       </Container>
     </ThemeProvider>

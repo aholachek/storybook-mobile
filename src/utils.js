@@ -3,7 +3,54 @@ import getDomPath from './getDomPath'
 const getElements = (container, tag) =>
   Array.from(container.querySelectorAll(tag))
 
+const getNodeName = (el) =>
+  el.nodeName === 'A'
+    ? 'a'
+    : el.nodeName === 'BUTTON'
+    ? 'button'
+    : `${el.nodeName.toLowerCase()}[role="button"]`
+
+export const getActiveStyles = function (container, el) {
+  const sheets = container.styleSheets
+  const result = []
+
+  const activeRegex = /:active$/
+
+  Object.keys(sheets).forEach((k) => {
+    const rules = sheets[k].rules || sheets[k].cssRules
+    rules.forEach((rule) => {
+      if (!rule) return
+      if (!rule.selectorText || !rule.selectorText.match(activeRegex)) return
+      const ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '')
+      if (el.matches(ruleNoPseudoClass)) {
+        result.push(rule)
+      }
+    })
+  })
+  return result.length ? result : null
+}
+
 export const getActiveWarnings = (container) => {
+  const buttons = getElements(container, 'button').concat(
+    getElements(container, '[role="button"]')
+  )
+  const links = getElements(container, 'a')
+
+  return buttons
+    .concat(links)
+    .map((el) => [el, getActiveStyles(container, el)])
+    .filter((tup) => tup[1])
+    .map(([el, activeStyles]) => {
+      return {
+        type: getNodeName(el),
+        text: el.innerText,
+        html: el.innerHTML,
+        path: getDomPath(el),
+      }
+    })
+}
+
+export const getTapHighlightWarnings = (container) => {
   const buttons = getElements(container, 'button').concat(
     getElements(container, '[role="button"]')
   )
@@ -11,7 +58,6 @@ export const getActiveWarnings = (container) => {
 
   const filterActiveStyles = (el) => {
     const tapHighlight = getComputedStyle(el)['-webkit-tap-highlight-color']
-    console.log(tapHighlight)
     if (tapHighlight === 'rgba(0, 0, 0, 0)') return true
   }
 
@@ -19,12 +65,7 @@ export const getActiveWarnings = (container) => {
     .concat(links)
     .filter(filterActiveStyles)
     .map((el) => ({
-      type:
-        el.nodeName === 'A'
-          ? 'a'
-          : el.nodeName === 'BUTTON'
-          ? 'button'
-          : `${el.nodeName.toLowerCase()}[role="button"]`,
+      type: getNodeName(el),
       text: el.innerText,
       html: el.innerHTML,
       path: getDomPath(el),
