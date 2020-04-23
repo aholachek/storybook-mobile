@@ -1,7 +1,10 @@
 node_modules
 dist
 
-register.js
 register.module.js
+register.js
+register.umd.js
 
 built-storybook
+
+.DS_Store
