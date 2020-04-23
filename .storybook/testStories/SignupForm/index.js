@@ -15,7 +15,7 @@ const Container = styled.div`
 
   h1 {
     position: absolute;
-    top: 3.5rem;
+    top: 4rem;
     font-weight: bold;
     width: 100%;
     padding-left: 1rem;
@@ -45,8 +45,8 @@ const AboutForm = () => {
     <Container>
       <div>
         <img src={background} alt="" />
-        <Heading color="white" size={700} is="h1">
-          Sign Up Form
+        <Heading color="white" size={900} is="h1">
+          Sign Up
         </Heading>
       </div>
       <Form>
