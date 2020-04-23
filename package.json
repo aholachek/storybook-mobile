@@ -7,6 +7,7 @@
   "module": "register.module.js",
   "scripts": {
     "build": "microbundle --no-compress --no-sourcemap --jsx React.createElement",
+    "build-storybook" : "build-storybook -c .storybook -o built-storybook",
     "prepublish": "npm run build",
     "dev": "microbundle watch --jsx React.createElement",
     "storybook": "start-storybook",
