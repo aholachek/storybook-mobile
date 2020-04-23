@@ -10,18 +10,19 @@ This addon offers suggestions on how you can improve the HTML, CSS and UX of you
 
 ## Quick Start
 
-### Install
-
 `yarn add -D storybook-mobile` or `npm install --dev storybook-mobile`
 
-### Add `storybook-mobile` to your list of addons:
+Next, add `storybook-mobile` to your list of addons:
 
-in `main.js`:
+`.storybook/main.js`
 
 ```js
 module.exports = {
-  stories: ['./testStories/stories/*.js'],
-  addons: ['@storybook/addon-viewport/register', 'storybook-mobile'],
+  // other config goes here
+  addons: [
+     '@storybook/addon-viewport/register',
++    'storybook-mobile'
+     ],
 }
 ```
 
