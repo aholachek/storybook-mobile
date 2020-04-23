@@ -2069,8 +2069,9 @@
   var getOverflowAutoWarnings = function (container) {
     return getElements(container, '#root *').filter(function (el) {
       var style = getComputedStyle(el);
+      var scrollStyles = ['scroll', 'auto'];
 
-      if (style.overflow === 'scroll' || style.overflow === 'auto') {
+      if (scrollStyles.includes(style.overflow) || scrollStyles.includes(style.overflowX) || scrollStyles.includes(style.overflowY)) {
         if (style['-webkit-overflow-scrolling'] !== 'touch') {
           return true;
         }
@@ -2202,10 +2203,10 @@
     };
   };
 
-  var templateObject$7 = Object.freeze(["\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));\n\n  font-size: ", "px;\n\n  p {\n    line-height: 1.4;\n  }\n\n  h3 {\n    font-size: ", "px;\n    font-weight: bold;\n    margin-bottom: 0.5rem;\n    margin-top: 0;\n  }\n\n  code {\n    background: hsla(0, 0%, 50%, 0.1);\n    border-radius: 3px;\n  }\n\n  summary {\n    cursor: pointer;\n    display: inline-block;\n    padding: 0.2rem 0.3rem;\n    border-radius: 5px;\n    color: ", ";\n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 3px ", ";\n    }\n  }\n\n  ul {\n    padding-left: 1.25rem;\n    max-height: 12rem;\n    overflow: auto;\n  }\n  a {\n    text-decoration: none;\n    color: ", ";\n    &:hover {\n      border-bottom: 1px solid ", ";\n    }\n  }\n  > div {\n    border-bottom: 1px solid ", ";\n    border-right: 1px solid ", ";\n  }\n"]);
+  var templateObject$7 = Object.freeze(["\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));\n\n  font-size: ", "px;\n\n  p {\n    line-height: 1.4;\n  }\n\n  h3 {\n    font-size: ", "px;\n    font-weight: bold;\n    margin-bottom: 0.5rem;\n    margin-top: 0;\n  }\n\n  code {\n    background: hsla(0, 0%, 50%, 0.1);\n    border-radius: 3px;\n  }\n\n  summary {\n    cursor: pointer;\n    display: inline-block;\n    padding: 0.2rem 0.3rem;\n    border-radius: 5px;\n    color: ", ";\n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 3px ", ";\n    }\n  }\n\n  ul {\n    padding-left: 1.25rem;\n    max-height: 12rem;\n    overflow: auto;\n  }\n  a {\n    text-decoration: none;\n    color: ", ";\n    &:hover {\n      border-bottom: 1px solid ", ";\n    }\n  }\n  > div {\n    border-bottom: 1px solid ", ";\n    border-right: 1px solid ", ";\n  }\n"]);
   var templateObject$6 = Object.freeze(["\n  margin-bottom: 0.5rem;\n"]);
   var templateObject$5 = Object.freeze(["\n  height: 4rem;\n  width: auto;\n  max-width: 100%;\n  background-color: hsla(0, 0%, 0%, 0.2);\n"]);
-  var templateObject$4 = Object.freeze(["\n  display: inline-block;\n  padding-top: 0.25rem;\n  height: 2rem;\n  width: auto;\n  img {\n    height: 2rem !important;\n    width: auto !important;\n  }\n"]);
+  var templateObject$4 = Object.freeze(["\n  display: inline-block;\n  padding-top: 0.25rem;\n  height: 2rem;\n  min-width: 1rem;\n  width: auto;\n  background-color: hsla(0, 0%, 50%, 0.1);\n  border-radius: 3px;\n  li {\n    list-style-type: none;\n  }\n  img {\n    height: 2rem !important;\n    width: auto !important;\n  }\n"]);
   var templateObject$3 = Object.freeze(["\n  padding: 1rem;\n"]);
   var templateObject$2 = Object.freeze(["\n  padding: 1rem;\n  font-weight: bold;\n"]);
   var templateObject$1 = Object.freeze(["\n  ", "\n color: ", ";\n background-color: hsla(214, 92%, 45%, 0.1);\n"]);
@@ -2215,7 +2216,7 @@
   var recommendedDistance = 8;
   var accessibleBlue = '#0965df';
   var warning = '#bd4700';
-  var tagStyles = "\n  padding: .25rem .5rem;\n  font-weight: bold;\n  display:inline-block;\n  border-radius: 10px;\n  margin-bottom: .5rem;\n  svg {\n    margin-right: .25rem;\n    display: inline-block;\n    height: .7rem;\n    line-height: 1;\n    position: relative;\n    top: .03rem;\n    letter-spacing: .01rem;\n  }\n";
+  var tagStyles = "\n  padding: .25rem .5rem;\n  font-weight: bold;\n  display:inline-block;\n  border-radius: 10px;\n  margin-bottom: 1rem;\n  svg {\n    margin-right: .25rem;\n    display: inline-block;\n    height: .7rem;\n    line-height: 1;\n    position: relative;\n    top: .03rem;\n    letter-spacing: .01rem;\n  }\n";
   var StyledWarningTag = styled__default.div(templateObject, warning, tagStyles);
 
   var Warning = function () {
@@ -2250,9 +2251,8 @@
         React__default.createElement( Info, null ),
         React__default.createElement( 'h3', null,
           React__default.createElement( 'code', null, ":active" ), " styles on iOS" ),
-        React__default.createElement( 'p', null, "Reminder: for ", React__default.createElement( 'code', null, ":active" ), " styles to show on iOS, you need to", ' ',
-          React__default.createElement( 'a', { href: "https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari" }, "add a touch listener to the element.")
-        ),
+        React__default.createElement( 'p', null, "For ", React__default.createElement( 'code', null, ":active" ), " styles to show on iOS, you need to", ' ',
+          React__default.createElement( 'a', { href: "https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari" }, "add a touch listener to the element."), ' ', "Please verify such a listener exists." ),
         React__default.createElement( 'ul', null,
           warnings.map(function (w, i) {
           return React__default.createElement( ListEntry, { key: i },
@@ -2329,8 +2329,7 @@
     return React__default.createElement( Spacer, null,
         React__default.createElement( Info, null ),
 
-        React__default.createElement( 'h3', null, "Input type ", React__default.createElement( 'code', null, "text" ), " with no ", React__default.createElement( 'code', null, "inputmode" ), ' '
-        ),
+        React__default.createElement( 'h3', null, "Plain input type ", React__default.createElement( 'code', null, "text" ), " detected" ),
         React__default.createElement( 'p', null, "This will render the default text keyboard on mobile (which could very well be what you want!) If you haven't already, take a moment to make sure this is correct. You can use", ' ',
           React__default.createElement( 'a', { href: "https://better-mobile-inputs.netlify.com/" }, "this tool"), " to explore keyboard options." ),
         React__default.createElement( 'ul', null,
@@ -2410,8 +2409,7 @@
         React__default.createElement( Info, null ),
         React__default.createElement( 'h3', null, "Usage of ", React__default.createElement( 'code', null, "100vh" ), " CSS" ),
         React__default.createElement( 'p', null, "Viewport units are", ' ',
-          React__default.createElement( 'a', { href: "https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html" }, "tricky on mobile."), ' ', "On some mobile browers, depending on scroll position and direction,", ' ',
-          React__default.createElement( 'code', null, "100vh" ), " might take up more than 100% of screen height." ),
+          React__default.createElement( 'a', { href: "https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html" }, "tricky on mobile."), ' ', "On some mobile browers, depending on scroll position, ", React__default.createElement( 'code', null, "100vh" ), ' ', "might take up more than 100% of screen height due to browser chrome like the address bar." ),
         React__default.createElement( 'ul', null,
           warnings.map(function (ref, i) {
           var path = ref.path;
@@ -2490,7 +2488,7 @@
                     React__default.createElement( 'code', null, w.type ), " with content", ' ',
                     w.text ? React__default.createElement( 'b', null, w.text ) : w.html ? React__default.createElement( StyledTappableContents, { dangerouslySetInnerHTML: {
                 __html: w.html
-              } }) : '[no text found]' 
+              } }) : '[no text found]'
                   );
           })
             )
@@ -2502,7 +2500,7 @@
               React__default.createElement( 'a', { href: "https://www.nngroup.com/articles/touch-target-size/" }, "Touch target size article from the Nielsen Normal Group")
             ),
             React__default.createElement( 'li', null,
-              React__default.createElement( 'a', { href: "https://developers.google.com/web/fundamentals/accessibility/accessible-styles" }, "Google's tap target size accessibility recommendations")
+              React__default.createElement( 'a', { href: "https://developers.google.com/web/fundamentals/accessibility/accessible-styles" }, "Google's tap target size recommendations")
             )
           ),
           React__default.createElement( 'p', null )

@@ -8,22 +8,22 @@ This addon gives you hints and warnings that will improve your UI for users on m
 
 ## Quick Start
 
-1. Install
+### Install
 
 `yarn add -D storybook-mobile` or `npm install --dev storybook-mobile`
 
-2. Add `storybook-mobile` to your list of addons:
+### Add `storybook-mobile` to your list of addons:
 
 in `main.js`:
 
 ```js
 module.exports = {
   stories: ['./testStories/stories/*.js'],
-  addons: ['@storybook/addon-viewport/register', 'storybook-mobile']
+  addons: ['@storybook/addon-viewport/register', 'storybook-mobile'],
 }
 ```
 
-This addon works best along with the [@storybook/addon-viewport](https://github.com/storybookjs/storybook/tree/next/addons/viewport) addon so please consider installing that as well if you don't have it already.
+This addon works best along with the [@storybook/addon-viewport](https://github.com/storybookjs/storybook/tree/next/addons/viewport) addon, so please consider installing that as well if you don't have it already.
 
 ## Contributing
 
