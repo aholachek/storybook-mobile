@@ -16,11 +16,10 @@ Next, add `storybook-mobile` to your list of addons:
 
 `.storybook/main.js`
 
-```js
+```diff
 module.exports = {
   // other config goes here
   addons: [
-     '@storybook/addon-viewport/register',
 +    'storybook-mobile'
      ],
 }
