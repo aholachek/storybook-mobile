@@ -1,8 +1,10 @@
 # 📱storybook-mobile
 
-This addon gives you hints and warnings that will improve your UI for users on mobile devices. It does this by offering suggestions on how you can improve the HTML, CSS and UX of your components to be more mobile-friendly.
+This addon offers suggestions on how you can improve the HTML, CSS and UX of your components to be more mobile-friendly.
 
-## Demo
+<a href="screenshot of storybook-mobile addon">
+<img src="./screenshot.png">
+</a>
 
 [Check out a live storybook demo here.]()
 
