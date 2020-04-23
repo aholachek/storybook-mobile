@@ -127,6 +127,7 @@ const DemoImg = styled.img`
 
 const ListEntry = styled.li`
   margin-bottom: 0.5rem;
+  ${(props) => (props.nostyle ? 'list-style-type: none;' : '')};
 `
 
 const Container = styled.div`
@@ -458,7 +459,7 @@ const SrcsetWarnings = ({ warnings }) => {
       <ul>
         {warnings.map(({ src, alt }, i) => {
           return (
-            <ListEntry key={i}>
+            <ListEntry key={i} nostyle>
               <div>
                 <DemoImg src={src} alt={alt} />
               </div>
