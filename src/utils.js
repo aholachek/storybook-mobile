@@ -151,7 +151,12 @@ export const getOverflowAutoWarnings = (container) => {
   return getElements(container, '#root *')
     .filter((el) => {
       const style = getComputedStyle(el)
-      if (style.overflow === 'scroll' || style.overflow === 'auto') {
+      const scrollStyles = ['scroll', 'auto']
+      if (
+        scrollStyles.includes(style.overflow) ||
+        scrollStyles.includes(style.overflowX) ||
+        scrollStyles.includes(style.overflowY)
+      ) {
         if (style['-webkit-overflow-scrolling'] !== 'touch') {
           return true
         }

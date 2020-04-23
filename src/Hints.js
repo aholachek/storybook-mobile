@@ -25,7 +25,7 @@ const tagStyles = `
   font-weight: bold;
   display:inline-block;
   border-radius: 10px;
-  margin-bottom: .5rem;
+  margin-bottom: 1rem;
   svg {
     margin-right: .25rem;
     display: inline-block;
@@ -105,7 +105,13 @@ const StyledTappableContents = styled.div`
   display: inline-block;
   padding-top: 0.25rem;
   height: 2rem;
+  min-width: 1rem;
   width: auto;
+  background-color: hsla(0, 0%, 50%, 0.1);
+  border-radius: 3px;
+  li {
+    list-style-type: none;
+  }
   img {
     height: 2rem !important;
     width: auto !important;
@@ -125,7 +131,7 @@ const ListEntry = styled.li`
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
 
   font-size: ${(props) => props.theme.typography.size.s2}px;
 
@@ -159,6 +165,8 @@ const Container = styled.div`
 
   ul {
     padding-left: 1.25rem;
+    max-height: 12rem;
+    overflow: auto;
   }
   a {
     text-decoration: none;
@@ -184,11 +192,11 @@ const ActiveWarnings = ({ warnings }) => {
         <code>:active</code> styles on iOS
       </h3>
       <p>
-        Reminder: for
-        <code>:active</code> styles to show on iOS, you need to{' '}
+        For <code>:active</code> styles to show on iOS, you need to{' '}
         <a href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari">
           add a touch listener to the element.
-        </a>
+        </a>{' '}
+        Please verify such a listener exists.
       </p>
       <ul>
         {warnings.map((w, i) => {
@@ -304,7 +312,7 @@ const InputTypeWarnings = ({ warnings }) => {
       <Info />
 
       <h3>
-        Input type <code>text</code> with no <code>inputmode</code>{' '}
+        Plain input type <code>text</code> detected
       </h3>
       <p>
         This will render the default text keyboard on mobile (which could very
@@ -416,8 +424,9 @@ const HeightWarnings = ({ warnings }) => {
         <a href="https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html">
           tricky on mobile.
         </a>{' '}
-        On some mobile browers, depending on scroll position and direction,{' '}
-        <code>100vh</code> might take up more than 100% of screen height.
+        On some mobile browers, depending on scroll position, <code>100vh</code>{' '}
+        might take up more than 100% of screen height due to browser chrome like
+        the address bar.
       </p>
       <ul>
         {warnings.map(({ path }, i) => {
@@ -549,7 +558,7 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
           </li>
           <li>
             <a href="https://developers.google.com/web/fundamentals/accessibility/accessible-styles">
-              Google&apos;s tap target size accessibility recommendations
+              Google&apos;s tap target size recommendations
             </a>
           </li>
         </ul>
@@ -559,7 +568,7 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
   )
 }
 
-const convertToBool = (num)=> num > 0 ? 1 : 0
+const convertToBool = (num) => (num > 0 ? 1 : 0)
 
 const Hints = ({ container, theme }) => {
   const tapHighlightWarnings = getTapHighlightWarnings(container)

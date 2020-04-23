@@ -2202,7 +2202,7 @@
     };
   };
 
-  var templateObject$7 = Object.freeze(["\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));\n\n  font-size: ", "px;\n\n  p {\n    line-height: 1.4;\n  }\n\n  h3 {\n    font-size: ", "px;\n    font-weight: bold;\n    margin-bottom: 0.5rem;\n    margin-top: 0;\n  }\n\n  code {\n    background: hsla(0, 0%, 50%, 0.1);\n    border-radius: 3px;\n  }\n\n  summary {\n    cursor: pointer;\n    display: inline-block;\n    padding: 0.2rem 0.3rem;\n    border-radius: 5px;\n    color: ", ";\n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 3px ", ";\n    }\n  }\n\n  ul {\n    padding-left: 1.25rem;\n  }\n  a {\n    text-decoration: none;\n    color: ", ";\n    &:hover {\n      border-bottom: 1px solid ", ";\n    }\n  }\n  > div {\n    border-bottom: 1px solid ", ";\n    border-right: 1px solid ", ";\n  }\n"]);
+  var templateObject$7 = Object.freeze(["\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));\n\n  font-size: ", "px;\n\n  p {\n    line-height: 1.4;\n  }\n\n  h3 {\n    font-size: ", "px;\n    font-weight: bold;\n    margin-bottom: 0.5rem;\n    margin-top: 0;\n  }\n\n  code {\n    background: hsla(0, 0%, 50%, 0.1);\n    border-radius: 3px;\n  }\n\n  summary {\n    cursor: pointer;\n    display: inline-block;\n    padding: 0.2rem 0.3rem;\n    border-radius: 5px;\n    color: ", ";\n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 3px ", ";\n    }\n  }\n\n  ul {\n    padding-left: 1.25rem;\n    max-height: 12rem;\n    overflow: auto;\n  }\n  a {\n    text-decoration: none;\n    color: ", ";\n    &:hover {\n      border-bottom: 1px solid ", ";\n    }\n  }\n  > div {\n    border-bottom: 1px solid ", ";\n    border-right: 1px solid ", ";\n  }\n"]);
   var templateObject$6 = Object.freeze(["\n  margin-bottom: 0.5rem;\n"]);
   var templateObject$5 = Object.freeze(["\n  height: 4rem;\n  width: auto;\n  max-width: 100%;\n  background-color: hsla(0, 0%, 0%, 0.2);\n"]);
   var templateObject$4 = Object.freeze(["\n  display: inline-block;\n  padding-top: 0.25rem;\n  height: 2rem;\n  width: auto;\n  img {\n    height: 2rem !important;\n    width: auto !important;\n  }\n"]);
@@ -2229,8 +2229,8 @@
 
   var Info = function () {
     return React__default.createElement( StyledInfoTag, null,
-        React__default.createElement( 'svg', { 'aria-hidden': "true", focusable: "false", 'data-prefix': "fas", 'data-icon': "magic", role: "img", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 512 512", class: "svg-inline--fa fa-magic fa-w-16 fa-5x" },
-          React__default.createElement( 'path', { fill: "currentColor", d: "M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.66-53.33L160 80l-53.34-26.67L80 0 53.34 53.33 0 80l53.34 26.67L80 160zm352 128l-26.66 53.33L352 368l53.34 26.67L432 448l26.66-53.33L512 368l-53.34-26.67L432 288zm70.62-193.77L417.77 9.38C411.53 3.12 403.34 0 395.15 0c-8.19 0-16.38 3.12-22.63 9.38L9.38 372.52c-12.5 12.5-12.5 32.76 0 45.25l84.85 84.85c6.25 6.25 14.44 9.37 22.62 9.37 8.19 0 16.38-3.12 22.63-9.37l363.14-363.15c12.5-12.48 12.5-32.75 0-45.24zM359.45 203.46l-50.91-50.91 86.6-86.6 50.91 50.91-86.6 86.6z", class: "" })
+        React__default.createElement( 'svg', { 'aria-hidden': "true", focusable: "false", 'data-prefix': "fas", 'data-icon': "magic", role: "img", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 512 512", className: "svg-inline--fa fa-magic fa-w-16 fa-5x" },
+          React__default.createElement( 'path', { fill: "currentColor", d: "M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.66-53.33L160 80l-53.34-26.67L80 0 53.34 53.33 0 80l53.34 26.67L80 160zm352 128l-26.66 53.33L352 368l53.34 26.67L432 448l26.66-53.33L512 368l-53.34-26.67L432 288zm70.62-193.77L417.77 9.38C411.53 3.12 403.34 0 395.15 0c-8.19 0-16.38 3.12-22.63 9.38L9.38 372.52c-12.5 12.5-12.5 32.76 0 45.25l84.85 84.85c6.25 6.25 14.44 9.37 22.62 9.37 8.19 0 16.38-3.12 22.63-9.37l363.14-363.15c12.5-12.48 12.5-32.75 0-45.24zM359.45 203.46l-50.91-50.91 86.6-86.6 50.91 50.91-86.6 86.6z", className: "" })
         ), "hint" );
   };
 
@@ -2316,7 +2316,7 @@
             React__default.createElement( 'a', { href: "https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill" }, "Google's autocomplete documentation")
           ),
           React__default.createElement( 'p', null,
-            React__default.createElement( 'a', { href: "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete" }, "Mozilla's autocomplete documentation")
+            React__default.createElement( 'a', { href: "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete" }, "Mozilla'ss autocomplete documentation")
           )
         )
       );
@@ -2480,7 +2480,7 @@
           ),
         Boolean(tooClose.length) && React__default.createElement( 'div', null,
             React__default.createElement( 'h3', { style: {
-          marginTop: Boolean(underMinSize.length) ? '.5rem' : '0'
+          marginTop: underMinSize.length ? '.5rem' : '0'
         } }, "Touch targets close together", ' '
             ),
             React__default.createElement( 'p', null, "These elements have dimensions smaller than ", recommendedSize, "px and are less than ", recommendedDistance, "px from at least one other tappable element:" ),
@@ -2490,7 +2490,7 @@
                     React__default.createElement( 'code', null, w.type ), " with content", ' ',
                     w.text ? React__default.createElement( 'b', null, w.text ) : w.html ? React__default.createElement( StyledTappableContents, { dangerouslySetInnerHTML: {
                 __html: w.html
-              } }) : '[no text found]'
+              } }) : '[no text found]' 
                   );
           })
             )
@@ -2510,6 +2510,8 @@
       );
   };
 
+  var convertToBool = function (num) { return num > 0 ? 1 : 0; };
+
   var Hints = function (ref) {
     var container = ref.container;
     var theme = ref.theme;
@@ -2528,7 +2530,7 @@
     var srcsetWarnings = getSrcsetWarnings(container);
     var heightWarnings = get100vhWarning(container);
     var inputTypeNumberWarnings = getInputTypeNumberWarnings(container);
-    var warningCount = tapHighlightWarnings.length + autocompleteWarnings.length + touchTargetWarnings.underMinSize.length + touchTargetWarnings.tooClose.length + overflowWarnings.length + srcsetWarnings.length + inputTypeWarnings.length + overflowWarnings.length + heightWarnings.length + inputTypeNumberWarnings.length + activeWarnings.length;
+    var warningCount = convertToBool(tapHighlightWarnings.length) + convertToBool(autocompleteWarnings.length) + convertToBool(touchTargetWarnings.underMinSize.length) + convertToBool(touchTargetWarnings.tooClose.length) + convertToBool(overflowWarnings.length) + convertToBool(srcsetWarnings.length) + convertToBool(inputTypeWarnings.length) + convertToBool(overflowWarnings.length) + convertToBool(heightWarnings.length) + convertToBool(inputTypeNumberWarnings.length) + convertToBool(activeWarnings.length);
     React__default.useEffect(function () {
       var tab = Array.from(document.querySelectorAll('button[role="tab"]')).find(function (el) { return /^Mobile(\s\(\d+\))?$/.test(el.innerText); });
 
