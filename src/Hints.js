@@ -454,7 +454,7 @@ const SrcsetWarnings = ({ warnings }) => {
         Asking your users on phones to download larger-than-necessary images
         will slow them down, both in terms of network downloads and image
         decoding. You can use <code>srcset</code> to customize image sizes for
-        different devices.
+        different device resolutions and sizes.
       </p>
       <ul>
         {warnings.map(({ src, alt }, i) => {
