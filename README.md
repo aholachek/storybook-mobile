@@ -2,11 +2,11 @@
 
 This addon offers suggestions on how you can improve the HTML, CSS and UX of your components to be more mobile-friendly.
 
-<a href="screenshot of storybook-mobile addon">
+<a href="https://storybook-mobile.netlify.app/?path=/story/signup-form--default" alt="screenshot of storybook-mobile addon">
 <img src="./screenshot.png">
 </a>
 
-[Check out a live storybook demo here.]()
+[Check out a live storybook demo here.](https://storybook-mobile.netlify.app/?path=/story/signup-form--default)
 
 ## Quick Start
 
