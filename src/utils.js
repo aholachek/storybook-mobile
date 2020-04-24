@@ -22,8 +22,12 @@ export const getActiveStyles = function (container, el) {
       if (!rule) return
       if (!rule.selectorText || !rule.selectorText.match(activeRegex)) return
       const ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '')
-      if (ruleNoPseudoClass && el.matches(ruleNoPseudoClass)) {
-        result.push(rule)
+      try {
+        if (el.matches(ruleNoPseudoClass)) {
+          result.push(rule)
+        }
+      } catch (e) {
+        // safari
       }
     })
   })
@@ -175,8 +179,12 @@ export const getOriginalStyles = function (container, el) {
     const rules = sheets[k].rules || sheets[k].cssRules
     rules.forEach((rule) => {
       if (!rule) return
-      if (rule.selectorText && el.matches(rule.selectorText)) {
-        result.push(rule)
+      try {
+        if (el.matches(rule.selectorText)) {
+          result.push(rule)
+        }
+      } catch (e) {
+        // catch errors in safari
       }
     })
   })
