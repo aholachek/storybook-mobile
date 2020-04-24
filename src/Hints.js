@@ -277,7 +277,8 @@ const AutocompleteWarnings = ({ warnings }) => {
       </h3>
       <p>
         Most textual inputs should have an explicit <code>autocomplete</code>{' '}
-        attribute (even if it&apos;s just <code>autocomplete=&quot;off&quot;</code>).
+        attribute (even if it&apos;s just{' '}
+        <code>autocomplete=&quot;off&quot;</code>).
       </p>
       <p>
         Note: <code>autocomplete</code> is styled as <code>autoComplete</code>{' '}
@@ -295,16 +296,18 @@ const AutocompleteWarnings = ({ warnings }) => {
       </ul>
       <details>
         <summary>{fixText}</summary>
-        <p>
-          <a href="https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill">
-            Google&apos;s autocomplete documentation
-          </a>
-        </p>
-        <p>
-          <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete">
-            Mozilla&apos;s autocomplete documentation
-          </a>
-        </p>
+        <ul>
+          <li>
+            <a href="https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill">
+              Google&apos;s autocomplete documentation
+            </a>
+          </li>
+          <li>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete">
+              Mozilla&apos;s autocomplete documentation
+            </a>
+          </li>
+        </ul>
       </details>
     </Spacer>
   )
@@ -336,6 +339,14 @@ const InputTypeWarnings = ({ warnings }) => {
           )
         })}
       </ul>
+       <details>
+        <summary>{fixText}</summary>
+        <p>
+          <a href="https://css-tricks.com/better-form-inputs-for-better-mobile-user-experiences/">
+            This article reviews the importance of using correct input types on the mobile web.
+          </a>
+        </p>
+      </details>
     </Spacer>
   )
 }
