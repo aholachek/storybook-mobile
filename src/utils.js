@@ -22,7 +22,7 @@ export const getActiveStyles = function (container, el) {
       if (!rule) return
       if (!rule.selectorText || !rule.selectorText.match(activeRegex)) return
       const ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '')
-      if (el.matches(ruleNoPseudoClass)) {
+      if (ruleNoPseudoClass && el.matches(ruleNoPseudoClass)) {
         result.push(rule)
       }
     })
@@ -175,7 +175,7 @@ export const getOriginalStyles = function (container, el) {
     const rules = sheets[k].rules || sheets[k].cssRules
     rules.forEach((rule) => {
       if (!rule) return
-      if (el.matches(rule.selectorText)) {
+      if (rule.selectorText && el.matches(rule.selectorText)) {
         result.push(rule)
       }
     })
