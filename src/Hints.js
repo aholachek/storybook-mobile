@@ -273,11 +273,15 @@ const AutocompleteWarnings = ({ warnings }) => {
     <Spacer>
       <Warning />
       <h3>
-        Input with no <code>autocomplete</code> prop
+        Input with no <code>autocomplete</code> attribute
       </h3>
       <p>
         Most textual inputs should have an explicit <code>autocomplete</code>{' '}
-        prop (even if it&apos;s just <code>autocomplete=&quot;off&quot;</code>).
+        attribute (even if it&apos;s just <code>autocomplete=&quot;off&quot;</code>).
+      </p>
+      <p>
+        Note: <code>autocomplete</code> is styled as <code>autoComplete</code>{' '}
+        in JSX.
       </p>
       <ul>
         {warnings.map((w, i) => {
@@ -298,7 +302,7 @@ const AutocompleteWarnings = ({ warnings }) => {
         </p>
         <p>
           <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete">
-            Mozilla&apos;ss autocomplete documentation
+            Mozilla&apos;s autocomplete documentation
           </a>
         </p>
       </details>
@@ -352,6 +356,9 @@ const InputTypeNumberWarnings = ({ warnings }) => {
         </code>{' '}
         will give you improved usability over{' '}
         <code>&lt;input type=&quot;number&quot; /&gt;</code>.
+      </p>
+      <p>
+        Note: <code>inputmode</code> is styled as <code>inputMode</code> in JSX.{' '}
       </p>
       <ul>
         {warnings.map((w, i) => {
