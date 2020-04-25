@@ -339,11 +339,12 @@ const InputTypeWarnings = ({ warnings }) => {
           )
         })}
       </ul>
-       <details>
+      <details>
         <summary>{fixText}</summary>
         <p>
           <a href="https://css-tricks.com/better-form-inputs-for-better-mobile-user-experiences/">
-            This article reviews the importance of using correct input types on the mobile web.
+            This article reviews the importance of using correct input types on
+            the mobile web.
           </a>
         </p>
       </details>
@@ -487,14 +488,19 @@ const SrcsetWarnings = ({ warnings }) => {
       </ul>
       <details>
         <summary>{fixText}</summary>
-        <p>
-          Here&apos;s a{' '}
-          <a href="https://cloudfour.com/thinks/responsive-images-the-simple-way">
-            good overview of the problem and how to solve it with{' '}
-            <code>srcset</code>
-          </a>
-          .
-        </p>
+        <ul>
+          <li>
+            <a href="https://cloudfour.com/thinks/responsive-images-the-simple-way">
+              Overview of the problem and how to solve it with{' '}
+              <code>srcset</code>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.responsivebreakpoints.com/">
+              Tool to generate responsive images
+            </a>
+          </li>
+        </ul>
       </details>
     </Spacer>
   )
