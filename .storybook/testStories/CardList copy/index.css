@@ -1,0 +1,12 @@
+.btn {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+  background-color: violet;
+}
+
+.overflow {
+  overflow: auto;
+  min-height: 100vh;
+}

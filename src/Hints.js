@@ -405,7 +405,7 @@ const OverflowWarning = ({ warnings }) => {
         Scrollable container without{' '}
         <code>-webkit-overflow-scrolling:touch</code>
       </h3>
-      <p>This element will scroll awkwardly and abruptly on iOS.</p>
+      <p>This element will scroll awkwardly on versions of iOS &lt; 13.</p>
       <ul>
         {warnings.map(({ path }, i) => {
           return (
