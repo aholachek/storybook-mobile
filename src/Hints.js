@@ -483,10 +483,9 @@ const SrcsetWarnings = ({ warnings }) => {
         Large image without <code>srscset</code>
       </h3>
       <p>
-        Asking your users on phones to download larger-than-necessary images
-        will slow them down, both in terms of network downloads and image
-        decoding. You can use <code>srcset</code> to customize image sizes for
-        different device resolutions and sizes.
+        Downloading larger-than-necessary images hurts performance for users on mobile. You can use{' '}
+        <code>srcset</code> to customize image sizes for different device
+        resolutions and sizes.
       </p>
       <ul>
         {warnings.map(({ src, alt }, i) => {
@@ -510,7 +509,7 @@ const SrcsetWarnings = ({ warnings }) => {
           </li>
           <li>
             <a href="https://www.responsivebreakpoints.com/">
-              Tool to generate responsive images
+              A tool to generate responsive images
             </a>
           </li>
         </ul>
