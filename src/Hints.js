@@ -193,11 +193,16 @@ const ActiveWarnings = ({ warnings }) => {
         <code>:active</code> styles on iOS
       </h3>
       <p>
-        For <code>:active</code> styles to show on iOS, you need to{' '}
+        <code>:active</code> styles will only appear in iOS{' '}
         <a href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari">
-          add a touch listener to the element.
-        </a>{' '}
-        Please verify such a listener exists.
+          if a touch listener is added to the element or one of its ancestors
+        </a>
+        . Once activated in this manner, <code>:active</code> styles (along with{' '}
+        <code>:hover</code> styles) will be applied immediately in iOS when a
+        user taps, possibly creating a confusing UX. (On Android,{' '}
+        <code>:active</code> styles are applied with a slight delay to allow the
+        user to use gestures like scroll without necessarily activating{' '}
+        <code>:active</code> styles.)
       </p>
       <ul>
         {warnings.map((w, i) => {
@@ -277,8 +282,15 @@ const AutocompleteWarnings = ({ warnings }) => {
       </h3>
       <p>
         Most textual inputs should have an explicit <code>autocomplete</code>{' '}
-        attribute (even if it&apos;s just{' '}
-        <code>autocomplete=&quot;off&quot;</code>).
+        attribute.
+      </p>
+      <p>
+        If you truly want to disable autocomplete, try using a{' '}
+        <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=468153#c164">
+          semantically valid but unique value rather than{' '}
+          <code>autocomplete=&quot;off&quot;</code>
+        </a>
+        , which doesn&apos;t work in Chrome.
       </p>
       <p>
         Note: <code>autocomplete</code> is styled as <code>autoComplete</code>{' '}
@@ -359,14 +371,13 @@ const InputTypeNumberWarnings = ({ warnings }) => {
       <Info />
 
       <h3>
-        Input type <code>number</code> used
+        Input type <code>number</code> detected
       </h3>
       <p>
-        Often,{' '}
         <code>
           &lt;input type=&quot;text&quot; inputmode=&quot;decimal&quot;/&gt;
         </code>{' '}
-        will give you improved usability over{' '}
+        might give you improved usability over{' '}
         <code>&lt;input type=&quot;number&quot; /&gt;</code>.
       </p>
       <p>
@@ -405,7 +416,9 @@ const OverflowWarning = ({ warnings }) => {
         Scrollable container without{' '}
         <code>-webkit-overflow-scrolling:touch</code>
       </h3>
-      <p>This element will scroll awkwardly on versions of iOS &lt; 13.</p>
+      <p>
+        This element will scroll awkwardly on versions of iOS before iOS 13.
+      </p>
       <ul>
         {warnings.map(({ path }, i) => {
           return (

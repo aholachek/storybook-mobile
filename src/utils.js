@@ -76,7 +76,7 @@ export const getTapHighlightWarnings = (container) => {
     }))
 }
 
-const maxWidth = 500
+const maxWidth = 600
 
 export const getSrcsetWarnings = (container) => {
   const images = getElements(container, 'img')
