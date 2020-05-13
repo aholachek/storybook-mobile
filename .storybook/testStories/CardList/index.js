@@ -16,7 +16,7 @@ const StyledList = styled.ul`
   scroll-padding: 0 1rem 0 1rem;
   padding: 1rem;
   grid-gap: 1rem;
-  overflow-x: scroll;
+  overflow-x: auto;
   &::after {
     content: '';
     width: 1rem;

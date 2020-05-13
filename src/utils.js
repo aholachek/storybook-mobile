@@ -104,6 +104,70 @@ export const getSrcsetWarnings = (container) => {
   return warnings
 }
 
+export const getBackgroundImageWarnings = (container) => {
+  const backgroundImageRegex = /url\(".*?(.png|.jpg|.jpeg)"\)/
+  const elsWithBackgroundImage = getElements(container, '#root *').filter(
+    (el) => {
+      const style = getComputedStyle(el)
+      if (
+        style['background-image'] &&
+        backgroundImageRegex.test(style['background-image']) &&
+        // ideally, we would make a new image element and check its "naturalWidth"
+        // to get a better idea of the size of the background image, this is a hack
+        el.clientWidth > 300
+      ) {
+        return true
+      }
+    }
+  )
+
+  if (!elsWithBackgroundImage.length) return []
+
+  const styleDict = new Map()
+
+  const sheets = container.styleSheets
+  Object.keys(sheets).forEach((k) => {
+    const rules = sheets[k].rules || sheets[k].cssRules
+    rules.forEach((rule) => {
+      if (!rule) return
+      try {
+        elsWithBackgroundImage.forEach((el) => {
+          if (el.matches(rule.selectorText)) {
+            styleDict.set(el, (styleDict.get(el) || []).concat(rule))
+          }
+        })
+      } catch (e) {
+        // catch errors in safari
+      }
+    })
+  })
+
+  const responsiveBackgroundImgRegex = /-webkit-min-device-pixel-ratio|min-resolution|image-set/
+
+  const filteredEls = [...styleDict.entries()]
+    .map(([el, styles]) => {
+      const requiresResponsiveWarning = styles.reduce((acc, curr) => {
+        if (acc === false) return acc
+        if (responsiveBackgroundImgRegex.test(curr)) return false
+        return true
+      }, true)
+      return requiresResponsiveWarning ? el : false
+    })
+    .filter(Boolean)
+    .map((el) => {
+      const bg = getComputedStyle(el).backgroundImage
+      const src = bg.match(/url\("(.*)"\)/)
+        ? bg.match(/url\("(.*)"\)/)[1]
+        : undefined
+      return {
+        path: getDomPath(el),
+        src,
+      }
+    })
+
+  return filteredEls
+}
+
 const textInputs = [
   'text',
   'search',

@@ -63,6 +63,7 @@ const getContainer = () => {
 const delay = 2500
 const MyPanel = ({ storyId }) => {
   const [html, setHTML] = React.useState('')
+  const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
     const setContainer = () => {
@@ -72,7 +73,9 @@ const MyPanel = ({ storyId }) => {
         return
       }
       setHTML(container.body.innerHTML)
+      setLoading(false)
     }
+    setLoading(true)
     setTimeout(setContainer, delay)
   }, [storyId])
 
@@ -80,7 +83,7 @@ const MyPanel = ({ storyId }) => {
 
   const container = getContainer()
 
-  return <Hints container={container} />
+  return <Hints container={container} loading={loading} />
 }
 
 addons.register(ADDON_ID, () => {

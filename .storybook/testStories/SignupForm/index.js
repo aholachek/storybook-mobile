@@ -8,10 +8,9 @@ const Container = styled.div`
     height: 30vh;
     overflow: hidden;
   }
-  img {
-    max-width: 100%;
-  }
-  height: 100vh;
+  background-image: url(${background});
+  background-size: cover;
+  height: 60vh;
 
   h1 {
     position: absolute;
@@ -44,7 +43,6 @@ const AboutForm = () => {
   return (
     <Container>
       <div>
-        <img src={background} alt="" />
         <Heading color="white" size={900} is="h1">
           Sign Up
         </Heading>

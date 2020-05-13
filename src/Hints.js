@@ -11,6 +11,7 @@ import {
   getTouchTargetSizeWarning,
   get100vhWarning,
   getInputTypeNumberWarnings,
+  getBackgroundImageWarnings,
 } from './utils'
 
 const recommendedSize = 44
@@ -68,7 +69,7 @@ const StyledInfoTag = styled.div`
  color: ${accessibleBlue};
  background-color: hsla(214, 92%, 45%, 0.1);
 `
-const Info = () => {
+const Hint = () => {
   return (
     <StyledInfoTag>
       <svg
@@ -112,8 +113,10 @@ const StyledTappableContents = styled.div`
   li {
     list-style-type: none;
   }
-  img {
-    height: 2rem !important;
+  img,
+  svg {
+    max-height: 2rem !important;
+    min-height: 1rem !important;
     width: auto !important;
   }
 `
@@ -182,13 +185,17 @@ const Container = styled.div`
   }
 `
 
+const StyledBanner = styled.div`
+  padding: 0.75rem;
+`
+
 const fixText = 'Learn more'
 
 const ActiveWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
     <Spacer>
-      <Info />
+      <Hint />
       <h3>
         <code>:active</code> styles on iOS
       </h3>
@@ -230,7 +237,7 @@ const TapWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
     <Spacer>
-      <Info />
+      <Hint />
       <h3>Tap style removed from tappable element</h3>
       <p>
         These elements have an invisible{' '}
@@ -329,7 +336,7 @@ const InputTypeWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
     <Spacer>
-      <Info />
+      <Hint />
 
       <h3>
         Plain input type <code>text</code> detected
@@ -368,7 +375,7 @@ const InputTypeNumberWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
     <Spacer>
-      <Info />
+      <Hint />
 
       <h3>
         Input type <code>number</code> detected
@@ -448,7 +455,7 @@ const HeightWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
     <Spacer>
-      <Info />
+      <Hint />
       <h3>
         Usage of <code>100vh</code> CSS
       </h3>
@@ -474,6 +481,35 @@ const HeightWarnings = ({ warnings }) => {
   )
 }
 
+const BackgroundImageWarnings = ({ warnings }) => {
+  if (!warnings.length) return null
+  return (
+    <Spacer>
+      <Warning />
+      <h3>Non-dynamic background image</h3>
+      <p>
+        Downloading larger-than-necessary images hurts performance for users on
+        mobile. You can{' '}
+        <a href="https://css-tricks.com/responsive-images-css/">
+          use <code>image-set</code> or <code>min-resolution</code>
+        </a>{' '}
+        to serve an appropriate image based on the user&apos;s screen size and resolution.
+      </p>
+      <ul>
+        {warnings.map(({ src, alt }, i) => {
+          return (
+            <ListEntry key={i} nostyle>
+              <div>
+                <DemoImg src={src} alt={alt} />
+              </div>
+            </ListEntry>
+          )
+        })}
+      </ul>
+    </Spacer>
+  )
+}
+
 const SrcsetWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
@@ -483,9 +519,9 @@ const SrcsetWarnings = ({ warnings }) => {
         Large image without <code>srscset</code>
       </h3>
       <p>
-        Downloading larger-than-necessary images hurts performance for users on mobile. You can use{' '}
-        <code>srcset</code> to customize image sizes for different device
-        resolutions and sizes.
+        Downloading larger-than-necessary images hurts performance for users on
+        mobile. You can use <code>srcset</code> to customize image sizes for
+        different device resolutions and sizes.
       </p>
       <ul>
         {warnings.map(({ src, alt }, i) => {
@@ -607,34 +643,38 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
 
 const convertToBool = (num) => (num > 0 ? 1 : 0)
 
-const Hints = ({ container, theme }) => {
-  const tapHighlightWarnings = getTapHighlightWarnings(container)
-  const activeWarnings = getActiveWarnings(container)
-  const autocompleteWarnings = getAutocompleteWarnings(container)
-  const inputTypeWarnings = getInputTypeWarnings(container)
-  const touchTargetWarnings = getTouchTargetSizeWarning({
-    container,
-    minSize,
-    recommendedSize,
-    recommendedDistance,
-  })
-  const overflowWarnings = getOverflowAutoWarnings(container)
-  const srcsetWarnings = getSrcsetWarnings(container)
-  const heightWarnings = get100vhWarning(container)
-  const inputTypeNumberWarnings = getInputTypeNumberWarnings(container)
+const Hints = ({ container, theme, loading }) => {
+  const warnings = {
+    tapHighlight: getTapHighlightWarnings(container),
+    active: getActiveWarnings(container),
+    autocomplete: getAutocompleteWarnings(container),
+    inputType: getInputTypeWarnings(container),
+    touchTarget: getTouchTargetSizeWarning({
+      container,
+      minSize,
+      recommendedSize,
+      recommendedDistance,
+    }),
+    overflow: getOverflowAutoWarnings(container),
+    srcset: getSrcsetWarnings(container),
+    backgroundImg: getBackgroundImageWarnings(container),
+    height: get100vhWarning(container),
+    inputTypeNumber: getInputTypeNumberWarnings(container),
+  }
 
-  const warningCount =
-    convertToBool(tapHighlightWarnings.length) +
-    convertToBool(autocompleteWarnings.length) +
-    convertToBool(touchTargetWarnings.underMinSize.length) +
-    convertToBool(touchTargetWarnings.tooClose.length) +
-    convertToBool(overflowWarnings.length) +
-    convertToBool(srcsetWarnings.length) +
-    convertToBool(inputTypeWarnings.length) +
-    convertToBool(overflowWarnings.length) +
-    convertToBool(heightWarnings.length) +
-    convertToBool(inputTypeNumberWarnings.length) +
-    convertToBool(activeWarnings.length)
+  const warningCount = Object.keys(warnings)
+    .map((key) => warnings[key])
+    .reduce((acc, curr) => {
+      const count = Array.isArray(curr)
+        ? convertToBool(curr.length)
+        : //touchTarget returns an object not an array
+          Object.keys(curr)
+            .map((key) => curr[key])
+            .reduce((acc, curr) => {
+              return acc + convertToBool(curr.length)
+            }, 0)
+      return acc + count
+    }, 0)
 
   React.useEffect(() => {
     const tab = Array.from(
@@ -651,18 +691,24 @@ const Hints = ({ container, theme }) => {
 
   if (!warningCount)
     return <NoWarning>Looking good! No mobile hints available.</NoWarning>
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
-        <TouchTargetWarnings warnings={touchTargetWarnings} />
-        <AutocompleteWarnings warnings={autocompleteWarnings} />
-        <SrcsetWarnings warnings={srcsetWarnings} />
-        <OverflowWarning warnings={overflowWarnings} />
-        <InputTypeWarnings warnings={inputTypeWarnings} />
-        <InputTypeNumberWarnings warnings={inputTypeNumberWarnings} />
-        <HeightWarnings warnings={heightWarnings} />
-        <TapWarnings warnings={tapHighlightWarnings} />
-        <ActiveWarnings warnings={activeWarnings} />
+        <StyledBanner>
+          {loading ? 'Scanning for additional issues...' : 'Scan complete!'}
+        </StyledBanner>
+
+        <TouchTargetWarnings warnings={warnings.touchTarget} />
+        <AutocompleteWarnings warnings={warnings.autocomplete} />
+        <SrcsetWarnings warnings={warnings.srcset} />
+        <BackgroundImageWarnings warnings={warnings.backgroundImg} />
+        <OverflowWarning warnings={warnings.overflow} />
+        <InputTypeWarnings warnings={warnings.inputType} />
+        <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
+        <HeightWarnings warnings={warnings.height} />
+        <TapWarnings warnings={warnings.tapHighlight} />
+        <ActiveWarnings warnings={warnings.active} />
       </Container>
     </ThemeProvider>
   )
