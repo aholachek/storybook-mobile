@@ -777,7 +777,7 @@ const Hints = ({ container, theme, loading, running }) => {
     backgroundImg: getBackgroundImageWarnings(container),
     height: get100vhWarning(container),
     inputTypeNumber: getInputTypeNumberWarnings(container),
-    tooWide: getTooWideWarnings(container),
+    // tooWide: getTooWideWarnings(container),
   }
 
   const warningCount = Object.keys(warnings)

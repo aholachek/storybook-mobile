@@ -2324,7 +2324,7 @@ const Container = styled.div(_t8 || (_t8 = _`
     padding-left: 1.25rem;
     max-height: 12rem;
     overflow: auto;
-    padding-bottom: .5rem;
+    padding-bottom: 0.5rem;
   }
   a {
     text-decoration: none;
@@ -2340,6 +2340,7 @@ const Container = styled.div(_t8 || (_t8 = _`
 `), props => props.theme.typography.size.s2, props => props.theme.typography.size.s2, accessibleBlue, props => props.theme.color.mediumlight, accessibleBlue, accessibleBlue, props => props.theme.color.medium, props => props.theme.color.medium);
 const StyledBanner = styled.div(_t9 || (_t9 = _`
   padding: 0.75rem;
+  grid-column: 1 / -1;
 `));
 const fixText = 'Learn more';
 
