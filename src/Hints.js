@@ -197,7 +197,7 @@ const Container = styled.div`
     padding-left: 1.25rem;
     max-height: 12rem;
     overflow: auto;
-    padding-bottom: .5rem;
+    padding-bottom: 0.5rem;
   }
   a {
     text-decoration: none;
@@ -214,6 +214,7 @@ const Container = styled.div`
 
 const StyledBanner = styled.div`
   padding: 0.75rem;
+  grid-column: 1 / -1;
 `
 
 const fixText = 'Learn more'
@@ -294,7 +295,7 @@ const ActiveWarnings = ({ warnings }) => {
       </ul>
       <details>
         <summary>{fixText}</summary>
-        <p style={{marginTop: '1rem'}}>
+        <p style={{ marginTop: '1rem' }}>
           <a href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari/33681490#33681490">
             Helpful Stack Overflow thread
           </a>
@@ -641,7 +642,8 @@ const SrcsetWarnings = ({ warnings }) => {
         <ul>
           <li>
             <a href="https://cloudfour.com/thinks/responsive-images-the-simple-way">
-              Good overview of the problem</a>
+              Good overview of the problem
+            </a>
           </li>
           <li>
             <a href="https://www.responsivebreakpoints.com/">

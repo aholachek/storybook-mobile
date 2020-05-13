@@ -2324,6 +2324,7 @@ const Container = styled.div(_t8 || (_t8 = _`
     padding-left: 1.25rem;
     max-height: 12rem;
     overflow: auto;
+    padding-bottom: .5rem;
   }
   a {
     text-decoration: none;
@@ -2341,33 +2342,6 @@ const StyledBanner = styled.div(_t9 || (_t9 = _`
   padding: 0.75rem;
 `));
 const fixText = 'Learn more';
-const timeout = 3000;
-
-const LogToConsole = ({
-  title,
-  els
-}) => {
-  const [success, setSuccess] = React.useState(false);
-  const magnifyingGlass = /*#__PURE__*/React.createElement("svg", {
-    role: "img",
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 512 512"
-  }, /*#__PURE__*/React.createElement("path", {
-    fill: "currentColor",
-    d: "M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
-  }));
-  return /*#__PURE__*/React.createElement(StyledLogButton, {
-    onClick: () => {
-      setSuccess(true);
-      console.group(`%c 📱Storybook Mobile Addon: ${title}`, 'font-weight: bold');
-      els.forEach(el => console.log(el));
-      console.groupEnd();
-      setTimeout(() => {
-        setSuccess(false);
-      }, timeout);
-    }
-  }, magnifyingGlass, success ? 'Success! Pls open devtools' : `Log element${els.length > 1 ? 's' : ''} to dev console`);
-};
 
 const ActiveWarnings = ({
   warnings
@@ -2383,7 +2357,13 @@ const ActiveWarnings = ({
         __html: w.html
       }
     }) : '[no text found]');
-  })));
+  })), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, fixText), /*#__PURE__*/React.createElement("p", {
+    style: {
+      marginTop: '1rem'
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari/33681490#33681490"
+  }, "Helpful Stack Overflow thread"))));
 };
 
 const TapWarnings = ({
@@ -2446,25 +2426,19 @@ const InputTypeNumberWarnings = ({
   }, "This article has a good overview of the issues with", ' ', /*#__PURE__*/React.createElement("code", null, "input type=\"number\""), "."))));
 };
 
-const TooWideWarnings = ({
+const OverflowWarning = ({
   warnings
 }) => {
   if (!warnings.length) return null;
-  const title = `Element${warnings.length > 1 ? 's' : ''} introducing horizontal overflow`;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Hint, null), /*#__PURE__*/React.createElement("h3", null, title), /*#__PURE__*/React.createElement("p", null, "The following element", warnings.length > 1 ? 's' : '', " had a width that exceeded that of the page, possibly introducing a horizontal scroll. While this may be intentional, please verify that this is not an error."), /*#__PURE__*/React.createElement(LogToConsole, {
-    title: title,
-    els: warnings.map(w => w.el)
-  }), /*#__PURE__*/React.createElement("div", null, warnings.map(({
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Warning, null), /*#__PURE__*/React.createElement("h3", null, "Scrollable container without", ' ', /*#__PURE__*/React.createElement("code", null, "-webkit-overflow-scrolling:touch")), /*#__PURE__*/React.createElement("p", null, "This element will scroll awkwardly on versions of iOS before iOS 13."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
     path
   }, i) => {
     return /*#__PURE__*/React.createElement(ListEntry, {
-      key: i,
-      style: {
-        marginBottom: '1rem'
-      },
-      as: "div"
+      key: i
     }, /*#__PURE__*/React.createElement("code", null, path));
-  })));
+  })), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, fixText), /*#__PURE__*/React.createElement("p", null, "To ensure your users benefit from momentum scrolling, add this line of CSS: ", /*#__PURE__*/React.createElement("code", null, "-webkit-overflow-scrolling:touch;"), " to any container with a style of ", /*#__PURE__*/React.createElement("code", null, "overflow: auto"), " or", ' ', /*#__PURE__*/React.createElement("code", null, "overflow: scroll"), ".", ' ', /*#__PURE__*/React.createElement("a", {
+    href: "https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling"
+  }, "Learn more about the property here."))));
 };
 
 const HeightWarnings = ({
@@ -2519,9 +2493,9 @@ const SrcsetWarnings = ({
     })));
   })), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, fixText), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "https://cloudfour.com/thinks/responsive-images-the-simple-way"
-  }, "Overview of the problem and how to solve it with", ' ', /*#__PURE__*/React.createElement("code", null, "srcset"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
+  }, "Good overview of the problem")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "https://www.responsivebreakpoints.com/"
-  }, "A tool to generate responsive images")))));
+  }, "Tool to generate responsive images")))));
 };
 
 const TouchTargetWarnings = ({
@@ -2626,9 +2600,8 @@ const Hints = ({
     warnings: warnings.srcset
   }), /*#__PURE__*/React.createElement(BackgroundImageWarnings, {
     warnings: warnings.backgroundImg
-  }), /*#__PURE__*/React.createElement(TooWideWarnings, {
-    warnings: warnings.tooWide,
-    container: container
+  }), /*#__PURE__*/React.createElement(OverflowWarning, {
+    warnings: warnings.overflow
   }), /*#__PURE__*/React.createElement(InputTypeWarnings, {
     warnings: warnings.inputType
   }), /*#__PURE__*/React.createElement(InputTypeNumberWarnings, {
