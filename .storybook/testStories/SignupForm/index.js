@@ -30,6 +30,7 @@ const Form = styled.form`
   margin-left: 1rem;
   margin-right: 1rem;
   max-width: 600px;
+  overflow: hidden;
   top: -2rem;
   box-shadow: 0 2px 20px hsla(0, 0%, 0%, 0.16);
   > div:last-of-type {

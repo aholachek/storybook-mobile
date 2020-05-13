@@ -85,7 +85,7 @@ export const getSrcsetWarnings = (container) => {
     .filter((img) => {
       const src = img.getAttribute('src')
       const srcSet = img.getAttribute('srcset')
-      if (srcSet) return false
+      if (srcSet || !src) return false
       const isSVG = Boolean(src.match(/svg$/))
       if (isSVG) return false
       const isLarge =
@@ -147,6 +147,7 @@ export const getBackgroundImageWarnings = (container) => {
 
   const filteredEls = [...styleDict.entries()]
     .map(([el, styles]) => {
+      if (!styles) return false
       const requiresResponsiveWarning = styles.reduce((acc, curr) => {
         if (acc === false) return acc
         if (responsiveBackgroundImgRegex.test(curr)) return false

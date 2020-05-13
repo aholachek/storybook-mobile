@@ -124,11 +124,6 @@ const Hint = () => {
   )
 }
 
-const NoWarning = styled.div`
-  padding: 1rem;
-  font-weight: bold;
-`
-
 const Spacer = styled.div`
   padding: 1rem;
 `
@@ -741,7 +736,22 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
 
 const convertToBool = (num) => (num > 0 ? 1 : 0)
 
-const Hints = ({ container, theme, loading }) => {
+const Wrapper = ({ theme, children }) => {
+  return (
+    <ThemeProvider theme={theme}>
+      <Container>{children}</Container>
+    </ThemeProvider>
+  )
+}
+
+const Hints = ({ container, theme, loading, running }) => {
+  if (running)
+    return (
+      <Wrapper theme={theme}>
+        <StyledBanner>Running scan...</StyledBanner>
+      </Wrapper>
+    )
+
   const warnings = {
     tapHighlight: getTapHighlightWarnings(container),
     active: getActiveWarnings(container),
@@ -789,20 +799,26 @@ const Hints = ({ container, theme, loading }) => {
   })
 
   if (!warningCount)
-    return <NoWarning>Looking good! No mobile hints available.</NoWarning>
+    return (
+      <Wrapper theme={theme}>
+        <StyledBanner>Looking good! No mobile hints available.</StyledBanner>
+      </Wrapper>
+    )
 
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <StyledBanner>
-          {loading ? 'Scanning for additional issues...' : 'Scan complete!'}
+          {loading
+            ? 'Preliminary results shown, still scanning...'
+            : 'Scan complete!'}
         </StyledBanner>
         <TouchTargetWarnings warnings={warnings.touchTarget} />
         <AutocompleteWarnings warnings={warnings.autocomplete} />
         <SrcsetWarnings warnings={warnings.srcset} />
         <BackgroundImageWarnings warnings={warnings.backgroundImg} />
         <TooWideWarnings warnings={warnings.tooWide} container={container} />
-        <OverflowWarning warnings={warnings.overflow} />
+        {/* <OverflowWarning warnings={warnings.overflow} /> */}
         <InputTypeWarnings warnings={warnings.inputType} />
         <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
         <HeightWarnings warnings={warnings.height} />

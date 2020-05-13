@@ -79,11 +79,10 @@ const MyPanel = ({ storyId }) => {
     setTimeout(setContainer, delay)
   }, [storyId])
 
-  if (!html) return <StyledLoading>Running mobile audit...</StyledLoading>
 
   const container = getContainer()
 
-  return <Hints container={container} loading={loading} />
+  return <Hints container={container} loading={loading} running={!html} />
 }
 
 addons.register(ADDON_ID, () => {
