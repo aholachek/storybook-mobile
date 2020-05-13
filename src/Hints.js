@@ -197,6 +197,7 @@ const Container = styled.div`
     padding-left: 1.25rem;
     max-height: 12rem;
     overflow: auto;
+    padding-bottom: .5rem;
   }
   a {
     text-decoration: none;
@@ -291,6 +292,14 @@ const ActiveWarnings = ({ warnings }) => {
           )
         })}
       </ul>
+      <details>
+        <summary>{fixText}</summary>
+        <p style={{marginTop: '1rem'}}>
+          <a href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari/33681490#33681490">
+            Helpful Stack Overflow thread
+          </a>
+        </p>
+      </details>
     </Spacer>
   )
 }
@@ -632,13 +641,11 @@ const SrcsetWarnings = ({ warnings }) => {
         <ul>
           <li>
             <a href="https://cloudfour.com/thinks/responsive-images-the-simple-way">
-              Overview of the problem and how to solve it with{' '}
-              <code>srcset</code>
-            </a>
+              Good overview of the problem</a>
           </li>
           <li>
             <a href="https://www.responsivebreakpoints.com/">
-              A tool to generate responsive images
+              Tool to generate responsive images
             </a>
           </li>
         </ul>
@@ -817,8 +824,8 @@ const Hints = ({ container, theme, loading, running }) => {
         <AutocompleteWarnings warnings={warnings.autocomplete} />
         <SrcsetWarnings warnings={warnings.srcset} />
         <BackgroundImageWarnings warnings={warnings.backgroundImg} />
-        <TooWideWarnings warnings={warnings.tooWide} container={container} />
-        {/* <OverflowWarning warnings={warnings.overflow} /> */}
+        {/* <TooWideWarnings warnings={warnings.tooWide} container={container} /> */}
+        <OverflowWarning warnings={warnings.overflow} />
         <InputTypeWarnings warnings={warnings.inputType} />
         <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
         <HeightWarnings warnings={warnings.height} />

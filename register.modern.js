@@ -1904,7 +1904,7 @@ const getSrcsetWarnings = container => {
   const warnings = images.filter(img => {
     const src = img.getAttribute('src');
     const srcSet = img.getAttribute('srcset');
-    if (srcSet) return false;
+    if (srcSet || !src) return false;
     const isSVG = Boolean(src.match(/svg$/));
     if (isSVG) return false;
     const isLarge = parseInt(getComputedStyle(img).width, 10) > maxWidth || img.naturalWidth > maxWidth;
@@ -1947,6 +1947,7 @@ const getBackgroundImageWarnings = container => {
   });
   const responsiveBackgroundImgRegex = /-webkit-min-device-pixel-ratio|min-resolution|image-set/;
   const filteredEls = [...styleDict.entries()].map(([el, styles]) => {
+    if (!styles) return false;
     const requiresResponsiveWarning = styles.reduce((acc, curr) => {
       if (acc === false) return acc;
       if (responsiveBackgroundImgRegex.test(curr)) return false;
@@ -2161,8 +2162,7 @@ let _ = t => t,
     _t6,
     _t7,
     _t8,
-    _t9,
-    _t10;
+    _t9;
 const recommendedSize = 44;
 const minSize = 30;
 const recommendedDistance = 8;
@@ -2255,14 +2255,10 @@ const Hint = () => {
   })), "hint");
 };
 
-const NoWarning = styled.div(_t4 || (_t4 = _`
-  padding: 1rem;
-  font-weight: bold;
-`));
-const Spacer = styled.div(_t5 || (_t5 = _`
+const Spacer = styled.div(_t4 || (_t4 = _`
   padding: 1rem;
 `));
-const StyledTappableContents = styled.div(_t6 || (_t6 = _`
+const StyledTappableContents = styled.div(_t5 || (_t5 = _`
   display: inline-block;
   padding-top: 0.25rem;
   height: 2rem;
@@ -2280,17 +2276,17 @@ const StyledTappableContents = styled.div(_t6 || (_t6 = _`
     width: auto !important;
   }
 `));
-const DemoImg = styled.img(_t7 || (_t7 = _`
+const DemoImg = styled.img(_t6 || (_t6 = _`
   height: 4rem;
   width: auto;
   max-width: 100%;
   background-color: hsla(0, 0%, 0%, 0.2);
 `));
-const ListEntry = styled.li(_t8 || (_t8 = _`
+const ListEntry = styled.li(_t7 || (_t7 = _`
   margin-bottom: 0.5rem;
   ${0};
 `), props => props.nostyle ? 'list-style-type: none;' : '');
-const Container = styled.div(_t9 || (_t9 = _`
+const Container = styled.div(_t8 || (_t8 = _`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
 
@@ -2341,7 +2337,7 @@ const Container = styled.div(_t9 || (_t9 = _`
     border-right: 1px solid ${0};
   }
 `), props => props.theme.typography.size.s2, props => props.theme.typography.size.s2, accessibleBlue, props => props.theme.color.mediumlight, accessibleBlue, accessibleBlue, props => props.theme.color.medium, props => props.theme.color.medium);
-const StyledBanner = styled.div(_t10 || (_t10 = _`
+const StyledBanner = styled.div(_t9 || (_t9 = _`
   padding: 0.75rem;
 `));
 const fixText = 'Learn more';
@@ -2448,21 +2444,6 @@ const InputTypeNumberWarnings = ({
   })), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, fixText), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("a", {
     href: "https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/"
   }, "This article has a good overview of the issues with", ' ', /*#__PURE__*/React.createElement("code", null, "input type=\"number\""), "."))));
-};
-
-const OverflowWarning = ({
-  warnings
-}) => {
-  if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Warning, null), /*#__PURE__*/React.createElement("h3", null, "Scrollable container without", ' ', /*#__PURE__*/React.createElement("code", null, "-webkit-overflow-scrolling:touch")), /*#__PURE__*/React.createElement("p", null, "This element will scroll awkwardly on versions of iOS before iOS 13."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
-    path
-  }, i) => {
-    return /*#__PURE__*/React.createElement(ListEntry, {
-      key: i
-    }, /*#__PURE__*/React.createElement("code", null, path));
-  })), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, fixText), /*#__PURE__*/React.createElement("p", null, "To ensure your users benefit from momentum scrolling, add this line of CSS: ", /*#__PURE__*/React.createElement("code", null, "-webkit-overflow-scrolling:touch;"), " to any container with a style of ", /*#__PURE__*/React.createElement("code", null, "overflow: auto"), " or", ' ', /*#__PURE__*/React.createElement("code", null, "overflow: scroll"), ".", ' ', /*#__PURE__*/React.createElement("a", {
-    href: "https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling"
-  }, "Learn more about the property here."))));
 };
 
 const TooWideWarnings = ({
@@ -2579,11 +2560,24 @@ const TouchTargetWarnings = ({
 
 const convertToBool = num => num > 0 ? 1 : 0;
 
+const Wrapper = ({
+  theme,
+  children
+}) => {
+  return /*#__PURE__*/React.createElement(ThemeProvider, {
+    theme: theme
+  }, /*#__PURE__*/React.createElement(Container, null, children));
+};
+
 const Hints = ({
   container,
   theme,
-  loading
+  loading,
+  running
 }) => {
+  if (running) return /*#__PURE__*/React.createElement(Wrapper, {
+    theme: theme
+  }, /*#__PURE__*/React.createElement(StyledBanner, null, "Running scan..."));
   const warnings = {
     tapHighlight: getTapHighlightWarnings(container),
     active: getActiveWarnings(container),
@@ -2619,10 +2613,12 @@ const Hints = ({
       }
     }
   });
-  if (!warningCount) return /*#__PURE__*/React.createElement(NoWarning, null, "Looking good! No mobile hints available.");
+  if (!warningCount) return /*#__PURE__*/React.createElement(Wrapper, {
+    theme: theme
+  }, /*#__PURE__*/React.createElement(StyledBanner, null, "Looking good! No mobile hints available."));
   return /*#__PURE__*/React.createElement(ThemeProvider, {
     theme: theme
-  }, /*#__PURE__*/React.createElement(Container, null, /*#__PURE__*/React.createElement(StyledBanner, null, loading ? 'Scanning for additional issues...' : 'Scan complete!'), /*#__PURE__*/React.createElement(TouchTargetWarnings, {
+  }, /*#__PURE__*/React.createElement(Container, null, /*#__PURE__*/React.createElement(StyledBanner, null, loading ? 'Preliminary results shown, still scanning...' : 'Scan complete!'), /*#__PURE__*/React.createElement(TouchTargetWarnings, {
     warnings: warnings.touchTarget
   }), /*#__PURE__*/React.createElement(AutocompleteWarnings, {
     warnings: warnings.autocomplete
@@ -2633,8 +2629,6 @@ const Hints = ({
   }), /*#__PURE__*/React.createElement(TooWideWarnings, {
     warnings: warnings.tooWide,
     container: container
-  }), /*#__PURE__*/React.createElement(OverflowWarning, {
-    warnings: warnings.overflow
   }), /*#__PURE__*/React.createElement(InputTypeWarnings, {
     warnings: warnings.inputType
   }), /*#__PURE__*/React.createElement(InputTypeNumberWarnings, {
@@ -2729,11 +2723,11 @@ const MyPanel = ({
     setLoading(true);
     setTimeout(setContainer, delay);
   }, [storyId]);
-  if (!html) return /*#__PURE__*/React.createElement(StyledLoading, null, "Running mobile audit...");
   const container = getContainer();
   return /*#__PURE__*/React.createElement(Hints$1, {
     container: container,
-    loading: loading
+    loading: loading,
+    running: !html
   });
 };
 
