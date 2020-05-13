@@ -112,9 +112,10 @@ export const getBackgroundImageWarnings = (container) => {
       if (
         style['background-image'] &&
         backgroundImageRegex.test(style['background-image']) &&
+        // HACK
         // ideally, we would make a new image element and check its "naturalWidth"
         // to get a better idea of the size of the background image, this is a hack
-        el.clientWidth > 300
+        el.clientWidth > 200
       ) {
         return true
       }
@@ -361,4 +362,19 @@ export const getTouchTargetSizeWarning = ({
     underMinSize: underMinSize.map(present),
     tooClose: tooClose.map(present),
   }
+}
+
+export const getTooWideWarnings = (container) => {
+  const containerWidth = container.body.clientWidth
+  const allElements = getElements(container, '#root *')
+  return allElements
+    .filter((el) => {
+      return el.clientWidth > containerWidth
+    })
+    .map((el) => {
+      return {
+        el,
+        path: getDomPath(el),
+      }
+    })
 }

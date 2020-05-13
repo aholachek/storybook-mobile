@@ -1919,6 +1919,50 @@ const getSrcsetWarnings = container => {
   });
   return warnings;
 };
+const getBackgroundImageWarnings = container => {
+  const backgroundImageRegex = /url\(".*?(.png|.jpg|.jpeg)"\)/;
+  const elsWithBackgroundImage = getElements(container, '#root *').filter(el => {
+    const style = getComputedStyle(el);
+
+    if (style['background-image'] && backgroundImageRegex.test(style['background-image']) && el.clientWidth > 200) {
+      return true;
+    }
+  });
+  if (!elsWithBackgroundImage.length) return [];
+  const styleDict = new Map();
+  const sheets = container.styleSheets;
+  Object.keys(sheets).forEach(k => {
+    const rules = sheets[k].rules || sheets[k].cssRules;
+    rules.forEach(rule => {
+      if (!rule) return;
+
+      try {
+        elsWithBackgroundImage.forEach(el => {
+          if (el.matches(rule.selectorText)) {
+            styleDict.set(el, (styleDict.get(el) || []).concat(rule));
+          }
+        });
+      } catch (e) {}
+    });
+  });
+  const responsiveBackgroundImgRegex = /-webkit-min-device-pixel-ratio|min-resolution|image-set/;
+  const filteredEls = [...styleDict.entries()].map(([el, styles]) => {
+    const requiresResponsiveWarning = styles.reduce((acc, curr) => {
+      if (acc === false) return acc;
+      if (responsiveBackgroundImgRegex.test(curr)) return false;
+      return true;
+    }, true);
+    return requiresResponsiveWarning ? el : false;
+  }).filter(Boolean).map(el => {
+    const bg = getComputedStyle(el).backgroundImage;
+    const src = bg.match(/url\("(.*)"\)/) ? bg.match(/url\("(.*)"\)/)[1] : undefined;
+    return {
+      path: getDomPath(el),
+      src
+    };
+  });
+  return filteredEls;
+};
 const textInputs = ['text', 'search', 'tel', 'url', 'email', 'number', 'password'];
 
 const attachLabels = (inputs, container) => {
@@ -2104,7 +2148,8 @@ let _ = t => t,
     _t5,
     _t6,
     _t7,
-    _t8;
+    _t8,
+    _t9;
 const recommendedSize = 44;
 const minSize = 30;
 const recommendedDistance = 8;
@@ -2151,7 +2196,7 @@ const StyledInfoTag = styled.div(_t2 || (_t2 = _`
  background-color: hsla(214, 92%, 45%, 0.1);
 `), tagStyles, accessibleBlue);
 
-const Info = () => {
+const Hint = () => {
   return /*#__PURE__*/React.createElement(StyledInfoTag, null, /*#__PURE__*/React.createElement("svg", {
     "aria-hidden": "true",
     focusable: "false",
@@ -2186,8 +2231,10 @@ const StyledTappableContents = styled.div(_t5 || (_t5 = _`
   li {
     list-style-type: none;
   }
-  img {
-    height: 2rem !important;
+  img,
+  svg {
+    max-height: 2rem !important;
+    min-height: 1rem !important;
     width: auto !important;
   }
 `));
@@ -2252,13 +2299,16 @@ const Container = styled.div(_t8 || (_t8 = _`
     border-right: 1px solid ${0};
   }
 `), props => props.theme.typography.size.s2, props => props.theme.typography.size.s2, accessibleBlue, props => props.theme.color.mediumlight, accessibleBlue, accessibleBlue, props => props.theme.color.medium, props => props.theme.color.medium);
+const StyledBanner = styled.div(_t9 || (_t9 = _`
+  padding: 0.75rem;
+`));
 const fixText = 'Learn more';
 
 const ActiveWarnings = ({
   warnings
 }) => {
   if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Info, null), /*#__PURE__*/React.createElement("h3", null, /*#__PURE__*/React.createElement("code", null, ":active"), " styles on iOS"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, ":active"), " styles will only appear in iOS", ' ', /*#__PURE__*/React.createElement("a", {
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Hint, null), /*#__PURE__*/React.createElement("h3", null, /*#__PURE__*/React.createElement("code", null, ":active"), " styles on iOS"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, ":active"), " styles will only appear in iOS", ' ', /*#__PURE__*/React.createElement("a", {
     href: "https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari"
   }, "if a touch listener is added to the element or one of its ancestors"), ". Once activated in this manner, ", /*#__PURE__*/React.createElement("code", null, ":active"), " styles (along with", ' ', /*#__PURE__*/React.createElement("code", null, ":hover"), " styles) will be applied immediately in iOS when a user taps, possibly creating a confusing UX. (On Android,", ' ', /*#__PURE__*/React.createElement("code", null, ":active"), " styles are applied with a slight delay to allow the user to use gestures like scroll without necessarily activating", ' ', /*#__PURE__*/React.createElement("code", null, ":active"), " styles.)"), /*#__PURE__*/React.createElement("ul", null, warnings.map((w, i) => {
     return /*#__PURE__*/React.createElement(ListEntry, {
@@ -2275,7 +2325,7 @@ const TapWarnings = ({
   warnings
 }) => {
   if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Info, null), /*#__PURE__*/React.createElement("h3", null, "Tap style removed from tappable element"), /*#__PURE__*/React.createElement("p", null, "These elements have an invisible", ' ', /*#__PURE__*/React.createElement("code", null, "-webkit-tap-highlight-color"), ". While this might be intentional, please verify that they have appropriate tap indication styles added through other means."), /*#__PURE__*/React.createElement("ul", null, warnings.map((w, i) => {
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Hint, null), /*#__PURE__*/React.createElement("h3", null, "Tap style removed from tappable element"), /*#__PURE__*/React.createElement("p", null, "These elements have an invisible", ' ', /*#__PURE__*/React.createElement("code", null, "-webkit-tap-highlight-color"), ". While this might be intentional, please verify that they have appropriate tap indication styles added through other means."), /*#__PURE__*/React.createElement("ul", null, warnings.map((w, i) => {
     return /*#__PURE__*/React.createElement(ListEntry, {
       key: i
     }, /*#__PURE__*/React.createElement("code", null, w.type), " with content", ' ', w.text ? /*#__PURE__*/React.createElement("b", null, w.text) : w.html ? /*#__PURE__*/React.createElement(StyledTappableContents, {
@@ -2307,7 +2357,7 @@ const InputTypeWarnings = ({
   warnings
 }) => {
   if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Info, null), /*#__PURE__*/React.createElement("h3", null, "Plain input type ", /*#__PURE__*/React.createElement("code", null, "text"), " detected"), /*#__PURE__*/React.createElement("p", null, "This will render the default text keyboard on mobile (which could very well be what you want!) If you haven't already, take a moment to make sure this is correct. You can use", ' ', /*#__PURE__*/React.createElement("a", {
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Hint, null), /*#__PURE__*/React.createElement("h3", null, "Plain input type ", /*#__PURE__*/React.createElement("code", null, "text"), " detected"), /*#__PURE__*/React.createElement("p", null, "This will render the default text keyboard on mobile (which could very well be what you want!) If you haven't already, take a moment to make sure this is correct. You can use", ' ', /*#__PURE__*/React.createElement("a", {
     href: "https://better-mobile-inputs.netlify.com/"
   }, "this tool"), " to explore keyboard options."), /*#__PURE__*/React.createElement("ul", null, warnings.map((w, i) => {
     return /*#__PURE__*/React.createElement(ListEntry, {
@@ -2322,7 +2372,7 @@ const InputTypeNumberWarnings = ({
   warnings
 }) => {
   if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Info, null), /*#__PURE__*/React.createElement("h3", null, "Input type ", /*#__PURE__*/React.createElement("code", null, "number"), " detected"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, "<input type=\"text\" inputmode=\"decimal\"/>"), ' ', "might give you improved usability over", ' ', /*#__PURE__*/React.createElement("code", null, "<input type=\"number\" />"), "."), /*#__PURE__*/React.createElement("p", null, "Note: ", /*#__PURE__*/React.createElement("code", null, "inputmode"), " is styled as ", /*#__PURE__*/React.createElement("code", null, "inputMode"), " in JSX.", ' '), /*#__PURE__*/React.createElement("ul", null, warnings.map((w, i) => {
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Hint, null), /*#__PURE__*/React.createElement("h3", null, "Input type ", /*#__PURE__*/React.createElement("code", null, "number"), " detected"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, "<input type=\"text\" inputmode=\"decimal\"/>"), ' ', "might give you improved usability over", ' ', /*#__PURE__*/React.createElement("code", null, "<input type=\"number\" />"), "."), /*#__PURE__*/React.createElement("p", null, "Note: ", /*#__PURE__*/React.createElement("code", null, "inputmode"), " is styled as ", /*#__PURE__*/React.createElement("code", null, "inputMode"), " in JSX.", ' '), /*#__PURE__*/React.createElement("ul", null, warnings.map((w, i) => {
     return /*#__PURE__*/React.createElement(ListEntry, {
       key: i
     }, /*#__PURE__*/React.createElement("code", null, "input type=\"", w.type, "\""), " and label", ' ', /*#__PURE__*/React.createElement("b", null, w.labelText || '[no label found]'));
@@ -2350,7 +2400,7 @@ const HeightWarnings = ({
   warnings
 }) => {
   if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Info, null), /*#__PURE__*/React.createElement("h3", null, "Usage of ", /*#__PURE__*/React.createElement("code", null, "100vh"), " CSS"), /*#__PURE__*/React.createElement("p", null, "Viewport units are", ' ', /*#__PURE__*/React.createElement("a", {
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Hint, null), /*#__PURE__*/React.createElement("h3", null, "Usage of ", /*#__PURE__*/React.createElement("code", null, "100vh"), " CSS"), /*#__PURE__*/React.createElement("p", null, "Viewport units are", ' ', /*#__PURE__*/React.createElement("a", {
     href: "https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html"
   }, "tricky on mobile."), ' ', "On some mobile browers, depending on scroll position, ", /*#__PURE__*/React.createElement("code", null, "100vh"), ' ', "might take up more than 100% of screen height due to browser chrome like the address bar."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
     path
@@ -2361,11 +2411,31 @@ const HeightWarnings = ({
   })));
 };
 
+const BackgroundImageWarnings = ({
+  warnings
+}) => {
+  if (!warnings.length) return null;
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Warning, null), /*#__PURE__*/React.createElement("h3", null, "Non-dynamic background image"), /*#__PURE__*/React.createElement("p", null, "Downloading larger-than-necessary images hurts performance for users on mobile. You can", ' ', /*#__PURE__*/React.createElement("a", {
+    href: "https://css-tricks.com/responsive-images-css/"
+  }, "use ", /*#__PURE__*/React.createElement("code", null, "image-set"), " or ", /*#__PURE__*/React.createElement("code", null, "min-resolution")), ' ', "to serve an appropriate image based on the user's screen size and resolution."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
+    src,
+    alt
+  }, i) => {
+    return /*#__PURE__*/React.createElement(ListEntry, {
+      key: i,
+      nostyle: true
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(DemoImg, {
+      src: src,
+      alt: alt
+    })));
+  })));
+};
+
 const SrcsetWarnings = ({
   warnings
 }) => {
   if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Warning, null), /*#__PURE__*/React.createElement("h3", null, "Large image without ", /*#__PURE__*/React.createElement("code", null, "srscset")), /*#__PURE__*/React.createElement("p", null, "Downloading larger-than-necessary images hurts performance for users on mobile. You can use", ' ', /*#__PURE__*/React.createElement("code", null, "srcset"), " to customize image sizes for different device resolutions and sizes."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Warning, null), /*#__PURE__*/React.createElement("h3", null, "Large image without ", /*#__PURE__*/React.createElement("code", null, "srscset")), /*#__PURE__*/React.createElement("p", null, "Downloading larger-than-necessary images hurts performance for users on mobile. You can use ", /*#__PURE__*/React.createElement("code", null, "srcset"), " to customize image sizes for different device resolutions and sizes."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
     src,
     alt
   }, i) => {
@@ -2421,23 +2491,32 @@ const convertToBool = num => num > 0 ? 1 : 0;
 
 const Hints = ({
   container,
-  theme
+  theme,
+  loading
 }) => {
-  const tapHighlightWarnings = getTapHighlightWarnings(container);
-  const activeWarnings = getActiveWarnings(container);
-  const autocompleteWarnings = getAutocompleteWarnings(container);
-  const inputTypeWarnings = getInputTypeWarnings(container);
-  const touchTargetWarnings = getTouchTargetSizeWarning({
-    container,
-    minSize,
-    recommendedSize,
-    recommendedDistance
-  });
-  const overflowWarnings = getOverflowAutoWarnings(container);
-  const srcsetWarnings = getSrcsetWarnings(container);
-  const heightWarnings = get100vhWarning(container);
-  const inputTypeNumberWarnings = getInputTypeNumberWarnings(container);
-  const warningCount = convertToBool(tapHighlightWarnings.length) + convertToBool(autocompleteWarnings.length) + convertToBool(touchTargetWarnings.underMinSize.length) + convertToBool(touchTargetWarnings.tooClose.length) + convertToBool(overflowWarnings.length) + convertToBool(srcsetWarnings.length) + convertToBool(inputTypeWarnings.length) + convertToBool(overflowWarnings.length) + convertToBool(heightWarnings.length) + convertToBool(inputTypeNumberWarnings.length) + convertToBool(activeWarnings.length);
+  const warnings = {
+    tapHighlight: getTapHighlightWarnings(container),
+    active: getActiveWarnings(container),
+    autocomplete: getAutocompleteWarnings(container),
+    inputType: getInputTypeWarnings(container),
+    touchTarget: getTouchTargetSizeWarning({
+      container,
+      minSize,
+      recommendedSize,
+      recommendedDistance
+    }),
+    overflow: getOverflowAutoWarnings(container),
+    srcset: getSrcsetWarnings(container),
+    backgroundImg: getBackgroundImageWarnings(container),
+    height: get100vhWarning(container),
+    inputTypeNumber: getInputTypeNumberWarnings(container)
+  };
+  const warningCount = Object.keys(warnings).map(key => warnings[key]).reduce((acc, curr) => {
+    const count = Array.isArray(curr) ? convertToBool(curr.length) : Object.keys(curr).map(key => curr[key]).reduce((acc, curr) => {
+      return acc + convertToBool(curr.length);
+    }, 0);
+    return acc + count;
+  }, 0);
   React.useEffect(() => {
     const tab = Array.from(document.querySelectorAll('button[role="tab"]')).find(el => /^Mobile(\s\(\d+\))?$/.test(el.innerText));
 
@@ -2452,24 +2531,26 @@ const Hints = ({
   if (!warningCount) return /*#__PURE__*/React.createElement(NoWarning, null, "Looking good! No mobile hints available.");
   return /*#__PURE__*/React.createElement(ThemeProvider, {
     theme: theme
-  }, /*#__PURE__*/React.createElement(Container, null, /*#__PURE__*/React.createElement(TouchTargetWarnings, {
-    warnings: touchTargetWarnings
+  }, /*#__PURE__*/React.createElement(Container, null, /*#__PURE__*/React.createElement(StyledBanner, null, loading ? 'Scanning for additional issues...' : 'Scan complete!'), /*#__PURE__*/React.createElement(TouchTargetWarnings, {
+    warnings: warnings.touchTarget
   }), /*#__PURE__*/React.createElement(AutocompleteWarnings, {
-    warnings: autocompleteWarnings
+    warnings: warnings.autocomplete
   }), /*#__PURE__*/React.createElement(SrcsetWarnings, {
-    warnings: srcsetWarnings
+    warnings: warnings.srcset
+  }), /*#__PURE__*/React.createElement(BackgroundImageWarnings, {
+    warnings: warnings.backgroundImg
   }), /*#__PURE__*/React.createElement(OverflowWarning, {
-    warnings: overflowWarnings
+    warnings: warnings.overflow
   }), /*#__PURE__*/React.createElement(InputTypeWarnings, {
-    warnings: inputTypeWarnings
+    warnings: warnings.inputType
   }), /*#__PURE__*/React.createElement(InputTypeNumberWarnings, {
-    warnings: inputTypeNumberWarnings
+    warnings: warnings.inputTypeNumber
   }), /*#__PURE__*/React.createElement(HeightWarnings, {
-    warnings: heightWarnings
+    warnings: warnings.height
   }), /*#__PURE__*/React.createElement(TapWarnings, {
-    warnings: tapHighlightWarnings
+    warnings: warnings.tapHighlight
   }), /*#__PURE__*/React.createElement(ActiveWarnings, {
-    warnings: activeWarnings
+    warnings: warnings.active
   })));
 };
 
@@ -2537,6 +2618,7 @@ const MyPanel = ({
   storyId
 }) => {
   const [html, setHTML] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
     const setContainer = () => {
       const container = getContainer();
@@ -2547,14 +2629,17 @@ const MyPanel = ({
       }
 
       setHTML(container.body.innerHTML);
+      setLoading(false);
     };
 
+    setLoading(true);
     setTimeout(setContainer, delay);
   }, [storyId]);
   if (!html) return /*#__PURE__*/React.createElement(StyledLoading, null, "Running mobile audit...");
   const container = getContainer();
   return /*#__PURE__*/React.createElement(Hints$1, {
-    container: container
+    container: container,
+    loading: loading
   });
 };
 

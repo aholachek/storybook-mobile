@@ -62,7 +62,7 @@ const AboutForm = () => {
           <Button type="reset">Clear</Button>
         </div>
 
-        <Text size={300}>
+        <Text size={300} style={{ width: '550px', display: 'block' }}>
           By filling out this form you acknowledge that we have full rights to
           your data forever and ever.
         </Text>

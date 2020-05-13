@@ -25,8 +25,8 @@ module.exports = {
 }
 ```
 
-This addon works best along with the [@storybook/addon-viewport](https://github.com/storybookjs/storybook/tree/next/addons/viewport) addon, so please consider installing that as well if you don't have it already.
+This addon works best along with the [@storybook/addon-viewport](https://github.com/storybookjs/storybook/tree/next/addons/viewport) addon, so please install that as well if you don't have it already.
 
 ## Contributing
 
-This addon is very new. If you have any suggestions or find any bugs, please make an issue or a pr!
+If you have any suggestions or find any bugs, please make an issue or a pr!
