@@ -2139,6 +2139,18 @@ const getTouchTargetSizeWarning = ({
     tooClose: tooClose.map(present)
   };
 };
+const getTooWideWarnings = container => {
+  const containerWidth = container.body.clientWidth;
+  const allElements = getElements(container, '#root *');
+  return allElements.filter(el => {
+    return el.clientWidth > containerWidth;
+  }).map(el => {
+    return {
+      el,
+      path: getDomPath(el)
+    };
+  });
+};
 
 let _ = t => t,
     _t,
@@ -2149,12 +2161,42 @@ let _ = t => t,
     _t6,
     _t7,
     _t8,
-    _t9;
+    _t9,
+    _t10;
 const recommendedSize = 44;
 const minSize = 30;
 const recommendedDistance = 8;
 const accessibleBlue = '#0965df';
 const warning = '#bd4700';
+const StyledLogButton = styled.button(_t || (_t = _`
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  font-size: 100%;
+  background-color: transparent;
+  appearance: none;
+  box-shadow: none;
+  font-weight: bold;
+  border-radius: 8px;
+  color: white;
+  background-color: ${0};
+  padding: 0.25rem 0.5rem;
+  display: inline-block;
+  margin-bottom: 1rem;
+  &:hover {
+    background-color: hsl(214, 90%, 38%);
+  }
+  svg {
+    margin-right: 0.25rem;
+    display: inline-block;
+    height: 0.7rem;
+    line-height: 1;
+    position: relative;
+    top: 0.03rem;
+    letter-spacing: 0.01rem;
+  }
+`), accessibleBlue);
 const tagStyles = `
   padding: .25rem .5rem;
   font-weight: bold;
@@ -2171,7 +2213,7 @@ const tagStyles = `
     letter-spacing: .01rem;
   }
 `;
-const StyledWarningTag = styled.div(_t || (_t = _`
+const StyledWarningTag = styled.div(_t2 || (_t2 = _`
   color: ${0};
   background-color: hsl(41, 100%, 92%);
   ${0}
@@ -2190,7 +2232,7 @@ const Warning = () => {
   })), "warning");
 };
 
-const StyledInfoTag = styled.div(_t2 || (_t2 = _`
+const StyledInfoTag = styled.div(_t3 || (_t3 = _`
   ${0}
  color: ${0};
  background-color: hsla(214, 92%, 45%, 0.1);
@@ -2213,14 +2255,14 @@ const Hint = () => {
   })), "hint");
 };
 
-const NoWarning = styled.div(_t3 || (_t3 = _`
+const NoWarning = styled.div(_t4 || (_t4 = _`
   padding: 1rem;
   font-weight: bold;
 `));
-const Spacer = styled.div(_t4 || (_t4 = _`
+const Spacer = styled.div(_t5 || (_t5 = _`
   padding: 1rem;
 `));
-const StyledTappableContents = styled.div(_t5 || (_t5 = _`
+const StyledTappableContents = styled.div(_t6 || (_t6 = _`
   display: inline-block;
   padding-top: 0.25rem;
   height: 2rem;
@@ -2238,17 +2280,17 @@ const StyledTappableContents = styled.div(_t5 || (_t5 = _`
     width: auto !important;
   }
 `));
-const DemoImg = styled.img(_t6 || (_t6 = _`
+const DemoImg = styled.img(_t7 || (_t7 = _`
   height: 4rem;
   width: auto;
   max-width: 100%;
   background-color: hsla(0, 0%, 0%, 0.2);
 `));
-const ListEntry = styled.li(_t7 || (_t7 = _`
+const ListEntry = styled.li(_t8 || (_t8 = _`
   margin-bottom: 0.5rem;
   ${0};
 `), props => props.nostyle ? 'list-style-type: none;' : '');
-const Container = styled.div(_t8 || (_t8 = _`
+const Container = styled.div(_t9 || (_t9 = _`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
 
@@ -2299,10 +2341,37 @@ const Container = styled.div(_t8 || (_t8 = _`
     border-right: 1px solid ${0};
   }
 `), props => props.theme.typography.size.s2, props => props.theme.typography.size.s2, accessibleBlue, props => props.theme.color.mediumlight, accessibleBlue, accessibleBlue, props => props.theme.color.medium, props => props.theme.color.medium);
-const StyledBanner = styled.div(_t9 || (_t9 = _`
+const StyledBanner = styled.div(_t10 || (_t10 = _`
   padding: 0.75rem;
 `));
 const fixText = 'Learn more';
+const timeout = 3000;
+
+const LogToConsole = ({
+  title,
+  els
+}) => {
+  const [success, setSuccess] = React.useState(false);
+  const magnifyingGlass = /*#__PURE__*/React.createElement("svg", {
+    role: "img",
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 512 512"
+  }, /*#__PURE__*/React.createElement("path", {
+    fill: "currentColor",
+    d: "M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+  }));
+  return /*#__PURE__*/React.createElement(StyledLogButton, {
+    onClick: () => {
+      setSuccess(true);
+      console.group(`%c 📱Storybook Mobile Addon: ${title}`, 'font-weight: bold');
+      els.forEach(el => console.log(el));
+      console.groupEnd();
+      setTimeout(() => {
+        setSuccess(false);
+      }, timeout);
+    }
+  }, magnifyingGlass, success ? 'Success! Pls open devtools' : `Log element${els.length > 1 ? 's' : ''} to dev console`);
+};
 
 const ActiveWarnings = ({
   warnings
@@ -2372,7 +2441,7 @@ const InputTypeNumberWarnings = ({
   warnings
 }) => {
   if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Hint, null), /*#__PURE__*/React.createElement("h3", null, "Input type ", /*#__PURE__*/React.createElement("code", null, "number"), " detected"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, "<input type=\"text\" inputmode=\"decimal\"/>"), ' ', "might give you improved usability over", ' ', /*#__PURE__*/React.createElement("code", null, "<input type=\"number\" />"), "."), /*#__PURE__*/React.createElement("p", null, "Note: ", /*#__PURE__*/React.createElement("code", null, "inputmode"), " is styled as ", /*#__PURE__*/React.createElement("code", null, "inputMode"), " in JSX.", ' '), /*#__PURE__*/React.createElement("ul", null, warnings.map((w, i) => {
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Hint, null), /*#__PURE__*/React.createElement("h3", null, "Input type ", /*#__PURE__*/React.createElement("code", null, "number"), " detected"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, "<input type=\"text\" inputmode=\"decimal\"/>"), ' ', "could give you improved usability over", ' ', /*#__PURE__*/React.createElement("code", null, "<input type=\"number\" />"), "."), /*#__PURE__*/React.createElement("p", null, "Note: ", /*#__PURE__*/React.createElement("code", null, "inputmode"), " is styled as ", /*#__PURE__*/React.createElement("code", null, "inputMode"), " in JSX.", ' '), /*#__PURE__*/React.createElement("ul", null, warnings.map((w, i) => {
     return /*#__PURE__*/React.createElement(ListEntry, {
       key: i
     }, /*#__PURE__*/React.createElement("code", null, "input type=\"", w.type, "\""), " and label", ' ', /*#__PURE__*/React.createElement("b", null, w.labelText || '[no label found]'));
@@ -2394,6 +2463,27 @@ const OverflowWarning = ({
   })), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, fixText), /*#__PURE__*/React.createElement("p", null, "To ensure your users benefit from momentum scrolling, add this line of CSS: ", /*#__PURE__*/React.createElement("code", null, "-webkit-overflow-scrolling:touch;"), " to any container with a style of ", /*#__PURE__*/React.createElement("code", null, "overflow: auto"), " or", ' ', /*#__PURE__*/React.createElement("code", null, "overflow: scroll"), ".", ' ', /*#__PURE__*/React.createElement("a", {
     href: "https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling"
   }, "Learn more about the property here."))));
+};
+
+const TooWideWarnings = ({
+  warnings
+}) => {
+  if (!warnings.length) return null;
+  const title = `Element${warnings.length > 1 ? 's' : ''} introducing horizontal overflow`;
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Hint, null), /*#__PURE__*/React.createElement("h3", null, title), /*#__PURE__*/React.createElement("p", null, "The following element", warnings.length > 1 ? 's' : '', " had a width that exceeded that of the page, possibly introducing a horizontal scroll. While this may be intentional, please verify that this is not an error."), /*#__PURE__*/React.createElement(LogToConsole, {
+    title: title,
+    els: warnings.map(w => w.el)
+  }), /*#__PURE__*/React.createElement("div", null, warnings.map(({
+    path
+  }, i) => {
+    return /*#__PURE__*/React.createElement(ListEntry, {
+      key: i,
+      style: {
+        marginBottom: '1rem'
+      },
+      as: "div"
+    }, /*#__PURE__*/React.createElement("code", null, path));
+  })));
 };
 
 const HeightWarnings = ({
@@ -2509,7 +2599,8 @@ const Hints = ({
     srcset: getSrcsetWarnings(container),
     backgroundImg: getBackgroundImageWarnings(container),
     height: get100vhWarning(container),
-    inputTypeNumber: getInputTypeNumberWarnings(container)
+    inputTypeNumber: getInputTypeNumberWarnings(container),
+    tooWide: getTooWideWarnings(container)
   };
   const warningCount = Object.keys(warnings).map(key => warnings[key]).reduce((acc, curr) => {
     const count = Array.isArray(curr) ? convertToBool(curr.length) : Object.keys(curr).map(key => curr[key]).reduce((acc, curr) => {
@@ -2539,6 +2630,9 @@ const Hints = ({
     warnings: warnings.srcset
   }), /*#__PURE__*/React.createElement(BackgroundImageWarnings, {
     warnings: warnings.backgroundImg
+  }), /*#__PURE__*/React.createElement(TooWideWarnings, {
+    warnings: warnings.tooWide,
+    container: container
   }), /*#__PURE__*/React.createElement(OverflowWarning, {
     warnings: warnings.overflow
   }), /*#__PURE__*/React.createElement(InputTypeWarnings, {

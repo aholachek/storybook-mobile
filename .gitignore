@@ -4,6 +4,7 @@ dist
 register.module.js
 register.js
 register.umd.js
+register.modern.js
 
 built-storybook
 
