@@ -6,7 +6,7 @@ This addon offers suggestions on how you can improve the HTML, CSS and UX of you
 <img src="./screenshot.png" width="600px">
 </a>
 
-[To see all available rules, check out a live storybook demo here.](https://storybook-mobile.netlify.app/?path=/story/signup-form--default)
+[To see all available suggestions, check out a live storybook demo here.](https://storybook-mobile.netlify.app/?path=/story/signup-form--default)
 
 ## Quick Start
 
