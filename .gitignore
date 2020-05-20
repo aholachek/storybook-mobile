@@ -6,6 +6,6 @@ register.js
 register.umd.js
 register.modern.js
 
-built-storybook
+storybook-static
 
 .DS_Store
