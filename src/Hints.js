@@ -219,7 +219,7 @@ const StyledBanner = styled.div`
 
 const fixText = 'Learn more'
 
-const timeout = 3000
+const timeout = 2200
 
 const LogToConsole = ({ title, els }) => {
   const [success, setSuccess] = React.useState(false)
