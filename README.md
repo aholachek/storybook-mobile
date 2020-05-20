@@ -10,7 +10,7 @@ This addon offers suggestions on how you can improve the HTML, CSS and UX of you
 
 ## Quick Start
 
-`yarn add -D storybook-mobile` or `npm install --dev storybook-mobile`
+`yarn add -D storybook-mobile` or `npm install --save-dev storybook-mobile`
 
 Next, add `storybook-mobile` to your list of addons:
 
