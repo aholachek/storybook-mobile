@@ -2140,18 +2140,6 @@ const getTouchTargetSizeWarning = ({
     tooClose: tooClose.map(present)
   };
 };
-const getTooWideWarnings = container => {
-  const containerWidth = container.body.clientWidth;
-  const allElements = getElements(container, '#root *');
-  return allElements.filter(el => {
-    return el.clientWidth > containerWidth;
-  }).map(el => {
-    return {
-      el,
-      path: getDomPath(el)
-    };
-  });
-};
 
 let _ = t => t,
     _t,
@@ -2568,8 +2556,7 @@ const Hints = ({
     srcset: getSrcsetWarnings(container),
     backgroundImg: getBackgroundImageWarnings(container),
     height: get100vhWarning(container),
-    inputTypeNumber: getInputTypeNumberWarnings(container),
-    tooWide: getTooWideWarnings(container)
+    inputTypeNumber: getInputTypeNumberWarnings(container)
   };
   const warningCount = Object.keys(warnings).map(key => warnings[key]).reduce((acc, curr) => {
     const count = Array.isArray(curr) ? convertToBool(curr.length) : Object.keys(curr).map(key => curr[key]).reduce((acc, curr) => {
