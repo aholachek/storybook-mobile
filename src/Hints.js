@@ -199,6 +199,9 @@ const Container = styled.div`
     max-height: 12rem;
     overflow: auto;
     padding-bottom: 0.5rem;
+    li {
+      margin-bottom: 0.3rem;
+    }
   }
   a {
     text-decoration: none;
@@ -616,7 +619,8 @@ const BackgroundImageWarnings = ({ warnings }) => {
           <li>
             <a href="https://css-tricks.com/responsive-images-css/">
               CSS Tricks article discussing responsive background images in
-              greater detail, including the interaction of <code>image-set</code> with media queries.
+              greater detail, including the interaction of{' '}
+              <code>image-set</code> with media queries.
             </a>
           </li>
         </ul>
