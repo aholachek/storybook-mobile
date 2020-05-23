@@ -20,8 +20,8 @@ Next, add `storybook-mobile` to your list of addons:
 module.exports = {
   // other config goes here
   addons: [
-+    'storybook-mobile/register'
-     ],
++    'storybook-mobile'
+  ],
 }
 ```
 
