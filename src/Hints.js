@@ -596,7 +596,7 @@ const BackgroundImageWarnings = ({ warnings }) => {
         <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/image-set">
           <code>image-set</code>
         </a>{' '}
-        to serve an appropriate image based on the user&apos;s screen size and
+        to serve an appropriate background image based on the user&apos;s device
         resolution.
       </p>
       <ul>
@@ -616,7 +616,7 @@ const BackgroundImageWarnings = ({ warnings }) => {
           <li>
             <a href="https://css-tricks.com/responsive-images-css/">
               CSS Tricks article discussing responsive background images in
-              greater detail.
+              greater detail, including the interaction of <code>image-set</code> with media queries.
             </a>
           </li>
         </ul>
