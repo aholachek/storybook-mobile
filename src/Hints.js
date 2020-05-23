@@ -183,7 +183,8 @@ const Container = styled.div`
 
   summary {
     cursor: pointer;
-    display: inline-block;
+    display: block;
+    margin-right: 1rem;
     padding: 0.2rem 0.3rem;
     border-radius: 5px;
     color: ${accessibleBlue};
@@ -591,9 +592,9 @@ const BackgroundImageWarnings = ({ warnings }) => {
       <h3>Non-dynamic background image</h3>
       <p>
         Downloading larger-than-necessary images hurts performance for users on
-        mobile. You can{' '}
-        <a href="https://css-tricks.com/responsive-images-css/">
-          use <code>image-set</code> or <code>min-resolution</code>
+        mobile. You can use{' '}
+        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/image-set">
+          <code>image-set</code>
         </a>{' '}
         to serve an appropriate image based on the user&apos;s screen size and
         resolution.
@@ -609,6 +610,17 @@ const BackgroundImageWarnings = ({ warnings }) => {
           )
         })}
       </ul>
+      <details>
+        <summary>{fixText}</summary>
+        <ul>
+          <li>
+            <a href="https://css-tricks.com/responsive-images-css/">
+              CSS Tricks article discussing responsive background images in
+              greater detail.
+            </a>
+          </li>
+        </ul>
+      </details>
     </Spacer>
   )
 }
@@ -619,7 +631,7 @@ const SrcsetWarnings = ({ warnings }) => {
     <Spacer>
       <Warning />
       <h3>
-        Large image without <code>srscset</code>
+        Large image without <code>srcset</code>
       </h3>
       <p>
         Downloading larger-than-necessary images hurts performance for users on
