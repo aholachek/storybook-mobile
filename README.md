@@ -1,5 +1,8 @@
 # 📱storybook-mobile
 
+[![npm version](https://badge.fury.io/js/storybook-mobile.svg)](https://badge.fury.io/js/storybook-mobile)
+
+
 This addon offers suggestions on how you can improve the HTML, CSS and UX of your components to be more mobile-friendly.
 
 <a href="https://storybook-mobile.netlify.app/?path=/story/signup-form--default" alt="screenshot of storybook-mobile addon">
