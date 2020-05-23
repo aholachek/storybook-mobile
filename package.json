@@ -13,6 +13,10 @@
     "storybook": "start-storybook",
     "lint": "./node_modules/.bin/eslint src"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aholachek/storybook-mobile"
+  },
   "keywords": [
     "storybook",
     "react-storybook",
