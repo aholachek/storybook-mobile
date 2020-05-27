@@ -3,13 +3,7 @@ import { addons, types } from '@storybook/addons'
 import { STORY_CHANGED } from '@storybook/core-events'
 import { useChannel, useAddonState } from '@storybook/api'
 import { AddonPanel } from '@storybook/components'
-import styled from '@emotion/styled'
 import Hints from './Hints'
-
-const StyledLoading = styled.div`
-  padding: 1rem;
-  font-weight: bold;
-`
 
 const ADDON_ID = 'mobile-hints'
 const PARAM_KEY = 'mobile-hints'
@@ -60,7 +54,7 @@ const getContainer = () => {
   return iframe.contentDocument
 }
 
-const delay = 2500
+const delay = 2000
 const MyPanel = ({ storyId }) => {
   const [html, setHTML] = React.useState('')
   const [loading, setLoading] = React.useState(false)
