@@ -783,7 +783,7 @@ const Hints = ({ container, theme, loading, running }) => {
     }
   })
 
-  if (!warningCount)
+  if (!warningCount && !loading)
     return (
       <Wrapper theme={theme}>
         <StyledBanner>Looking good! No mobile hints available.</StyledBanner>
