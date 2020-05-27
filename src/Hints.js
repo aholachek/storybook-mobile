@@ -6,7 +6,6 @@ import {
   getActiveWarnings,
   getAutocompleteWarnings,
   getInputTypeWarnings,
-  getOverflowAutoWarnings,
   getSrcsetWarnings,
   getTouchTargetSizeWarning,
   get100vhWarning,
@@ -489,44 +488,6 @@ const InputTypeNumberWarnings = ({ warnings }) => {
   )
 }
 
-const OverflowWarning = ({ warnings }) => {
-  if (!warnings.length) return null
-
-  return (
-    <Spacer>
-      <Warning />
-      <h3>
-        Scrollable container without{' '}
-        <code>-webkit-overflow-scrolling:touch</code>
-      </h3>
-      <p>
-        This element will scroll awkwardly on versions of iOS before iOS 13.
-      </p>
-      <ul>
-        {warnings.map(({ path }, i) => {
-          return (
-            <ListEntry key={i}>
-              <code>{path}</code>
-            </ListEntry>
-          )
-        })}
-      </ul>
-      <details>
-        <summary>{fixText}</summary>
-        <p>
-          To ensure your users benefit from momentum scrolling, add this line of
-          CSS: <code>-webkit-overflow-scrolling:touch;</code> to any container
-          with a style of <code>overflow: auto</code> or{' '}
-          <code>overflow: scroll</code>.{' '}
-          <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling">
-            Learn more about the property here.
-          </a>
-        </p>
-      </details>
-    </Spacer>
-  )
-}
-
 const TooWideWarnings = ({ warnings }) => {
   if (!warnings.length) return null
 
@@ -788,7 +749,6 @@ const Hints = ({ container, theme, loading, running }) => {
       recommendedSize,
       recommendedDistance,
     }),
-    overflow: getOverflowAutoWarnings(container),
     srcset: getSrcsetWarnings(container),
     backgroundImg: getBackgroundImageWarnings(container),
     height: get100vhWarning(container),
@@ -843,7 +803,6 @@ const Hints = ({ container, theme, loading, running }) => {
         <SrcsetWarnings warnings={warnings.srcset} />
         <BackgroundImageWarnings warnings={warnings.backgroundImg} />
         {/* <TooWideWarnings warnings={warnings.tooWide} container={container} /> */}
-        <OverflowWarning warnings={warnings.overflow} />
         <InputTypeWarnings warnings={warnings.inputType} />
         <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
         <HeightWarnings warnings={warnings.height} />

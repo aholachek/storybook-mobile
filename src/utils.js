@@ -3,6 +3,18 @@ import getDomPath from './getDomPath'
 const getElements = (container, tag) =>
   Array.from(container.querySelectorAll(tag))
 
+// try to prevent CORS error when no rules
+const missingRules = (sheets, k) => {
+  if (
+    !sheets[k].hasOwnProperty('rules') &&
+    !sheets[k].hasOwnProperty('cssRules')
+  )
+    return true
+  return false
+}
+
+const getRules = (sheets, k) => sheets[k].rules || sheets[k].cssRules
+
 const getNodeName = (el) =>
   el.nodeName === 'A'
     ? 'a'
@@ -17,8 +29,8 @@ export const getActiveStyles = function (container, el) {
   const activeRegex = /:active$/
 
   Object.keys(sheets).forEach((k) => {
-    const rules = sheets[k].rules || sheets[k].cssRules
-    rules.forEach((rule) => {
+    if (missingRules(sheets, k)) return
+    getRules(sheets, k).forEach((rule) => {
       if (!rule) return
       if (!rule.selectorText || !rule.selectorText.match(activeRegex)) return
       const ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '')
@@ -128,8 +140,8 @@ export const getBackgroundImageWarnings = (container) => {
 
   const sheets = container.styleSheets
   Object.keys(sheets).forEach((k) => {
-    const rules = sheets[k].rules || sheets[k].cssRules
-    rules.forEach((rule) => {
+    if (missingRules(sheets, k)) return
+    getRules(sheets, k).forEach((rule) => {
       if (!rule) return
       try {
         elsWithBackgroundImage.forEach((el) => {
@@ -217,33 +229,12 @@ export const getInputTypeNumberWarnings = (container) => {
   return attachLabels(inputs)
 }
 
-export const getOverflowAutoWarnings = (container) => {
-  return getElements(container, '#root *')
-    .filter((el) => {
-      const style = getComputedStyle(el)
-      const scrollStyles = ['scroll', 'auto']
-      if (
-        scrollStyles.includes(style.overflow) ||
-        scrollStyles.includes(style.overflowX) ||
-        scrollStyles.includes(style.overflowY)
-      ) {
-        if (style['-webkit-overflow-scrolling'] !== 'touch') {
-          return true
-        }
-      }
-      return false
-    })
-    .map((el) => ({
-      path: getDomPath(el),
-    }))
-}
-
 export const getOriginalStyles = function (container, el) {
   const sheets = container.styleSheets
   const result = []
   Object.keys(sheets).forEach((k) => {
-    const rules = sheets[k].rules || sheets[k].cssRules
-    rules.forEach((rule) => {
+    if (missingRules(sheets, k)) return
+    getRules(sheets, k).forEach((rule) => {
       if (!rule) return
       try {
         if (el.matches(rule.selectorText)) {

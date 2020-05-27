@@ -2003,22 +2003,6 @@ const getInputTypeNumberWarnings = container => {
   const inputs = getElements(container, 'input[type="number"]');
   return attachLabels(inputs);
 };
-const getOverflowAutoWarnings = container => {
-  return getElements(container, '#root *').filter(el => {
-    const style = getComputedStyle(el);
-    const scrollStyles = ['scroll', 'auto'];
-
-    if (scrollStyles.includes(style.overflow) || scrollStyles.includes(style.overflowX) || scrollStyles.includes(style.overflowY)) {
-      if (style['-webkit-overflow-scrolling'] !== 'touch') {
-        return true;
-      }
-    }
-
-    return false;
-  }).map(el => ({
-    path: getDomPath(el)
-  }));
-};
 const getOriginalStyles = function (container, el) {
   const sheets = container.styleSheets;
   const result = [];
@@ -2298,7 +2282,8 @@ const Container = styled.div(_t8 || (_t8 = _`
 
   summary {
     cursor: pointer;
-    display: inline-block;
+    display: block;
+    margin-right: 1rem;
     padding: 0.2rem 0.3rem;
     border-radius: 5px;
     color: ${0};
@@ -2313,6 +2298,9 @@ const Container = styled.div(_t8 || (_t8 = _`
     max-height: 12rem;
     overflow: auto;
     padding-bottom: 0.5rem;
+    li {
+      margin-bottom: 0.3rem;
+    }
   }
   a {
     text-decoration: none;
@@ -2415,21 +2403,6 @@ const InputTypeNumberWarnings = ({
   }, "This article has a good overview of the issues with", ' ', /*#__PURE__*/React.createElement("code", null, "input type=\"number\""), "."))));
 };
 
-const OverflowWarning = ({
-  warnings
-}) => {
-  if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Warning, null), /*#__PURE__*/React.createElement("h3", null, "Scrollable container without", ' ', /*#__PURE__*/React.createElement("code", null, "-webkit-overflow-scrolling:touch")), /*#__PURE__*/React.createElement("p", null, "This element will scroll awkwardly on versions of iOS before iOS 13."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
-    path
-  }, i) => {
-    return /*#__PURE__*/React.createElement(ListEntry, {
-      key: i
-    }, /*#__PURE__*/React.createElement("code", null, path));
-  })), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, fixText), /*#__PURE__*/React.createElement("p", null, "To ensure your users benefit from momentum scrolling, add this line of CSS: ", /*#__PURE__*/React.createElement("code", null, "-webkit-overflow-scrolling:touch;"), " to any container with a style of ", /*#__PURE__*/React.createElement("code", null, "overflow: auto"), " or", ' ', /*#__PURE__*/React.createElement("code", null, "overflow: scroll"), ".", ' ', /*#__PURE__*/React.createElement("a", {
-    href: "https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling"
-  }, "Learn more about the property here."))));
-};
-
 const HeightWarnings = ({
   warnings
 }) => {
@@ -2449,9 +2422,9 @@ const BackgroundImageWarnings = ({
   warnings
 }) => {
   if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Warning, null), /*#__PURE__*/React.createElement("h3", null, "Non-dynamic background image"), /*#__PURE__*/React.createElement("p", null, "Downloading larger-than-necessary images hurts performance for users on mobile. You can", ' ', /*#__PURE__*/React.createElement("a", {
-    href: "https://css-tricks.com/responsive-images-css/"
-  }, "use ", /*#__PURE__*/React.createElement("code", null, "image-set"), " or ", /*#__PURE__*/React.createElement("code", null, "min-resolution")), ' ', "to serve an appropriate image based on the user's screen size and resolution."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Warning, null), /*#__PURE__*/React.createElement("h3", null, "Non-dynamic background image"), /*#__PURE__*/React.createElement("p", null, "Downloading larger-than-necessary images hurts performance for users on mobile. You can use", ' ', /*#__PURE__*/React.createElement("a", {
+    href: "https://developer.mozilla.org/en-US/docs/Web/CSS/image-set"
+  }, /*#__PURE__*/React.createElement("code", null, "image-set")), ' ', "to serve an appropriate background image based on the user's device resolution."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
     src,
     alt
   }, i) => {
@@ -2462,14 +2435,16 @@ const BackgroundImageWarnings = ({
       src: src,
       alt: alt
     })));
-  })));
+  })), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, fixText), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
+    href: "https://css-tricks.com/responsive-images-css/"
+  }, "CSS Tricks article discussing responsive background images in greater detail, including the interaction of", ' ', /*#__PURE__*/React.createElement("code", null, "image-set"), " with media queries.")))));
 };
 
 const SrcsetWarnings = ({
   warnings
 }) => {
   if (!warnings.length) return null;
-  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Warning, null), /*#__PURE__*/React.createElement("h3", null, "Large image without ", /*#__PURE__*/React.createElement("code", null, "srscset")), /*#__PURE__*/React.createElement("p", null, "Downloading larger-than-necessary images hurts performance for users on mobile. You can use ", /*#__PURE__*/React.createElement("code", null, "srcset"), " to customize image sizes for different device resolutions and sizes."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
+  return /*#__PURE__*/React.createElement(Spacer, null, /*#__PURE__*/React.createElement(Warning, null), /*#__PURE__*/React.createElement("h3", null, "Large image without ", /*#__PURE__*/React.createElement("code", null, "srcset")), /*#__PURE__*/React.createElement("p", null, "Downloading larger-than-necessary images hurts performance for users on mobile. You can use ", /*#__PURE__*/React.createElement("code", null, "srcset"), " to customize image sizes for different device resolutions and sizes."), /*#__PURE__*/React.createElement("ul", null, warnings.map(({
     src,
     alt
   }, i) => {
@@ -2588,8 +2563,6 @@ const Hints = ({
     warnings: warnings.srcset
   }), /*#__PURE__*/React.createElement(BackgroundImageWarnings, {
     warnings: warnings.backgroundImg
-  }), /*#__PURE__*/React.createElement(OverflowWarning, {
-    warnings: warnings.overflow
   }), /*#__PURE__*/React.createElement(InputTypeWarnings, {
     warnings: warnings.inputType
   }), /*#__PURE__*/React.createElement(InputTypeNumberWarnings, {
