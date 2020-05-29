@@ -5,12 +5,8 @@ const getElements = (container, tag) =>
 
 // try to prevent CORS error when no rules
 const missingRules = (sheets, k) => {
-  if (
-    !sheets[k].hasOwnProperty('rules') &&
-    !sheets[k].hasOwnProperty('cssRules')
-  )
-    return true
-  return false
+  if ('rules' in sheets[k] || 'cssRules' in sheets[k]) return false
+  return true
 }
 
 const getRules = (sheets, k) => sheets[k].rules || sheets[k].cssRules
