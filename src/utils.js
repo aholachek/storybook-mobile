@@ -3,13 +3,14 @@ import getDomPath from './getDomPath'
 const getElements = (container, tag) =>
   Array.from(container.querySelectorAll(tag))
 
-// try to prevent CORS error when no rules
-const missingRules = (sheets, k) => {
-  if ('rules' in sheets[k] || 'cssRules' in sheets[k]) return false
-  return true
+const getStylesheetRules = (sheets, k) => {
+  try {
+    const rules = sheets[k].rules || sheets[k].cssRules
+    return rules
+  } catch (e) {
+    return []
+  }
 }
-
-const getRules = (sheets, k) => sheets[k].rules || sheets[k].cssRules
 
 const getNodeName = (el) =>
   el.nodeName === 'A'
@@ -25,8 +26,7 @@ export const getActiveStyles = function (container, el) {
   const activeRegex = /:active$/
 
   Object.keys(sheets).forEach((k) => {
-    if (missingRules(sheets, k)) return
-    getRules(sheets, k).forEach((rule) => {
+    getStylesheetRules(sheets, k).forEach((rule) => {
       if (!rule) return
       if (!rule.selectorText || !rule.selectorText.match(activeRegex)) return
       const ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '')
@@ -136,8 +136,7 @@ export const getBackgroundImageWarnings = (container) => {
 
   const sheets = container.styleSheets
   Object.keys(sheets).forEach((k) => {
-    if (missingRules(sheets, k)) return
-    getRules(sheets, k).forEach((rule) => {
+    getStylesheetRules(sheets, k).forEach((rule) => {
       if (!rule) return
       try {
         elsWithBackgroundImage.forEach((el) => {
@@ -229,8 +228,7 @@ export const getOriginalStyles = function (container, el) {
   const sheets = container.styleSheets
   const result = []
   Object.keys(sheets).forEach((k) => {
-    if (missingRules(sheets, k)) return
-    getRules(sheets, k).forEach((rule) => {
+    getStylesheetRules(sheets, k).forEach((rule) => {
       if (!rule) return
       try {
         if (el.matches(rule.selectorText)) {
