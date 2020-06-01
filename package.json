@@ -1,6 +1,6 @@
 {
   "name": "storybook-mobile",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "description": "A storybook addon to help you catch mobile usability problems",
   "source": "src/register.js",
   "main": "register.js",
