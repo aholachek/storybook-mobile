@@ -11,7 +11,6 @@ import {
   get100vhWarning,
   getInputTypeNumberWarnings,
   getBackgroundImageWarnings,
-  getTooWideWarnings,
 } from './utils'
 
 const recommendedSize = 44
@@ -21,35 +20,7 @@ const recommendedDistance = 8
 const accessibleBlue = '#0965df'
 const warning = '#bd4700'
 
-const StyledLogButton = styled.button`
-  font-family: inherit;
-  color: inherit;
-  cursor: pointer;
-  border: none;
-  font-size: 100%;
-  background-color: transparent;
-  appearance: none;
-  box-shadow: none;
-  font-weight: bold;
-  border-radius: 8px;
-  color: white;
-  background-color: ${accessibleBlue};
-  padding: 0.25rem 0.5rem;
-  display: inline-block;
-  margin-bottom: 1rem;
-  &:hover {
-    background-color: hsl(214, 90%, 38%);
-  }
-  svg {
-    margin-right: 0.25rem;
-    display: inline-block;
-    height: 0.7rem;
-    line-height: 1;
-    position: relative;
-    top: 0.03rem;
-    letter-spacing: 0.01rem;
-  }
-`
+
 
 const tagStyles = `
   padding: .25rem .5rem;
@@ -222,41 +193,6 @@ const StyledBanner = styled.div`
 
 const fixText = 'Learn more'
 
-const timeout = 2200
-
-const LogToConsole = ({ title, els }) => {
-  const [success, setSuccess] = React.useState(false)
-  const magnifyingGlass = (
-    <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path
-        fill="currentColor"
-        d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
-      ></path>
-    </svg>
-  )
-
-  return (
-    <StyledLogButton
-      onClick={() => {
-        setSuccess(true)
-        console.group(
-          `%c 📱Storybook Mobile Addon: ${title}`,
-          'font-weight: bold'
-        )
-        els.forEach((el) => console.log(el))
-        console.groupEnd()
-        setTimeout(() => {
-          setSuccess(false)
-        }, timeout)
-      }}
-    >
-      {magnifyingGlass}
-      {success
-        ? 'Success! Pls open devtools'
-        : `Log element${els.length > 1 ? 's' : ''} to dev console`}
-    </StyledLogButton>
-  )
-}
 
 const ActiveWarnings = ({ warnings }) => {
   if (!warnings.length) return null
@@ -391,12 +327,12 @@ const AutocompleteWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <ul>
-          <li>
+          <li key="1">
             <a href="https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill">
               Google&apos;s autocomplete documentation
             </a>
           </li>
-          <li>
+          <li key="2">
             <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete">
               Mozilla&apos;s autocomplete documentation
             </a>
@@ -488,35 +424,35 @@ const InputTypeNumberWarnings = ({ warnings }) => {
   )
 }
 
-const TooWideWarnings = ({ warnings }) => {
-  if (!warnings.length) return null
+// const TooWideWarnings = ({ warnings }) => {
+//   if (!warnings.length) return null
 
-  const title = `Element${
-    warnings.length > 1 ? 's' : ''
-  } introducing horizontal overflow`
+//   const title = `Element${
+//     warnings.length > 1 ? 's' : ''
+//   } introducing horizontal overflow`
 
-  return (
-    <Spacer>
-      <Hint />
-      <h3>{title}</h3>
-      <p>
-        The following element{warnings.length > 1 ? 's' : ''} had a width that
-        exceeded that of the page, possibly introducing a horizontal scroll.
-        While this may be intentional, please verify that this is not an error.
-      </p>
-      <LogToConsole title={title} els={warnings.map((w) => w.el)} />
-      <div>
-        {warnings.map(({ path }, i) => {
-          return (
-            <ListEntry key={i} style={{ marginBottom: '1rem' }} as="div">
-              <code>{path}</code>
-            </ListEntry>
-          )
-        })}
-      </div>
-    </Spacer>
-  )
-}
+//   return (
+//     <Spacer>
+//       <Hint />
+//       <h3>{title}</h3>
+//       <p>
+//         The following element{warnings.length > 1 ? 's' : ''} had a width that
+//         exceeded that of the page, possibly introducing a horizontal scroll.
+//         While this may be intentional, please verify that this is not an error.
+//       </p>
+//       <LogToConsole title={title} els={warnings.map((w) => w.el)} />
+//       <div>
+//         {warnings.map(({ path }, i) => {
+//           return (
+//             <ListEntry key={i} style={{ marginBottom: '1rem' }} as="div">
+//               <code>{path}</code>
+//             </ListEntry>
+//           )
+//         })}
+//       </div>
+//     </Spacer>
+//   )
+// }
 
 const HeightWarnings = ({ warnings }) => {
   if (!warnings.length) return null
@@ -577,7 +513,7 @@ const BackgroundImageWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <ul>
-          <li>
+          <li key="1">
             <a href="https://css-tricks.com/responsive-images-css/">
               CSS Tricks article discussing responsive background images in
               greater detail, including the interaction of{' '}
@@ -617,12 +553,12 @@ const SrcsetWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <ul>
-          <li>
+          <li key="1">
             <a href="https://cloudfour.com/thinks/responsive-images-the-simple-way">
               Good overview of the problem
             </a>
           </li>
-          <li>
+          <li key="2">
             <a href="https://www.responsivebreakpoints.com/">
               Tool to generate responsive images
             </a>
@@ -703,12 +639,12 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
       <details>
         <summary>{fixText}</summary>
         <ul>
-          <li>
+          <li key="1">
             <a href="https://www.nngroup.com/articles/touch-target-size/">
               Touch target size article from the Nielsen Normal Group
             </a>
           </li>
-          <li>
+          <li key="2">
             <a href="https://developers.google.com/web/fundamentals/accessibility/accessible-styles">
               Google&apos;s tap target size recommendations
             </a>

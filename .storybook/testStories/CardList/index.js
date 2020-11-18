@@ -67,6 +67,7 @@ const CardList = () => {
     <StyledList>
       {cards.map((src) => (
         <a
+          key={src}
           href="/"
           onClick={(e) => {
             e.preventDefault()
