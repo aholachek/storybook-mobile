@@ -195,7 +195,7 @@ const attachLabels = (inputs, container) => {
     } else if (input.parentElement.nodeName === 'LABEL')
       labelText = input.parentElement.innerText
     else if (input.id) {
-      const label = container.querySelector(`label for="${input.id}"`)
+      const label = container.querySelector(`label[for="${input.id}"]`)
       if (label) labelText = label.innerText
     }
     return {
