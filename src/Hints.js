@@ -20,8 +20,6 @@ const recommendedDistance = 8
 const accessibleBlue = '#0965df'
 const warning = '#bd4700'
 
-
-
 const tagStyles = `
   padding: .25rem .5rem;
   font-weight: bold;
@@ -67,8 +65,8 @@ const Warning = () => {
 
 const StyledInfoTag = styled.div`
   ${tagStyles}
- color: ${accessibleBlue};
- background-color: hsla(214, 92%, 45%, 0.1);
+  color: ${accessibleBlue};
+  background-color: hsla(214, 92%, 45%, 0.1);
 `
 const Hint = () => {
   return (
@@ -193,7 +191,6 @@ const StyledBanner = styled.div`
 
 const fixText = 'Learn more'
 
-
 const ActiveWarnings = ({ warnings }) => {
   if (!warnings.length) return null
   return (
@@ -236,7 +233,7 @@ const ActiveWarnings = ({ warnings }) => {
         <summary>{fixText}</summary>
         <p style={{ marginTop: '1rem' }}>
           <a href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari/33681490#33681490">
-            Helpful Stack Overflow thread
+            Relevant Stack Overflow thread
           </a>
         </p>
       </details>
@@ -281,9 +278,10 @@ const TapWarnings = ({ warnings }) => {
           Android browsers by adding the code{' '}
           <code>-webkit-tap-highlight-color: transparent</code>. In order to
           maintain a good mobile experience, tap styles should be added via
-          appropriate <code>:active</code> CSS styles (though, note{' '}
-          <code>:active</code> styles work inconsistently in iOS), or via
-          JavaScript on the <code>touchstart</code> event.
+          appropriate <code>:active</code> CSS styles (though, note that{' '}
+          <a href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari">
+            <code>:active</code> styles work inconsistently in iOS
+          </a>) , or via JavaScript on the <code>touchstart</code> event.
         </p>
       </details>
     </Spacer>
@@ -329,12 +327,12 @@ const AutocompleteWarnings = ({ warnings }) => {
         <ul>
           <li key="1">
             <a href="https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill">
-              Google&apos;s autocomplete documentation
+              Autocomplete documentation by Google
             </a>
           </li>
           <li key="2">
             <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete">
-              Mozilla&apos;s autocomplete documentation
+              Autocomplete documentation by Mozilla
             </a>
           </li>
         </ul>
@@ -373,8 +371,8 @@ const InputTypeWarnings = ({ warnings }) => {
         <summary>{fixText}</summary>
         <p>
           <a href="https://css-tricks.com/better-form-inputs-for-better-mobile-user-experiences/">
-            This article reviews the importance of using correct input types on
-            the mobile web.
+            Article reviewing the importance of using correct input types on the
+            mobile web from CSS Tricks.
           </a>
         </p>
       </details>
@@ -415,8 +413,8 @@ const InputTypeNumberWarnings = ({ warnings }) => {
         <summary>{fixText}</summary>
         <p>
           <a href="https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/">
-            This article has a good overview of the issues with{' '}
-            <code>input type=&quot;number&quot;</code>.
+            Overview of the issues with{' '}
+            <code>input type=&quot;number&quot;</code> from gov.uk.
           </a>
         </p>
       </details>
@@ -515,9 +513,9 @@ const BackgroundImageWarnings = ({ warnings }) => {
         <ul>
           <li key="1">
             <a href="https://css-tricks.com/responsive-images-css/">
-              CSS Tricks article discussing responsive background images in
-              greater detail, including the interaction of{' '}
-              <code>image-set</code> with media queries.
+              Article discussing responsive background images in greater detail,
+              including the interaction of <code>image-set</code> with media
+              queries, from CSS Tricks.
             </a>
           </li>
         </ul>
@@ -555,12 +553,12 @@ const SrcsetWarnings = ({ warnings }) => {
         <ul>
           <li key="1">
             <a href="https://cloudfour.com/thinks/responsive-images-the-simple-way">
-              Good overview of the problem
+              Summary of the why and how of responsive images
             </a>
           </li>
           <li key="2">
             <a href="https://www.responsivebreakpoints.com/">
-              Tool to generate responsive images
+              A tool to generate responsive images
             </a>
           </li>
         </ul>
@@ -641,12 +639,12 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
         <ul>
           <li key="1">
             <a href="https://www.nngroup.com/articles/touch-target-size/">
-              Touch target size article from the Nielsen Normal Group
+              Touch target size article from the Nielsen Norman Group
             </a>
           </li>
           <li key="2">
             <a href="https://developers.google.com/web/fundamentals/accessibility/accessible-styles">
-              Google&apos;s tap target size recommendations
+              Tap target size recommendations from Google
             </a>
           </li>
         </ul>
@@ -736,14 +734,14 @@ const Hints = ({ container, theme, loading, running }) => {
         </StyledBanner>
         <TouchTargetWarnings warnings={warnings.touchTarget} />
         <AutocompleteWarnings warnings={warnings.autocomplete} />
-        <SrcsetWarnings warnings={warnings.srcset} />
-        <BackgroundImageWarnings warnings={warnings.backgroundImg} />
         {/* <TooWideWarnings warnings={warnings.tooWide} container={container} /> */}
         <InputTypeWarnings warnings={warnings.inputType} />
         <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
         <HeightWarnings warnings={warnings.height} />
         <TapWarnings warnings={warnings.tapHighlight} />
         <ActiveWarnings warnings={warnings.active} />
+        <SrcsetWarnings warnings={warnings.srcset} />
+        <BackgroundImageWarnings warnings={warnings.backgroundImg} />
       </Container>
     </ThemeProvider>
   )

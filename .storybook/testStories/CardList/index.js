@@ -47,6 +47,11 @@ const StyledList = styled.ul`
       object-fit: cover;
     }
   }
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    max-width: 800px;
+    grid-auto-flow: row;
+  }
 `
 
 const cards = [
@@ -65,9 +70,9 @@ const cards = [
 const CardList = () => {
   return (
     <StyledList>
-      {cards.map((src) => (
+      {cards.map((src,i) => (
         <a
-          key={src}
+          key={`${src}-${i}`}
           href="/"
           onClick={(e) => {
             e.preventDefault()

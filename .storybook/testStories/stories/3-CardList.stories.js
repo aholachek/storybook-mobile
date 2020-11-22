@@ -2,7 +2,7 @@ import React from 'react'
 import CardList from '../CardList'
 
 export default {
-  title: 'Snap Scroll Cards',
+  title: 'Scrollable Cards',
   component: CardList,
 }
 
