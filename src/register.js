@@ -82,7 +82,7 @@ const MyPanel = ({ storyId }) => {
 addons.register(ADDON_ID, () => {
   const render = ({ active, key }) => {
     return (
-      <React.Fragment>
+      <React.Fragment key="storybook-mobile">
         <ViewportManager active={active} />
         <AddonPanel active={active} key={key}>
           <StateWrapper active={active}>
