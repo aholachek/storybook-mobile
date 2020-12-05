@@ -13,8 +13,8 @@ import {
   getBackgroundImageWarnings,
 } from './utils'
 
-const recommendedSize = 44
-const minSize = 30
+const recommendedSize = 48
+const minSize = 32
 const recommendedDistance = 8
 
 const accessibleBlue = '#0965df'

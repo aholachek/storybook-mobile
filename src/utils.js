@@ -320,9 +320,9 @@ export const getTouchTargetSizeWarning = ({
   )
 
   const tooClose = elsWithClose.filter(
-    ({ boundingBox: { width, height }, close }) => {
+    ({ close }) => {
       return (
-        close.length && (width < recommendedSize || height < recommendedSize)
+        close.length 
       )
     }
   )
