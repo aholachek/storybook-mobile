@@ -643,7 +643,7 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
             </a>
           </li>
           <li key="2">
-            <a href="https://developers.google.com/web/fundamentals/accessibility/accessible-styles">
+            <a href="https://web.dev/accessible-tap-targets/">
               Tap target size recommendations from Google
             </a>
           </li>
