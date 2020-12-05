@@ -610,8 +610,7 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
             Touch targets close together{' '}
           </h3>
           <p>
-            These elements have dimensions smaller than {recommendedSize}px and
-            are less than {recommendedDistance}px from at least one other
+            These tappable elements are less than {recommendedDistance}px from at least one other
             tappable element:
           </p>
           <ul>
