@@ -265,25 +265,17 @@ export const getInputTypeWarnings = (container) => {
   return attachLabels(inputs, container)
 }
 
-const makePoints = ({ top, right, bottom, left }) => {
-  return [
-    [top, right],
-    [top, left],
-    [bottom, right],
-    [bottom, left],
-  ]
-}
-
-const findDistance = (point1, point2) => {
-  return Math.sqrt(
-    Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2)
+const isInside = (dangerZone, [, boundingBox]) => {
+  return (
+    boundingBox.top <= dangerZone.bottom &&
+    boundingBox.bottom >= dangerZone.top &&
+    boundingBox.left <= dangerZone.right &&
+    boundingBox.right >= dangerZone.left
   )
 }
-
 export const getTouchTargetSizeWarning = ({
   container,
   minSize,
-  recommendedSize,
   recommendedDistance,
 }) => {
   const els = getElements(container, 'button')
@@ -291,27 +283,31 @@ export const getTouchTargetSizeWarning = ({
     .concat(getElements(container, 'a'))
     .map((el) => [el, el.getBoundingClientRect()])
 
-  const elsWithClose = els.map(([el1, bounding1], i1) => {
-    const close = els.filter(([, bounding2], i2) => {
-      if (i2 === i1) return
+  const suspectEls = new Set([...els])
 
-      const points1 = makePoints(bounding1)
-      const points2 = makePoints(bounding2)
+  const elsWithClose = els
+    .map(([el1, bounding1]) => {
+      const dangerZone = {
+        top: bounding1.top - recommendedDistance,
+        left: bounding1.left - recommendedDistance,
+        right: bounding1.right + recommendedDistance,
+        bottom: bounding1.bottom + recommendedDistance,
+      }
 
-      let isTooClose = false
-
-      points1.forEach((point1) => {
-        points2.forEach((point2) => {
-          const distance = findDistance(point1, point2)
-          if (distance < recommendedDistance) {
-            isTooClose = true
+      const close = Array.from(suspectEls)
+        .filter((el) => {
+          if (isInside(dangerZone, el)) {
+            return el
           }
+          return false
         })
-      })
-      return isTooClose
+
+      if (!close.length) {
+        suspectEls.delete(el1)
+        return false
+      }
+      return { close: close ? close : null, el: el1, boundingBox: bounding1 }
     })
-    return { close: close ? close : null, el: el1, boundingBox: bounding1 }
-  })
 
   const underMinSize = elsWithClose.filter(
     ({ boundingBox: { width, height } }) => {
@@ -319,13 +315,9 @@ export const getTouchTargetSizeWarning = ({
     }
   )
 
-  const tooClose = elsWithClose.filter(
-    ({ close }) => {
-      return (
-        close.length 
-      )
-    }
-  )
+  const tooClose = elsWithClose.filter(({ close }) => {
+    return close.length
+  })
 
   const present = ({ el, boundingBox: { width, height }, close }) => {
     return {
