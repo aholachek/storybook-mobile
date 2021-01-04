@@ -265,7 +265,7 @@ export const getInputTypeWarnings = (container) => {
   return attachLabels(inputs, container)
 }
 
-const isInside = (dangerZone, [, boundingBox]) => {
+const isInside = (dangerZone, boundingBox) => {
   return (
     boundingBox.top <= dangerZone.bottom &&
     boundingBox.bottom >= dangerZone.top &&
@@ -295,17 +295,14 @@ export const getTouchTargetSizeWarning = ({
       }
 
       const close = Array.from(suspectEls)
-        .filter((el) => {
-          if (isInside(dangerZone, el)) {
+        .filter(([el, boundingBox]) => {
+          if (el === el1) return false
+          if (isInside(dangerZone, boundingBox)) {
             return el
           }
           return false
         })
 
-      if (!close.length) {
-        suspectEls.delete(el1)
-        return false
-      }
       return { close: close ? close : null, el: el1, boundingBox: bounding1 }
     })
 
@@ -316,7 +313,7 @@ export const getTouchTargetSizeWarning = ({
   )
 
   const tooClose = elsWithClose.filter(({ close }) => {
-    return close.length
+    return close && close.length
   })
 
   const present = ({ el, boundingBox: { width, height }, close }) => {
