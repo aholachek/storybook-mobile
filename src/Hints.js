@@ -721,9 +721,9 @@ const Hints = ({ container, theme }) => {
     return <Loading />
   }
 
-  const scanComplete = !!warnings.height;
+  const scanComplete = !!warnings.height
 
-  const onRescanClick = () => setRescan(prev => prev + 1);
+  const onRescanClick = () => setRescan(prev => prev + 1)
 
   if (warningCount === 0 && scanComplete) {
     return (
