@@ -1,15 +1,17 @@
 import getDomPath from './getDomPath'
+import {createScheduler} from 'lrt'
 
 const getElements = (container, tag) =>
   Array.from(container.querySelectorAll(tag))
 
 const getStylesheetRules = (sheets, k) => {
+  let rules = []
   try {
-    const rules = sheets[k].rules || sheets[k].cssRules
-    return rules
+    rules = sheets[k].rules || sheets[k].cssRules
   } catch (e) {
-    return []
+    //
   }
+  return rules
 }
 
 const getNodeName = (el) =>
@@ -40,26 +42,6 @@ export const getActiveStyles = function (container, el) {
     })
   })
   return result.length ? result : null
-}
-
-export const getActiveWarnings = (container) => {
-  const buttons = getElements(container, 'button').concat(
-    getElements(container, '[role="button"]')
-  )
-  const links = getElements(container, 'a')
-
-  return buttons
-    .concat(links)
-    .map((el) => [el, getActiveStyles(container, el)])
-    .filter((tup) => tup[1])
-    .map(([el]) => {
-      return {
-        type: getNodeName(el),
-        text: el.innerText,
-        html: el.innerHTML,
-        path: getDomPath(el),
-      }
-    })
 }
 
 export const getTapHighlightWarnings = (container) => {
@@ -224,40 +206,6 @@ export const getInputTypeNumberWarnings = (container) => {
   return attachLabels(inputs)
 }
 
-export const getOriginalStyles = function (container, el) {
-  const sheets = container.styleSheets
-  const result = []
-  Object.keys(sheets).forEach((k) => {
-    getStylesheetRules(sheets, k).forEach((rule) => {
-      if (!rule) return
-      try {
-        if (el.matches(rule.selectorText)) {
-          result.push(rule)
-        }
-      } catch (e) {
-        // catch errors in safari
-      }
-    })
-  })
-  return result.length ? result : null
-}
-
-export const get100vhWarning = (container) => {
-  return getElements(container, '#root *')
-    .map((el) => {
-      const styles = getOriginalStyles(container, el)
-      if (!styles) return false
-      const hasVHWarning = styles.find((style) => /100vh/.test(style.cssText))
-      if (hasVHWarning) return { el, css: hasVHWarning.cssText }
-      return null
-    })
-    .filter(Boolean)
-    .map((data) => ({
-      ...data,
-      path: getDomPath(data.el),
-    }))
-}
-
 export const getInputTypeWarnings = (container) => {
   const inputs = getElements(container, 'input[type="text"]')
     .concat(getElements(container, 'input:not([type])'))
@@ -353,3 +301,88 @@ export const getTooWideWarnings = (container) => {
       }
     })
 }
+
+
+export const getActiveWarnings = (container) => {
+  const buttons = getElements(container, 'button').concat(
+    getElements(container, '[role="button"]')
+  )
+  const links = getElements(container, 'a')
+
+  return buttons
+    .concat(links)
+    .map((el) => getActiveStyles(container, el) ?
+      {
+        type: getNodeName(el),
+        text: el.innerText,
+        html: el.innerHTML,
+        path: getDomPath(el),
+      }
+      : null
+    ).filter(Boolean)
+}
+
+export const getOriginalStyles = (container, el) => {
+  const sheets = container.styleSheets
+  let result = []
+  Object.keys(sheets).forEach((k) => {
+    const rules = getStylesheetRules(sheets, k)
+    rules.forEach((rule) => {
+      if (rule) {
+        try {
+          if (el.matches(rule.selectorText)) {
+            result.push(rule.cssText)
+          }
+        } catch (e) {
+          // catch errors in safari
+        }
+      }
+    })
+  })
+  return result
+}
+
+function* vhIterator(container) {
+  const elements = getElements(container, '#root *')
+  const len = elements.length
+  const result = []
+
+  for (let i = 0; i < len; i++) {
+    const el = elements[i]
+    const styles = getOriginalStyles(container, el)
+    const vhWarning = styles.find((style) => /100vh/.test(style))
+    if (vhWarning) {
+      result.push( { el, css: vhWarning, path: getDomPath(el) })
+    }
+    yield
+  }
+  return result
+}
+
+export const get100vhWarnings = (container) => {
+  const scheduler = createScheduler()
+  const task = scheduler.runTask(vhIterator(container))
+  return {abortTask: () => scheduler.abortTask(task), task}
+}
+
+export const getFastWarnings = ({
+  container,
+  minSize,
+  recommendedSize,
+  recommendedDistance,
+}) => ({
+  tapHighlight: getTapHighlightWarnings(container),
+  autocomplete: getAutocompleteWarnings(container),
+  inputType: getInputTypeWarnings(container),
+  srcset: getSrcsetWarnings(container),
+  backgroundImg: getBackgroundImageWarnings(container),
+  inputTypeNumber: getInputTypeNumberWarnings(container),
+  touchTarget: getTouchTargetSizeWarning({
+    container,
+    minSize,
+    recommendedSize,
+    recommendedDistance,
+  }),
+  active: getActiveWarnings(container),
+  // tooWide: getTooWideWarnings(container),
+})

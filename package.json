@@ -53,6 +53,7 @@
     "@storybook/core-events": "^5.3.18",
     "emotion": "^10.0.27",
     "emotion-theming": "^10.0.27",
+    "lrt": "^3.0.3",
     "styled-components": "^5.1.0"
   }
 }

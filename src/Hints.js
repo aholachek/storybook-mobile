@@ -1,17 +1,7 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import styled, { ThemeProvider } from 'styled-components'
 import { withTheme } from 'emotion-theming'
-import {
-  getTapHighlightWarnings,
-  getActiveWarnings,
-  getAutocompleteWarnings,
-  getInputTypeWarnings,
-  getSrcsetWarnings,
-  getTouchTargetSizeWarning,
-  get100vhWarning,
-  getInputTypeNumberWarnings,
-  getBackgroundImageWarnings,
-} from './utils'
+import { getFastWarnings, get100vhWarnings } from './utils'
 
 const recommendedSize = 48
 const minSize = 32
@@ -185,8 +175,19 @@ const Container = styled.div`
 `
 
 const StyledBanner = styled.div`
-  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
   grid-column: 1 / -1;
+  height: 2.875rem;
+`
+
+const StyledRescanButton = styled.button`
+  margin-left: 1rem;
+  background: transparent;
+  border-width: 1px;
+  border-radius: 3px;
+  cursor: pointer;
 `
 
 const fixText = 'Learn more'
@@ -647,7 +648,6 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
             </a>
           </li>
         </ul>
-        <p></p>
       </details>
     </Spacer>
   )
@@ -663,45 +663,44 @@ const Wrapper = ({ theme, children }) => {
   )
 }
 
-const Hints = ({ container, theme, loading, running }) => {
-  if (running)
-    return (
-      <Wrapper theme={theme}>
-        <StyledBanner>Running scan...</StyledBanner>
-      </Wrapper>
-    )
+export const Loading = withTheme(({theme}) => (
+  <Wrapper theme={theme}>
+    <StyledBanner>Running scan...</StyledBanner>
+  </Wrapper>
+))
 
-  const warnings = {
-    tapHighlight: getTapHighlightWarnings(container),
-    active: getActiveWarnings(container),
-    autocomplete: getAutocompleteWarnings(container),
-    inputType: getInputTypeWarnings(container),
-    touchTarget: getTouchTargetSizeWarning({
+const Hints = ({ container, theme }) => {
+  const [warnings, setWarnings] = React.useState(undefined)
+  const [rescan, setRescan] = React.useState(0)
+
+  React.useEffect(() => {
+    setWarnings(getFastWarnings({
       container,
       minSize,
-      recommendedSize,
       recommendedDistance,
-    }),
-    srcset: getSrcsetWarnings(container),
-    backgroundImg: getBackgroundImageWarnings(container),
-    height: get100vhWarning(container),
-    inputTypeNumber: getInputTypeNumberWarnings(container),
-    // tooWide: getTooWideWarnings(container),
-  }
+      recommendedSize
+    }))
+    const {abortTask, task} = get100vhWarnings(container)
+    task.then((height) => {
+      setWarnings(prev => ({...prev, height}))
+    })
+    return abortTask
+  }, [container, rescan])
 
-  const warningCount = Object.keys(warnings)
-    .map((key) => warnings[key])
-    .reduce((acc, curr) => {
-      const count = Array.isArray(curr)
-        ? convertToBool(curr.length)
-        : //touchTarget returns an object not an array
+  const warningCount = React.useMemo(() => warnings ? Object.keys(warnings)
+      .reduce((acc, key) => {
+        const curr = warnings[key]
+        const count = Array.isArray(curr)
+          ? convertToBool(curr.length)
+          : //touchTarget returns an object not an array
           Object.keys(curr)
             .map((key) => curr[key])
             .reduce((acc, curr) => {
               return acc + convertToBool(curr.length)
             }, 0)
-      return acc + count
-    }, 0)
+        return acc + count
+      }, 0) : 0
+  , [warnings])
 
   React.useEffect(() => {
     const tab = Array.from(
@@ -714,29 +713,56 @@ const Hints = ({ container, theme, loading, running }) => {
         tab.innerText = `Mobile (${warningCount})`
       }
     }
-  })
+    return () => tab.innerText = 'Mobile'
+  }, [warningCount])
 
-  if (!warningCount && !loading)
+  // Before counting, show the Loading state
+  if (!warnings) {
+    return <Loading />
+  }
+
+  const scanComplete = !!warnings.height;
+
+  const onRescanClick = () => setRescan(prev => prev + 1);
+
+  if (warningCount === 0 && scanComplete) {
     return (
       <Wrapper theme={theme}>
-        <StyledBanner>Looking good! No mobile hints available.</StyledBanner>
+        <StyledBanner>
+          <span>Looking good! No mobile hints available.</span>
+          <StyledRescanButton onClick={onRescanClick} type="button">
+            Rescan
+          </StyledRescanButton>
+        </StyledBanner>
       </Wrapper>
     )
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <StyledBanner>
-          {loading
-            ? 'Preliminary results shown, still scanning...'
-            : 'Scan complete!'}
+          {scanComplete ? (
+            <Fragment>
+              <span>
+                Scan complete!
+              </span>
+              <StyledRescanButton onClick={onRescanClick} type="button">
+                Rescan
+              </StyledRescanButton>
+            </Fragment>
+          ) : (
+            <span>
+              Preliminary results shown, still scanning...
+            </span>
+          )}
         </StyledBanner>
         <TouchTargetWarnings warnings={warnings.touchTarget} />
         <AutocompleteWarnings warnings={warnings.autocomplete} />
         {/* <TooWideWarnings warnings={warnings.tooWide} container={container} /> */}
         <InputTypeWarnings warnings={warnings.inputType} />
         <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
-        <HeightWarnings warnings={warnings.height} />
+        {warnings.height && <HeightWarnings warnings={warnings.height} />}
         <TapWarnings warnings={warnings.tapHighlight} />
         <ActiveWarnings warnings={warnings.active} />
         <SrcsetWarnings warnings={warnings.srcset} />
