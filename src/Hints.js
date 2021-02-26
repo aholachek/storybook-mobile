@@ -184,6 +184,24 @@ const StyledBanner = styled.div`
 
 const StyledRescanButton = styled.button`
   margin-left: 1rem;
+  border-width: 1px;
+  border-radius: 3px;
+  padding: .2rem .5rem;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  border: none;
+  font-size: 100%;
+  background-color: transparent;
+  appearance: none;
+  box-shadow: none;
+  border: 1px solid;
+  &:hover {
+    background-color: hsla(0, 0%, 0%, 0.1)
+  }
+`
+`
+  margin-left: 1rem;
   background: transparent;
   border-width: 1px;
   border-radius: 3px;
