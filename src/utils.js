@@ -193,10 +193,7 @@ export const getAutocompleteWarnings = (container) => {
   const warnings = inputs.filter((input) => {
     const currentType = input.getAttribute('type')
     const autocomplete = input.getAttribute('autocomplete')
-    if (textInputs.find((type) => currentType === type) && !autocomplete) {
-      return true
-    }
-    return false
+    return (!!textInputs.find((type) => currentType === type) && !autocomplete)
   })
   return attachLabels(warnings, container)
 }
@@ -302,24 +299,36 @@ export const getTooWideWarnings = (container) => {
     })
 }
 
-
-export const getActiveWarnings = (container) => {
+function* activeIterator(container) {
   const buttons = getElements(container, 'button').concat(
     getElements(container, '[role="button"]')
   )
   const links = getElements(container, 'a')
+  const elements = buttons.concat(links)
+  const len = elements.length
+  const result = []
 
-  return buttons
-    .concat(links)
-    .map((el) => getActiveStyles(container, el) ?
-      {
+  for (let i = 0; i < len; i++) {
+    const el = elements[i]
+    const hasActive = getActiveStyles(container, el);
+    if (hasActive) {
+      result.push({
         type: getNodeName(el),
         text: el.innerText,
         html: el.innerHTML,
         path: getDomPath(el),
-      }
-      : null
-    ).filter(Boolean)
+      });
+    }
+    yield
+  }
+
+  return result
+}
+
+export const getActiveWarnings = (container) => {
+  const scheduler = createScheduler()
+  const task = scheduler.runTask(activeIterator(container))
+  return {abortTask: () => scheduler.abortTask(task), task}
 }
 
 export const getOriginalStyles = (container, el) => {
@@ -383,6 +392,5 @@ export const getFastWarnings = ({
     recommendedSize,
     recommendedDistance,
   }),
-  active: getActiveWarnings(container),
   // tooWide: getTooWideWarnings(container),
 })

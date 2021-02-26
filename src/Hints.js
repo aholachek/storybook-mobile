@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import styled, { ThemeProvider } from 'styled-components'
 import { withTheme } from 'emotion-theming'
-import { getFastWarnings, get100vhWarnings } from './utils'
+import { getActiveWarnings, getFastWarnings, get100vhWarnings } from './utils'
 
 const recommendedSize = 48
 const minSize = 32
@@ -197,15 +197,8 @@ const StyledRescanButton = styled.button`
   box-shadow: none;
   border: 1px solid;
   &:hover {
-    background-color: hsla(0, 0%, 0%, 0.1)
+    background-color: hsla(0, 0%, 0%, 0.15)
   }
-`
-`
-  margin-left: 1rem;
-  background: transparent;
-  border-width: 1px;
-  border-radius: 3px;
-  cursor: pointer;
 `
 
 const fixText = 'Learn more'
@@ -220,7 +213,11 @@ const ActiveWarnings = ({ warnings }) => {
       </h3>
       <p>
         <code>:active</code> styles will only appear in iOS{' '}
-        <a href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari">
+        <a
+          href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           if a touch listener is added to the element or one of its ancestors
         </a>
         . Once activated in this manner, <code>:active</code> styles (along with{' '}
@@ -251,7 +248,11 @@ const ActiveWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <p style={{ marginTop: '1rem' }}>
-          <a href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari/33681490#33681490">
+          <a
+            href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari/33681490#33681490"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Relevant Stack Overflow thread
           </a>
         </p>
@@ -298,7 +299,11 @@ const TapWarnings = ({ warnings }) => {
           <code>-webkit-tap-highlight-color: transparent</code>. In order to
           maintain a good mobile experience, tap styles should be added via
           appropriate <code>:active</code> CSS styles (though, note that{' '}
-          <a href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari">
+          <a
+            href="https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <code>:active</code> styles work inconsistently in iOS
           </a>) , or via JavaScript on the <code>touchstart</code> event.
         </p>
@@ -321,7 +326,11 @@ const AutocompleteWarnings = ({ warnings }) => {
       </p>
       <p>
         If you truly want to disable autocomplete, try using a{' '}
-        <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=468153#c164">
+        <a
+          href="https://bugs.chromium.org/p/chromium/issues/detail?id=468153#c164"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           semantically valid but unique value rather than{' '}
           <code>autocomplete=&quot;off&quot;</code>
         </a>
@@ -344,13 +353,21 @@ const AutocompleteWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <ul>
-          <li key="1">
-            <a href="https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill">
+          <li>
+            <a
+              href="https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Autocomplete documentation by Google
             </a>
           </li>
-          <li key="2">
-            <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete">
+          <li>
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Autocomplete documentation by Mozilla
             </a>
           </li>
@@ -373,7 +390,11 @@ const InputTypeWarnings = ({ warnings }) => {
         This will render the default text keyboard on mobile (which could very
         well be what you want!) If you haven&apos;t already, take a moment to
         make sure this is correct. You can use{' '}
-        <a href="https://better-mobile-inputs.netlify.com/">this tool</a> to
+        <a
+          href="https://better-mobile-inputs.netlify.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >this tool</a> to
         explore keyboard options.
       </p>
       <ul>
@@ -389,7 +410,11 @@ const InputTypeWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <p>
-          <a href="https://css-tricks.com/better-form-inputs-for-better-mobile-user-experiences/">
+          <a
+            href="https://css-tricks.com/better-form-inputs-for-better-mobile-user-experiences/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Article reviewing the importance of using correct input types on the
             mobile web from CSS Tricks.
           </a>
@@ -431,7 +456,11 @@ const InputTypeNumberWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <p>
-          <a href="https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/">
+          <a
+            href="https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Overview of the issues with{' '}
             <code>input type=&quot;number&quot;</code> from gov.uk.
           </a>
@@ -481,7 +510,11 @@ const HeightWarnings = ({ warnings }) => {
       </h3>
       <p>
         Viewport units are{' '}
-        <a href="https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html">
+        <a
+          href="https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           tricky on mobile.
         </a>{' '}
         On some mobile browers, depending on scroll position, <code>100vh</code>{' '}
@@ -510,7 +543,11 @@ const BackgroundImageWarnings = ({ warnings }) => {
       <p>
         Downloading larger-than-necessary images hurts performance for users on
         mobile. You can use{' '}
-        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/image-set">
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Web/CSS/image-set"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <code>image-set</code>
         </a>{' '}
         to serve an appropriate background image based on the user&apos;s device
@@ -530,8 +567,12 @@ const BackgroundImageWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <ul>
-          <li key="1">
-            <a href="https://css-tricks.com/responsive-images-css/">
+          <li>
+            <a
+              href="https://css-tricks.com/responsive-images-css/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Article discussing responsive background images in greater detail,
               including the interaction of <code>image-set</code> with media
               queries, from CSS Tricks.
@@ -570,13 +611,21 @@ const SrcsetWarnings = ({ warnings }) => {
       <details>
         <summary>{fixText}</summary>
         <ul>
-          <li key="1">
-            <a href="https://cloudfour.com/thinks/responsive-images-the-simple-way">
+          <li>
+            <a
+              href="https://cloudfour.com/thinks/responsive-images-the-simple-way"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Summary of the why and how of responsive images
             </a>
           </li>
-          <li key="2">
-            <a href="https://www.responsivebreakpoints.com/">
+          <li>
+            <a
+              href="https://www.responsivebreakpoints.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               A tool to generate responsive images
             </a>
           </li>
@@ -655,13 +704,21 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
       <details>
         <summary>{fixText}</summary>
         <ul>
-          <li key="1">
-            <a href="https://www.nngroup.com/articles/touch-target-size/">
+          <li>
+            <a
+              href="https://www.nngroup.com/articles/touch-target-size/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Touch target size article from the Nielsen Norman Group
             </a>
           </li>
-          <li key="2">
-            <a href="https://web.dev/accessible-tap-targets/">
+          <li>
+            <a
+              href="https://web.dev/accessible-tap-targets/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Tap target size recommendations from Google
             </a>
           </li>
@@ -698,11 +755,18 @@ const Hints = ({ container, theme }) => {
       recommendedDistance,
       recommendedSize
     }))
-    const {abortTask, task} = get100vhWarnings(container)
-    task.then((height) => {
+    const schedule100vh = get100vhWarnings(container)
+    const scheduleActive = getActiveWarnings(container)
+    schedule100vh.task.then((height) => {
       setWarnings(prev => ({...prev, height}))
     })
-    return abortTask
+    scheduleActive.task.then((active) => {
+      setWarnings(prev => ({...prev, active}))
+    })
+    return () => {
+      schedule100vh.abortTask();
+      scheduleActive.abortTask();
+    }
   }, [container, rescan])
 
   const warningCount = React.useMemo(() => warnings ? Object.keys(warnings)
@@ -734,12 +798,14 @@ const Hints = ({ container, theme }) => {
     return () => tab.innerText = 'Mobile'
   }, [warningCount])
 
+  const scanComplete = React.useMemo(() =>
+    !!(warnings && warnings.active && warnings.height),
+    [warnings])
+
   // Before counting, show the Loading state
   if (!warnings) {
     return <Loading />
   }
-
-  const scanComplete = !!warnings.height
 
   const onRescanClick = () => setRescan(prev => prev + 1)
 
@@ -782,7 +848,7 @@ const Hints = ({ container, theme }) => {
         <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
         {warnings.height && <HeightWarnings warnings={warnings.height} />}
         <TapWarnings warnings={warnings.tapHighlight} />
-        <ActiveWarnings warnings={warnings.active} />
+        {warnings.active && <ActiveWarnings warnings={warnings.active} />}
         <SrcsetWarnings warnings={warnings.srcset} />
         <BackgroundImageWarnings warnings={warnings.backgroundImg} />
       </Container>
