@@ -30,21 +30,21 @@
   "author": "Alex Holachek",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.9.6",
+    "@babel/core": "^7.13.8",
     "@storybook/addon-actions": "^5.3.18",
     "@storybook/addon-knobs": "^5.3.18",
     "@storybook/addon-viewport": "^5.3.18",
     "@storybook/react": "^5.3.18",
-    "babel-loader": "^8.1.0",
-    "eslint": "^7.0.0",
+    "babel-loader": "^8.2.2",
+    "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-prettier": "^3.3.1",
-    "evergreen-ui": "^4.27.4",
-    "microbundle": "^0.12.0",
+    "evergreen-ui": "^4.29.1",
+    "microbundle": "^0.13.0",
     "prettier": "^2.2.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "peerDependencies": {
     "react": "*"
@@ -54,9 +54,9 @@
     "@storybook/api": "^5.3.18",
     "@storybook/components": "^5.3.18",
     "@storybook/core-events": "^5.3.18",
-    "emotion": "^10.0.27",
-    "emotion-theming": "^10.0.27",
+    "emotion": "^11.0.0",
+    "emotion-theming": "^11.0.0",
     "lrt": "^3.0.3",
-    "styled-components": "^5.1.0"
+    "styled-components": "^5.2.1"
   }
 }
