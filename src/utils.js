@@ -113,7 +113,10 @@ function* getTouchTargetSizeWarning(container) {
     .concat(getElements(container, '[role="button"]'))
     .concat(getElements(container, 'a'))
 
-  const suspectElements = Array.from(new Set(elements))
+  const suspectElements = Array.from(new Set(elements)).map((el) => [
+    el,
+    el.getBoundingClientRect(),
+  ])
 
   const len = elements.length
   const underMinSize = []
@@ -131,8 +134,8 @@ function* getTouchTargetSizeWarning(container) {
     }
 
     const close = suspectElements.filter(
-      (susEl) =>
-        susEl !== el && isInside(dangerZone, susEl.getBoundingClientRect())
+      ([susEl, susBounding]) =>
+        susEl !== el && isInside(dangerZone, susBounding)
     )
 
     const isUnderMinSize = checkMinSize(bounding)
