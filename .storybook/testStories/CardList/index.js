@@ -8,6 +8,7 @@ import fish4 from './assets/fish-4.jpg'
 import fish5 from './assets/fish-5.jpg'
 
 const StyledList = styled.ul`
+  min-height: 100vh;
   margin-top: 4rem;
   list-style-type: none;
   display: grid;
