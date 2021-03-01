@@ -1,9 +1,9 @@
 import React from 'react'
 import { addons, types } from '@storybook/addons'
-import { STORY_CHANGED } from '@storybook/core-events'
+import { STORY_RENDERED } from '@storybook/core-events'
 import { useChannel, useAddonState } from '@storybook/api'
 import { AddonPanel } from '@storybook/components'
-import Hints from './Hints'
+import Hints, { Loading } from './Hints'
 
 const ADDON_ID = 'mobile-hints'
 const PARAM_KEY = 'mobile-hints'
@@ -39,7 +39,7 @@ const StateWrapper = ({ children }) => {
   const [storyId, setStoryId] = React.useState('')
 
   useChannel({
-    [STORY_CHANGED]: (...args) => {
+    [STORY_RENDERED]: (...args) => {
       setStoryId(args)
     },
   })
@@ -55,28 +55,37 @@ const getContainer = () => {
 }
 
 const delay = 2000
-const MyPanel = ({ storyId }) => {
-  const [html, setHTML] = React.useState('')
-  const [loading, setLoading] = React.useState(false)
+const MyPanel = ({ active, storyId }) => {
+  const [html, setHTML] = React.useState(undefined)
 
   React.useEffect(() => {
-    const setContainer = () => {
+    // clear HTML when storyId changes
+    setHTML(undefined)
+    // check for container
+    let timeoutId = undefined
+    const checkContainer = () => {
       const container = getContainer()
       if (!container || !container.body) {
-        setTimeout(setContainer, delay)
-        return
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(checkContainer, delay)
+      } else {
+        setHTML(container.body.innerHTML)
       }
-      setHTML(container.body.innerHTML)
-      setLoading(false)
     }
-    setLoading(true)
-    setTimeout(setContainer, delay)
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(checkContainer, delay)
+    return () => clearTimeout(timeoutId)
   }, [storyId])
-
 
   const container = getContainer()
 
-  return <Hints container={container} loading={loading} running={!html} />
+  if (!active) return null
+
+  if (!html || !container) {
+    return <Loading />
+  }
+
+  return <Hints container={container} />
 }
 
 addons.register(ADDON_ID, () => {
@@ -84,7 +93,7 @@ addons.register(ADDON_ID, () => {
     return (
       <React.Fragment key="storybook-mobile">
         <ViewportManager active={active} />
-        <AddonPanel active={active} key={key}>
+        <AddonPanel key={key} active={active}>
           <StateWrapper active={active}>
             <MyPanel key={key} active={active} />
           </StateWrapper>

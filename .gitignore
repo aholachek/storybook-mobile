@@ -9,3 +9,4 @@ register.modern.js
 storybook-static
 
 .DS_Store
+.idea
