@@ -41,7 +41,7 @@ const StateWrapper = ({ children }) => {
   useChannel({
     [STORY_RENDERED]: (...args) => {
       setStoryId(args)
-    }
+    },
   })
   return React.cloneElement(children, {
     storyId,
@@ -55,7 +55,7 @@ const getContainer = () => {
 }
 
 const delay = 2000
-const MyPanel = ({ storyId }) => {
+const MyPanel = ({ active, storyId }) => {
   const [html, setHTML] = React.useState(undefined)
 
   React.useEffect(() => {
@@ -79,6 +79,8 @@ const MyPanel = ({ storyId }) => {
 
   const container = getContainer()
 
+  if (!active) return null
+
   if (!html || !container) {
     return <Loading />
   }
@@ -91,7 +93,7 @@ addons.register(ADDON_ID, () => {
     return (
       <React.Fragment key="storybook-mobile">
         <ViewportManager active={active} />
-        <AddonPanel active={active} key={key}>
+        <AddonPanel key={key} active={active}>
           <StateWrapper active={active}>
             <MyPanel key={key} active={active} />
           </StateWrapper>

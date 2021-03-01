@@ -1,5 +1,5 @@
 import getDomPath from './getDomPath'
-import {createScheduler} from 'lrt'
+import { createScheduler } from 'lrt'
 
 const getElements = (container, tag) =>
   Array.from(container.querySelectorAll(tag))
@@ -21,6 +21,261 @@ const getNodeName = (el) =>
     ? 'button'
     : `${el.nodeName.toLowerCase()}[role="button"]`
 
+const attachLabels = (inputs, container) =>
+  inputs.map((input) => {
+    let labelText = ''
+    if (input.labels && input.labels[0]) {
+      labelText = input.labels[0].innerText
+    } else if (input.parentElement.nodeName === 'LABEL') {
+      labelText = input.parentElement.innerText
+    } else if (input.id) {
+      const label = container.querySelector(`label[for="${input.id}"]`)
+      if (label) labelText = label.innerText
+    }
+    return {
+      labelText,
+      path: getDomPath(input),
+      type: input.type,
+    }
+  })
+
+const textInputs = {
+  text: true,
+  search: true,
+  tel: true,
+  url: true,
+  email: true,
+  number: true,
+  password: true,
+}
+
+const getAutocompleteWarnings = (container) => {
+  const inputs = getElements(container, 'input')
+  const warnings = inputs.filter((input) => {
+    const currentType = input.getAttribute('type')
+    const autocomplete = input.getAttribute('autocomplete')
+    return textInputs[currentType] && !autocomplete
+  })
+  return attachLabels(warnings, container)
+}
+
+const getInputTypeNumberWarnings = (container) => {
+  const inputs = getElements(container, 'input[type="number"]')
+  return attachLabels(inputs)
+}
+
+const getInputTypeWarnings = (container) => {
+  const inputs = getElements(container, 'input[type="text"]')
+    .concat(getElements(container, 'input:not([type])'))
+    .filter((input) => !input.getAttribute('inputmode'))
+  return attachLabels(inputs, container)
+}
+
+export const getInstantWarnings = (container) => ({
+  autocomplete: getAutocompleteWarnings(container),
+  inputType: getInputTypeWarnings(container),
+  inputTypeNumber: getInputTypeNumberWarnings(container),
+})
+
+// SCHEDULED ANALYSES
+// We schedule these so the UI does not lock up while they're running
+
+const isInside = (dangerZone, bounding) =>
+  bounding.top <= dangerZone.bottom &&
+  bounding.bottom >= dangerZone.top &&
+  bounding.left <= dangerZone.right &&
+  bounding.right >= dangerZone.left
+
+const toPresent = ({ el, bounding: { width, height }, close }) => ({
+  type:
+    el.nodeName === 'A'
+      ? 'a'
+      : el.nodeName === 'BUTTON'
+      ? 'button'
+      : `${el.nodeName.toLowerCase()}[role="button"]`,
+  path: getDomPath(el),
+  text: el.innerText,
+  html: el.innerHTML,
+  width: Math.floor(width),
+  height: Math.floor(height),
+  close,
+})
+
+export const MIN_SIZE = 32
+export const RECOMMENDED_DISTANCE = 8
+//const RECOMMENDED_SIZE = 48
+
+const checkMinSize = ({ height, width }) =>
+  height < MIN_SIZE || width < MIN_SIZE
+
+function* getTouchTargetSizeWarning(container) {
+  const elements = getElements(container, 'button')
+    .concat(getElements(container, '[role="button"]'))
+    .concat(getElements(container, 'a'))
+
+  const suspectElements = Array.from(new Set(elements))
+
+  const len = elements.length
+  const underMinSize = []
+  const tooClose = []
+
+  for (let i = 0; i < len; i++) {
+    const el = elements[i]
+    const bounding = el.getBoundingClientRect()
+
+    const dangerZone = {
+      top: bounding.top - RECOMMENDED_DISTANCE,
+      left: bounding.left - RECOMMENDED_DISTANCE,
+      right: bounding.right + RECOMMENDED_DISTANCE,
+      bottom: bounding.bottom + RECOMMENDED_DISTANCE,
+    }
+
+    const close = suspectElements.filter(
+      (susEl) =>
+        susEl !== el && isInside(dangerZone, susEl.getBoundingClientRect())
+    )
+
+    const isUnderMinSize = checkMinSize(bounding)
+    if (isUnderMinSize || close.length > 0) {
+      const present = toPresent({ el, bounding, close })
+      if (isUnderMinSize) {
+        underMinSize.push(present)
+      }
+      if (close.length > 0) {
+        tooClose.push(present)
+      }
+    }
+    yield i
+  }
+
+  return { tooClose, underMinSize }
+}
+
+function* getTapHighlightWarnings(container) {
+  const buttons = getElements(container, 'button').concat(
+    getElements(container, '[role="button"]')
+  )
+  const links = getElements(container, 'a')
+  const elements = buttons.concat(links)
+  const len = elements.length
+
+  const result = []
+  for (let i = 0; i < len; i++) {
+    const el = elements[i]
+    if (
+      getComputedStyle(el)['-webkit-tap-highlight-color'] === 'rgba(0, 0, 0, 0)'
+    ) {
+      result.push({
+        type: getNodeName(el),
+        text: el.innerText,
+        html: el.innerHTML,
+        path: getDomPath(el),
+      })
+    }
+    yield i
+  }
+
+  return result
+}
+
+const MAX_WIDTH = 600
+
+function* getSrcsetWarnings(container) {
+  const images = getElements(container, 'img')
+  const len = images.length
+
+  const result = []
+
+  for (let i = 0; i < len; i++) {
+    const img = images[i]
+    const srcSet = img.getAttribute('srcset')
+    const src = img.getAttribute('src')
+    if (!srcSet && src) {
+      const isSVG = Boolean(src.match(/svg$/))
+      if (!isSVG) {
+        const isLarge =
+          parseInt(getComputedStyle(img).width, 10) > MAX_WIDTH ||
+          img.naturalWidth > MAX_WIDTH
+        if (isLarge) {
+          result.push({
+            src: img.src,
+            path: getDomPath(img),
+            alt: img.alt,
+          })
+        }
+      }
+    }
+    yield i
+  }
+
+  return result
+}
+
+function* getBackgroundImageWarnings(container) {
+  const backgroundImageRegex = /url\(".*?(.png|.jpg|.jpeg)"\)/
+  const elsWithBackgroundImage = getElements(container, '#root *').filter(
+    (el) => {
+      const style = getComputedStyle(el)
+      return (
+        style['background-image'] &&
+        backgroundImageRegex.test(style['background-image']) &&
+        // HACK
+        // ideally, we would make a new image element and check its "naturalWidth"
+        // to get a better idea of the size of the background image, this is a hack
+        el.clientWidth > 200
+      )
+    }
+  )
+
+  if (!elsWithBackgroundImage.length) return []
+
+  const styleDict = new Map()
+
+  Object.keys(container.styleSheets).forEach((k) => {
+    getStylesheetRules(container.styleSheets, k).forEach((rule) => {
+      if (rule) {
+        try {
+          elsWithBackgroundImage.forEach((el) => {
+            if (el.matches(rule.selectorText)) {
+              styleDict.set(el, (styleDict.get(el) || []).concat(rule))
+            }
+          })
+        } catch (e) {
+          // catch errors in safari
+        }
+      }
+    })
+  })
+
+  const responsiveBackgroundImgRegex = /-webkit-min-device-pixel-ratio|min-resolution|image-set/
+
+  const result = []
+  const elements = Array.from(styleDict.entries())
+  const len = elements.length
+
+  for (let i = 0; i < len; i++) {
+    const [el, styles] = elements[i]
+    if (styles) {
+      const requiresResponsiveWarning = styles.some(
+        (style) => !responsiveBackgroundImgRegex.test(style)
+      )
+      if (requiresResponsiveWarning) {
+        const bg = getComputedStyle(el).backgroundImage
+        const src = bg.match(/url\("(.*)"\)/)
+          ? bg.match(/url\("(.*)"\)/)[1]
+          : undefined
+        result.push({
+          path: getDomPath(el),
+          src,
+        })
+      }
+    }
+    yield i
+  }
+
+  return result
+}
+
 export const getActiveStyles = function (container, el) {
   const sheets = container.styleSheets
   const result = []
@@ -29,277 +284,22 @@ export const getActiveStyles = function (container, el) {
 
   Object.keys(sheets).forEach((k) => {
     getStylesheetRules(sheets, k).forEach((rule) => {
-      if (!rule) return
-      if (!rule.selectorText || !rule.selectorText.match(activeRegex)) return
-      const ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '')
-      try {
-        if (el.matches(ruleNoPseudoClass)) {
-          result.push(rule)
+      if (rule && rule.selectorText && rule.selectorText.match(activeRegex)) {
+        const ruleNoPseudoClass = rule.selectorText.replace(activeRegex, '')
+        try {
+          if (el.matches(ruleNoPseudoClass)) {
+            result.push(rule)
+          }
+        } catch (e) {
+          // safari
         }
-      } catch (e) {
-        // safari
       }
     })
   })
-  return result.length ? result : null
+  return result
 }
 
-export const getTapHighlightWarnings = (container) => {
-  const buttons = getElements(container, 'button').concat(
-    getElements(container, '[role="button"]')
-  )
-  const links = getElements(container, 'a')
-
-  const filterActiveStyles = (el) => {
-    const tapHighlight = getComputedStyle(el)['-webkit-tap-highlight-color']
-    if (tapHighlight === 'rgba(0, 0, 0, 0)') return true
-  }
-
-  return buttons
-    .concat(links)
-    .filter(filterActiveStyles)
-    .map((el) => ({
-      type: getNodeName(el),
-      text: el.innerText,
-      html: el.innerHTML,
-      path: getDomPath(el),
-    }))
-}
-
-const maxWidth = 600
-
-export const getSrcsetWarnings = (container) => {
-  const images = getElements(container, 'img')
-
-  const warnings = images
-    .filter((img) => {
-      const src = img.getAttribute('src')
-      const srcSet = img.getAttribute('srcset')
-      if (srcSet || !src) return false
-      const isSVG = Boolean(src.match(/svg$/))
-      if (isSVG) return false
-      const isLarge =
-        parseInt(getComputedStyle(img).width, 10) > maxWidth ||
-        img.naturalWidth > maxWidth
-      if (!isLarge) return false
-      return true
-    })
-    .map((img) => {
-      return {
-        src: img.src,
-        path: getDomPath(img),
-        alt: img.alt,
-      }
-    })
-  return warnings
-}
-
-export const getBackgroundImageWarnings = (container) => {
-  const backgroundImageRegex = /url\(".*?(.png|.jpg|.jpeg)"\)/
-  const elsWithBackgroundImage = getElements(container, '#root *').filter(
-    (el) => {
-      const style = getComputedStyle(el)
-      if (
-        style['background-image'] &&
-        backgroundImageRegex.test(style['background-image']) &&
-        // HACK
-        // ideally, we would make a new image element and check its "naturalWidth"
-        // to get a better idea of the size of the background image, this is a hack
-        el.clientWidth > 200
-      ) {
-        return true
-      }
-    }
-  )
-
-  if (!elsWithBackgroundImage.length) return []
-
-  const styleDict = new Map()
-
-  const sheets = container.styleSheets
-  Object.keys(sheets).forEach((k) => {
-    getStylesheetRules(sheets, k).forEach((rule) => {
-      if (!rule) return
-      try {
-        elsWithBackgroundImage.forEach((el) => {
-          if (el.matches(rule.selectorText)) {
-            styleDict.set(el, (styleDict.get(el) || []).concat(rule))
-          }
-        })
-      } catch (e) {
-        // catch errors in safari
-      }
-    })
-  })
-
-  const responsiveBackgroundImgRegex = /-webkit-min-device-pixel-ratio|min-resolution|image-set/
-
-  const filteredEls = [...styleDict.entries()]
-    .map(([el, styles]) => {
-      if (!styles) return false
-      const requiresResponsiveWarning = styles.reduce((acc, curr) => {
-        if (acc === false) return acc
-        if (responsiveBackgroundImgRegex.test(curr)) return false
-        return true
-      }, true)
-      return requiresResponsiveWarning ? el : false
-    })
-    .filter(Boolean)
-    .map((el) => {
-      const bg = getComputedStyle(el).backgroundImage
-      const src = bg.match(/url\("(.*)"\)/)
-        ? bg.match(/url\("(.*)"\)/)[1]
-        : undefined
-      return {
-        path: getDomPath(el),
-        src,
-      }
-    })
-
-  return filteredEls
-}
-
-const textInputs = [
-  'text',
-  'search',
-  'tel',
-  'url',
-  'email',
-  'number',
-  'password',
-]
-
-const attachLabels = (inputs, container) => {
-  return inputs.map((input) => {
-    let labelText = ''
-    if (input.labels && input.labels[0]) {
-      labelText = input.labels[0].innerText
-    } else if (input.parentElement.nodeName === 'LABEL')
-      labelText = input.parentElement.innerText
-    else if (input.id) {
-      const label = container.querySelector(`label[for="${input.id}"]`)
-      if (label) labelText = label.innerText
-    }
-    return {
-      path: getDomPath(input),
-      labelText,
-      type: input.type,
-    }
-  })
-}
-
-export const getAutocompleteWarnings = (container) => {
-  const inputs = getElements(container, 'input')
-  const warnings = inputs.filter((input) => {
-    const currentType = input.getAttribute('type')
-    const autocomplete = input.getAttribute('autocomplete')
-    return (!!textInputs.find((type) => currentType === type) && !autocomplete)
-  })
-  return attachLabels(warnings, container)
-}
-
-export const getInputTypeNumberWarnings = (container) => {
-  const inputs = getElements(container, 'input[type="number"]')
-  return attachLabels(inputs)
-}
-
-export const getInputTypeWarnings = (container) => {
-  const inputs = getElements(container, 'input[type="text"]')
-    .concat(getElements(container, 'input:not([type])'))
-    .filter((input) => !input.getAttribute('inputmode'))
-  return attachLabels(inputs, container)
-}
-
-const isInside = (dangerZone, boundingBox) => {
-  return (
-    boundingBox.top <= dangerZone.bottom &&
-    boundingBox.bottom >= dangerZone.top &&
-    boundingBox.left <= dangerZone.right &&
-    boundingBox.right >= dangerZone.left
-  )
-}
-export const getTouchTargetSizeWarning = ({
-  container,
-  minSize,
-  recommendedDistance,
-}) => {
-  const els = getElements(container, 'button')
-    .concat(getElements(container, '[role="button"]'))
-    .concat(getElements(container, 'a'))
-    .map((el) => [el, el.getBoundingClientRect()])
-
-  const suspectEls = new Set([...els])
-
-  const elsWithClose = els
-    .map(([el1, bounding1]) => {
-      const dangerZone = {
-        top: bounding1.top - recommendedDistance,
-        left: bounding1.left - recommendedDistance,
-        right: bounding1.right + recommendedDistance,
-        bottom: bounding1.bottom + recommendedDistance,
-      }
-
-      const close = Array.from(suspectEls)
-        .filter(([el, boundingBox]) => {
-          if (el === el1) return false
-          if (isInside(dangerZone, boundingBox)) {
-            return el
-          }
-          return false
-        })
-
-      return { close: close ? close : null, el: el1, boundingBox: bounding1 }
-    })
-
-  const underMinSize = elsWithClose.filter(
-    ({ boundingBox: { width, height } }) => {
-      return width < minSize || height < minSize
-    }
-  )
-
-  const tooClose = elsWithClose.filter(({ close }) => {
-    return close && close.length
-  })
-
-  const present = ({ el, boundingBox: { width, height }, close }) => {
-    return {
-      type:
-        el.nodeName === 'A'
-          ? 'a'
-          : el.nodeName === 'BUTTON'
-          ? 'button'
-          : `${el.nodeName.toLowerCase()}[role="button"]`,
-      path: getDomPath(el),
-      text: el.innerText,
-      html: el.innerHTML,
-      width: Math.floor(width),
-      height: Math.floor(height),
-      close,
-    }
-  }
-
-  return {
-    underMinSize: underMinSize.map(present),
-    tooClose: tooClose.map(present),
-  }
-}
-
-export const getTooWideWarnings = (container) => {
-  const containerWidth = container.body.clientWidth
-  const allElements = getElements(container, '#root *')
-  return allElements
-    .filter((el) => {
-      return el.clientWidth > containerWidth
-    })
-    .map((el) => {
-      return {
-        el,
-        path: getDomPath(el),
-      }
-    })
-}
-
-function* activeIterator(container) {
+function* getActiveWarnings(container) {
   const buttons = getElements(container, 'button').concat(
     getElements(container, '[role="button"]')
   )
@@ -310,25 +310,19 @@ function* activeIterator(container) {
 
   for (let i = 0; i < len; i++) {
     const el = elements[i]
-    const hasActive = getActiveStyles(container, el);
-    if (hasActive) {
+    const hasActive = getActiveStyles(container, el)
+    if (hasActive.length) {
       result.push({
         type: getNodeName(el),
         text: el.innerText,
         html: el.innerHTML,
         path: getDomPath(el),
-      });
+      })
     }
-    yield
+    yield i
   }
 
   return result
-}
-
-export const getActiveWarnings = (container) => {
-  const scheduler = createScheduler()
-  const task = scheduler.runTask(activeIterator(container))
-  return {abortTask: () => scheduler.abortTask(task), task}
 }
 
 export const getOriginalStyles = (container, el) => {
@@ -348,10 +342,11 @@ export const getOriginalStyles = (container, el) => {
       }
     })
   })
+
   return result
 }
 
-function* vhIterator(container) {
+function* get100vhWarnings(container) {
   const elements = getElements(container, '#root *')
   const len = elements.length
   const result = []
@@ -361,36 +356,63 @@ function* vhIterator(container) {
     const styles = getOriginalStyles(container, el)
     const vhWarning = styles.find((style) => /100vh/.test(style))
     if (vhWarning) {
-      result.push( { el, css: vhWarning, path: getDomPath(el) })
+      result.push({ el, css: vhWarning, path: getDomPath(el) })
     }
-    yield
+    yield i
   }
+
   return result
 }
 
-export const get100vhWarnings = (container) => {
-  const scheduler = createScheduler()
-  const task = scheduler.runTask(vhIterator(container))
-  return {abortTask: () => scheduler.abortTask(task), task}
+/*function* getTooWideWarnings(container) {
+  const containerWidth = container.body.clientWidth
+  const elements = getElements(container, '#root *')
+  const len = elements.length
+  const result = []
+
+  for (let i = 0; i < len; i++) {
+    const el = elements[i]
+    if (el.clientWidth > containerWidth) {
+      result.push({
+        el,
+        path: getDomPath(el),
+      })
+    }
+    yield i
+  }
+
+  return result
+}*/
+
+const schedule = (iterator) => {
+  // 100ms is the threshold where users start to notice UI lag
+  // higher values increase lag but do not noticeably improve processing time so 100ms is the sweet spot
+  const scheduler = createScheduler({ chunkBudget: 100 })
+  const task = scheduler.runTask(iterator)
+  return { task, abort: () => scheduler.abortTask(task) }
 }
 
-export const getFastWarnings = ({
-  container,
-  minSize,
-  recommendedSize,
-  recommendedDistance,
-}) => ({
-  tapHighlight: getTapHighlightWarnings(container),
-  autocomplete: getAutocompleteWarnings(container),
-  inputType: getInputTypeWarnings(container),
-  srcset: getSrcsetWarnings(container),
-  backgroundImg: getBackgroundImageWarnings(container),
-  inputTypeNumber: getInputTypeNumberWarnings(container),
-  touchTarget: getTouchTargetSizeWarning({
-    container,
-    minSize,
-    recommendedSize,
-    recommendedDistance,
-  }),
-  // tooWide: getTooWideWarnings(container),
-})
+export const getScheduledWarnings = (container, setState, setComplete) => {
+  const analyses = {
+    // tooWide: schedule(getTooWideWarnings(container)),
+    tapHighlight: schedule(getTapHighlightWarnings(container)),
+    srcset: schedule(getSrcsetWarnings(container)),
+    backgroundImg: schedule(getBackgroundImageWarnings(container)),
+    touchTarget: schedule(getTouchTargetSizeWarning(container)),
+    active: schedule(getActiveWarnings(container)),
+    height: schedule(get100vhWarnings(container)),
+  }
+  const analysesArray = Object.keys(analyses)
+  let remaining = analysesArray.length
+  analysesArray.forEach((key) => {
+    //const start = performance.now()
+    analyses[key].task.then((result) => {
+      //console.log(key, performance.now() - start)
+      setState((prev) => ({ ...prev, [key]: result }))
+      if (--remaining === 0) {
+        setComplete(true)
+      }
+    })
+  })
+  return () => analysesArray.forEach((key) => analyses[key].abort())
+}

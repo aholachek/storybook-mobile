@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react'
 import styled, { ThemeProvider } from 'styled-components'
 import { withTheme } from 'emotion-theming'
-import { getActiveWarnings, getFastWarnings, get100vhWarnings } from './utils'
-
-const recommendedSize = 48
-const minSize = 32
-const recommendedDistance = 8
+import {
+  getInstantWarnings,
+  getScheduledWarnings,
+  MIN_SIZE,
+  RECOMMENDED_DISTANCE,
+} from './utils'
 
 const accessibleBlue = '#0965df'
 const warning = '#bd4700'
@@ -33,54 +34,50 @@ const StyledWarningTag = styled.div`
   ${tagStyles}
 `
 
-const Warning = () => {
-  return (
-    <StyledWarningTag>
-      <svg
-        aria-hidden="true"
-        focusable="false"
-        role="img"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 576 512"
-      >
-        <path
-          fill="currentColor"
-          d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
-        ></path>
-      </svg>
-      warning
-    </StyledWarningTag>
-  )
-}
+const Warning = () => (
+  <StyledWarningTag>
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 576 512"
+    >
+      <path
+        fill="currentColor"
+        d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
+      ></path>
+    </svg>
+    warning
+  </StyledWarningTag>
+)
 
 const StyledInfoTag = styled.div`
   ${tagStyles}
   color: ${accessibleBlue};
   background-color: hsla(214, 92%, 45%, 0.1);
 `
-const Hint = () => {
-  return (
-    <StyledInfoTag>
-      <svg
-        aria-hidden="true"
-        focusable="false"
-        data-prefix="fas"
-        data-icon="magic"
-        role="img"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 512 512"
-        className="svg-inline--fa fa-magic fa-w-16 fa-5x"
-      >
-        <path
-          fill="currentColor"
-          d="M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.66-53.33L160 80l-53.34-26.67L80 0 53.34 53.33 0 80l53.34 26.67L80 160zm352 128l-26.66 53.33L352 368l53.34 26.67L432 448l26.66-53.33L512 368l-53.34-26.67L432 288zm70.62-193.77L417.77 9.38C411.53 3.12 403.34 0 395.15 0c-8.19 0-16.38 3.12-22.63 9.38L9.38 372.52c-12.5 12.5-12.5 32.76 0 45.25l84.85 84.85c6.25 6.25 14.44 9.37 22.62 9.37 8.19 0 16.38-3.12 22.63-9.37l363.14-363.15c12.5-12.48 12.5-32.75 0-45.24zM359.45 203.46l-50.91-50.91 86.6-86.6 50.91 50.91-86.6 86.6z"
-          className=""
-        ></path>
-      </svg>
-      hint
-    </StyledInfoTag>
-  )
-}
+const Hint = () => (
+  <StyledInfoTag>
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      data-prefix="fas"
+      data-icon="magic"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      className="svg-inline--fa fa-magic fa-w-16 fa-5x"
+    >
+      <path
+        fill="currentColor"
+        d="M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.66-53.33L160 80l-53.34-26.67L80 0 53.34 53.33 0 80l53.34 26.67L80 160zm352 128l-26.66 53.33L352 368l53.34 26.67L432 448l26.66-53.33L512 368l-53.34-26.67L432 288zm70.62-193.77L417.77 9.38C411.53 3.12 403.34 0 395.15 0c-8.19 0-16.38 3.12-22.63 9.38L9.38 372.52c-12.5 12.5-12.5 32.76 0 45.25l84.85 84.85c6.25 6.25 14.44 9.37 22.62 9.37 8.19 0 16.38-3.12 22.63-9.37l363.14-363.15c12.5-12.48 12.5-32.75 0-45.24zM359.45 203.46l-50.91-50.91 86.6-86.6 50.91 50.91-86.6 86.6z"
+        className=""
+      ></path>
+    </svg>
+    hint
+  </StyledInfoTag>
+)
 
 const Spacer = styled.div`
   padding: 1rem;
@@ -183,10 +180,10 @@ const StyledBanner = styled.div`
 `
 
 const StyledRescanButton = styled.button`
-  margin-left: 1rem;
+  margin-left: 0.5rem;
   border-width: 1px;
   border-radius: 3px;
-  padding: .2rem .5rem;
+  padding: 0.2rem 0.5rem;
   cursor: pointer;
   font-family: inherit;
   color: inherit;
@@ -197,14 +194,40 @@ const StyledRescanButton = styled.button`
   box-shadow: none;
   border: 1px solid;
   &:hover {
-    background-color: hsla(0, 0%, 0%, 0.15)
+    background-color: hsla(0, 0%, 0%, 0.15);
+  }
+`
+
+const Spinner = styled.div`
+  cursor: progress;
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+  margin-right: 0.7rem;
+  height: 1.25rem;
+  width: 1.25rem;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 50%;
+  border-color: rgba(97, 97, 97, 0.29);
+  border-top-color: rgb(100, 100, 100);
+  animation: spinner 0.7s linear infinite;
+  mix-blend-mode: difference;
+
+  @keyframes spinner {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 `
 
 const fixText = 'Learn more'
 
 const ActiveWarnings = ({ warnings }) => {
-  if (!warnings.length) return null
+  if (!warnings || !warnings.length) return null
   return (
     <Spacer>
       <Hint />
@@ -228,22 +251,20 @@ const ActiveWarnings = ({ warnings }) => {
         <code>:active</code> styles.)
       </p>
       <ul>
-        {warnings.map((w, i) => {
-          return (
-            <ListEntry key={i}>
-              <code>{w.type}</code> with content{' '}
-              {w.text ? (
-                <b>{w.text}</b>
-              ) : w.html ? (
-                <StyledTappableContents
-                  dangerouslySetInnerHTML={{ __html: w.html }}
-                />
-              ) : (
-                '[no text found]'
-              )}
-            </ListEntry>
-          )
-        })}
+        {warnings.map((w, i) => (
+          <ListEntry key={i}>
+            <code>{w.type}</code> with content&nbsp;&nbsp;
+            {w.text ? (
+              <b>{w.text}</b>
+            ) : w.html ? (
+              <StyledTappableContents
+                dangerouslySetInnerHTML={{ __html: w.html }}
+              />
+            ) : (
+              '[no text found]'
+            )}
+          </ListEntry>
+        ))}
       </ul>
       <details>
         <summary>{fixText}</summary>
@@ -262,7 +283,7 @@ const ActiveWarnings = ({ warnings }) => {
 }
 
 const TapWarnings = ({ warnings }) => {
-  if (!warnings.length) return null
+  if (!warnings || !warnings.length) return null
   return (
     <Spacer>
       <Hint />
@@ -274,22 +295,20 @@ const TapWarnings = ({ warnings }) => {
         styles added through other means.
       </p>
       <ul>
-        {warnings.map((w, i) => {
-          return (
-            <ListEntry key={i}>
-              <code>{w.type}</code> with content{' '}
-              {w.text ? (
-                <b>{w.text}</b>
-              ) : w.html ? (
-                <StyledTappableContents
-                  dangerouslySetInnerHTML={{ __html: w.html }}
-                />
-              ) : (
-                '[no text found]'
-              )}
-            </ListEntry>
-          )
-        })}
+        {warnings.map((w, i) => (
+          <ListEntry key={i}>
+            <code>{w.type}</code> with content&nbsp;&nbsp;
+            {w.text ? (
+              <b>{w.text}</b>
+            ) : w.html ? (
+              <StyledTappableContents
+                dangerouslySetInnerHTML={{ __html: w.html }}
+              />
+            ) : (
+              '[no text found]'
+            )}
+          </ListEntry>
+        ))}
       </ul>
       <details>
         <summary>{fixText}</summary>
@@ -305,7 +324,8 @@ const TapWarnings = ({ warnings }) => {
             rel="noopener noreferrer"
           >
             <code>:active</code> styles work inconsistently in iOS
-          </a>) , or via JavaScript on the <code>touchstart</code> event.
+          </a>
+          ) , or via JavaScript on the <code>touchstart</code> event.
         </p>
       </details>
     </Spacer>
@@ -313,7 +333,7 @@ const TapWarnings = ({ warnings }) => {
 }
 
 const AutocompleteWarnings = ({ warnings }) => {
-  if (!warnings.length) return null
+  if (!warnings || !warnings.length) return null
   return (
     <Spacer>
       <Warning />
@@ -341,14 +361,12 @@ const AutocompleteWarnings = ({ warnings }) => {
         in JSX.
       </p>
       <ul>
-        {warnings.map((w, i) => {
-          return (
-            <ListEntry key={i}>
-              <code>input type=&quot;{w.type}&quot;</code> and label{' '}
-              <b>{w.labelText || '[no label found]'}</b>
-            </ListEntry>
-          )
-        })}
+        {warnings.map((w, i) => (
+          <ListEntry key={i}>
+            <code>input type=&quot;{w.type}&quot;</code> and label{' '}
+            <b>{w.labelText || '[no label found]'}</b>
+          </ListEntry>
+        ))}
       </ul>
       <details>
         <summary>{fixText}</summary>
@@ -378,7 +396,7 @@ const AutocompleteWarnings = ({ warnings }) => {
 }
 
 const InputTypeWarnings = ({ warnings }) => {
-  if (!warnings.length) return null
+  if (!warnings || !warnings.length) return null
   return (
     <Spacer>
       <Hint />
@@ -394,18 +412,18 @@ const InputTypeWarnings = ({ warnings }) => {
           href="https://better-mobile-inputs.netlify.com/"
           target="_blank"
           rel="noopener noreferrer"
-        >this tool</a> to
-        explore keyboard options.
+        >
+          this tool
+        </a>{' '}
+        to explore keyboard options.
       </p>
       <ul>
-        {warnings.map((w, i) => {
-          return (
-            <ListEntry key={i}>
-              <code>input type=&quot;{w.type}&quot;</code> and label{' '}
-              <b>{w.labelText || '[no label found]'}</b>
-            </ListEntry>
-          )
-        })}
+        {warnings.map((w, i) => (
+          <ListEntry key={i}>
+            <code>input type=&quot;{w.type}&quot;</code> and label{' '}
+            <b>{w.labelText || '[no label found]'}</b>
+          </ListEntry>
+        ))}
       </ul>
       <details>
         <summary>{fixText}</summary>
@@ -425,7 +443,7 @@ const InputTypeWarnings = ({ warnings }) => {
 }
 
 const InputTypeNumberWarnings = ({ warnings }) => {
-  if (!warnings.length) return null
+  if (!warnings || !warnings.length) return null
   return (
     <Spacer>
       <Hint />
@@ -444,14 +462,12 @@ const InputTypeNumberWarnings = ({ warnings }) => {
         Note: <code>inputmode</code> is styled as <code>inputMode</code> in JSX.{' '}
       </p>
       <ul>
-        {warnings.map((w, i) => {
-          return (
-            <ListEntry key={i}>
-              <code>input type=&quot;{w.type}&quot;</code> and label{' '}
-              <b>{w.labelText || '[no label found]'}</b>
-            </ListEntry>
-          )
-        })}
+        {warnings.map((w, i) => (
+          <ListEntry key={i}>
+            <code>input type=&quot;{w.type}&quot;</code> and label{' '}
+            <b>{w.labelText || '[no label found]'}</b>
+          </ListEntry>
+        ))}
       </ul>
       <details>
         <summary>{fixText}</summary>
@@ -471,7 +487,7 @@ const InputTypeNumberWarnings = ({ warnings }) => {
 }
 
 // const TooWideWarnings = ({ warnings }) => {
-//   if (!warnings.length) return null
+//   if (!warnings || !warnings.length) return null
 
 //   const title = `Element${
 //     warnings.length > 1 ? 's' : ''
@@ -488,20 +504,19 @@ const InputTypeNumberWarnings = ({ warnings }) => {
 //       </p>
 //       <LogToConsole title={title} els={warnings.map((w) => w.el)} />
 //       <div>
-//         {warnings.map(({ path }, i) => {
-//           return (
+//         {warnings.map(({ path }, i) => (
 //             <ListEntry key={i} style={{ marginBottom: '1rem' }} as="div">
 //               <code>{path}</code>
 //             </ListEntry>
 //           )
-//         })}
+//         )}
 //       </div>
 //     </Spacer>
 //   )
 // }
 
 const HeightWarnings = ({ warnings }) => {
-  if (!warnings.length) return null
+  if (!warnings || !warnings.length) return null
   return (
     <Spacer>
       <Hint />
@@ -522,20 +537,18 @@ const HeightWarnings = ({ warnings }) => {
         the address bar.
       </p>
       <ul>
-        {warnings.map(({ path }, i) => {
-          return (
-            <ListEntry key={i}>
-              <code>{path}</code>
-            </ListEntry>
-          )
-        })}
+        {warnings.map(({ path }, i) => (
+          <ListEntry key={i}>
+            <code>{path}</code>
+          </ListEntry>
+        ))}
       </ul>
     </Spacer>
   )
 }
 
 const BackgroundImageWarnings = ({ warnings }) => {
-  if (!warnings.length) return null
+  if (!warnings || !warnings.length) return null
   return (
     <Spacer>
       <Warning />
@@ -554,15 +567,13 @@ const BackgroundImageWarnings = ({ warnings }) => {
         resolution.
       </p>
       <ul>
-        {warnings.map(({ src, alt }, i) => {
-          return (
-            <ListEntry key={i} nostyle>
-              <div>
-                <DemoImg src={src} alt={alt} />
-              </div>
-            </ListEntry>
-          )
-        })}
+        {warnings.map(({ src, alt }, i) => (
+          <ListEntry key={i} nostyle>
+            <div>
+              <DemoImg src={src} alt={alt} />
+            </div>
+          </ListEntry>
+        ))}
       </ul>
       <details>
         <summary>{fixText}</summary>
@@ -585,7 +596,7 @@ const BackgroundImageWarnings = ({ warnings }) => {
 }
 
 const SrcsetWarnings = ({ warnings }) => {
-  if (!warnings.length) return null
+  if (!warnings || !warnings.length) return null
   return (
     <Spacer>
       <Warning />
@@ -598,15 +609,13 @@ const SrcsetWarnings = ({ warnings }) => {
         different device resolutions and sizes.
       </p>
       <ul>
-        {warnings.map(({ src, alt }, i) => {
-          return (
-            <ListEntry key={i} nostyle>
-              <div>
-                <DemoImg src={src} alt={alt} />
-              </div>
-            </ListEntry>
-          )
-        })}
+        {warnings.map(({ src, alt }, i) => (
+          <ListEntry key={i} nostyle>
+            <div>
+              <DemoImg src={src} alt={alt} />
+            </div>
+          </ListEntry>
+        ))}
       </ul>
       <details>
         <summary>{fixText}</summary>
@@ -635,7 +644,9 @@ const SrcsetWarnings = ({ warnings }) => {
   )
 }
 
-const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
+const TouchTargetWarnings = ({ warnings }) => {
+  if (!warnings) return null
+  const { underMinSize, tooClose } = warnings
   if (!underMinSize.length && !tooClose.length) return null
   return (
     <Spacer>
@@ -645,26 +656,24 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
         <div>
           <h3>Small touch target</h3>
           <p>
-            With heights and/or widths of less than {minSize}px, these tappable
+            With heights and/or widths of less than {MIN_SIZE}px, these tappable
             elements could be difficult for users to press:
           </p>
           <ul>
-            {underMinSize.map((w, i) => {
-              return (
-                <ListEntry key={i}>
-                  <code>{w.type}</code> with content{' '}
-                  {w.text ? (
-                    <b>{w.text}</b>
-                  ) : w.html ? (
-                    <StyledTappableContents
-                      dangerouslySetInnerHTML={{ __html: w.html }}
-                    />
-                  ) : (
-                    '[no text found]'
-                  )}
-                </ListEntry>
-              )
-            })}
+            {underMinSize.map((w, i) => (
+              <ListEntry key={i}>
+                <code>{w.type}</code> with content&nbsp;&nbsp;
+                {w.text ? (
+                  <b>{w.text}</b>
+                ) : w.html ? (
+                  <StyledTappableContents
+                    dangerouslySetInnerHTML={{ __html: w.html }}
+                  />
+                ) : (
+                  '[no text found]'
+                )}
+              </ListEntry>
+            ))}
           </ul>
         </div>
       )}
@@ -678,26 +687,24 @@ const TouchTargetWarnings = ({ warnings: { underMinSize, tooClose } }) => {
             Touch targets close together{' '}
           </h3>
           <p>
-            These tappable elements are less than {recommendedDistance}px from at least one other
-            tappable element:
+            These tappable elements are less than {RECOMMENDED_DISTANCE}px from
+            at least one other tappable element:
           </p>
           <ul>
-            {tooClose.map((w, i) => {
-              return (
-                <ListEntry key={i}>
-                  <code>{w.type}</code> with content{' '}
-                  {w.text ? (
-                    <b>{w.text}</b>
-                  ) : w.html ? (
-                    <StyledTappableContents
-                      dangerouslySetInnerHTML={{ __html: w.html }}
-                    />
-                  ) : (
-                    '[no text found]'
-                  )}
-                </ListEntry>
-              )
-            })}
+            {tooClose.map((w, i) => (
+              <ListEntry key={i}>
+                <code>{w.type}</code> with content&nbsp;&nbsp;
+                {w.text ? (
+                  <b>{w.text}</b>
+                ) : w.html ? (
+                  <StyledTappableContents
+                    dangerouslySetInnerHTML={{ __html: w.html }}
+                  />
+                ) : (
+                  '[no text found]'
+                )}
+              </ListEntry>
+            ))}
           </ul>
         </div>
       )}
@@ -738,82 +745,57 @@ const Wrapper = ({ theme, children }) => {
   )
 }
 
-export const Loading = withTheme(({theme}) => (
+export const Loading = withTheme(({ theme }) => (
   <Wrapper theme={theme}>
-    <StyledBanner>Running scan...</StyledBanner>
+    <StyledBanner>
+      <Spinner />
+      <span>Running scan...</span>
+    </StyledBanner>
   </Wrapper>
 ))
 
 const Hints = ({ container, theme }) => {
   const [warnings, setWarnings] = React.useState(undefined)
+  const [scanComplete, setScanComplete] = React.useState(false)
   const [rescan, setRescan] = React.useState(0)
 
   React.useEffect(() => {
-    setWarnings(getFastWarnings({
-      container,
-      minSize,
-      recommendedDistance,
-      recommendedSize
-    }))
-    const schedule100vh = get100vhWarnings(container)
-    const scheduleActive = getActiveWarnings(container)
-    schedule100vh.task.then((height) => {
-      setWarnings(prev => ({...prev, height}))
-    })
-    scheduleActive.task.then((active) => {
-      setWarnings(prev => ({...prev, active}))
-    })
-    return () => {
-      schedule100vh.abortTask();
-      scheduleActive.abortTask();
-    }
+    setScanComplete(false)
+    setWarnings(getInstantWarnings(container))
+    return getScheduledWarnings(container, setWarnings, setScanComplete)
   }, [container, rescan])
 
-  const warningCount = React.useMemo(() => warnings ? Object.keys(warnings)
-      .reduce((acc, key) => {
-        const curr = warnings[key]
-        const count = Array.isArray(curr)
-          ? convertToBool(curr.length)
-          : //touchTarget returns an object not an array
-          Object.keys(curr)
-            .map((key) => curr[key])
-            .reduce((acc, curr) => {
-              return acc + convertToBool(curr.length)
-            }, 0)
-        return acc + count
-      }, 0) : 0
-  , [warnings])
-
-  React.useEffect(() => {
-    const tab = Array.from(
-      document.querySelectorAll('button[role="tab"]')
-    ).find((el) => /^Mobile(\s\(\d+\))?$/.test(el.innerText))
-    if (tab) {
-      if (warningCount === 0) {
-        tab.innerText = 'Mobile'
-      } else {
-        tab.innerText = `Mobile (${warningCount})`
-      }
-    }
-    return () => tab.innerText = 'Mobile'
-  }, [warningCount])
-
-  const scanComplete = React.useMemo(() =>
-    !!(warnings && warnings.active && warnings.height),
-    [warnings])
+  const warningCount = React.useMemo(
+    () =>
+      warnings
+        ? Object.keys(warnings).reduce((acc, key) => {
+            const curr = warnings[key]
+            const count = Array.isArray(curr)
+              ? convertToBool(curr.length)
+              : //touchTarget returns an object not an array
+                Object.keys(curr)
+                  .map((key) => curr[key])
+                  .reduce((acc, curr) => {
+                    return acc + convertToBool(curr.length)
+                  }, 0)
+            return acc + count
+          }, 0)
+        : 0,
+    [warnings]
+  )
 
   // Before counting, show the Loading state
   if (!warnings) {
     return <Loading />
   }
 
-  const onRescanClick = () => setRescan(prev => prev + 1)
+  const onRescanClick = () => setRescan((prev) => prev + 1)
 
   if (warningCount === 0 && scanComplete) {
     return (
       <Wrapper theme={theme}>
         <StyledBanner>
-          <span>Looking good! No mobile hints available.</span>
+          <span>Scan complete! No issues found.</span>
           <StyledRescanButton onClick={onRescanClick} type="button">
             Rescan
           </StyledRescanButton>
@@ -828,17 +810,21 @@ const Hints = ({ container, theme }) => {
         <StyledBanner>
           {scanComplete ? (
             <Fragment>
-              <span>
-                Scan complete!
-              </span>
+              <span>Scan complete! {warningCount} issues found.</span>
               <StyledRescanButton onClick={onRescanClick} type="button">
                 Rescan
               </StyledRescanButton>
             </Fragment>
           ) : (
-            <span>
-              Preliminary results shown, still scanning...
-            </span>
+            <Fragment>
+              <Spinner />
+              <span>
+                {warningCount > 0
+                  ? `Running scan - ${warningCount} issues found so far`
+                  : 'Running scan'}
+                ...
+              </span>
+            </Fragment>
           )}
         </StyledBanner>
         <TouchTargetWarnings warnings={warnings.touchTarget} />
@@ -846,9 +832,9 @@ const Hints = ({ container, theme }) => {
         {/* <TooWideWarnings warnings={warnings.tooWide} container={container} /> */}
         <InputTypeWarnings warnings={warnings.inputType} />
         <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
-        {warnings.height && <HeightWarnings warnings={warnings.height} />}
+        <HeightWarnings warnings={warnings.height} />
         <TapWarnings warnings={warnings.tapHighlight} />
-        {warnings.active && <ActiveWarnings warnings={warnings.active} />}
+        <ActiveWarnings warnings={warnings.active} />
         <SrcsetWarnings warnings={warnings.srcset} />
         <BackgroundImageWarnings warnings={warnings.backgroundImg} />
       </Container>
