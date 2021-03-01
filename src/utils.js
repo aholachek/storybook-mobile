@@ -367,26 +367,6 @@ function* get100vhWarnings(container) {
   return result
 }
 
-/*function* getTooWideWarnings(container) {
-  const containerWidth = container.body.clientWidth
-  const elements = getElements(container, '#root *')
-  const len = elements.length
-  const result = []
-
-  for (let i = 0; i < len; i++) {
-    const el = elements[i]
-    if (el.clientWidth > containerWidth) {
-      result.push({
-        el,
-        path: getDomPath(el),
-      })
-    }
-    yield i
-  }
-
-  return result
-}*/
-
 const schedule = (iterator) => {
   // 100ms is the threshold where users start to notice UI lag
   // higher values increase lag but do not noticeably improve processing time so 100ms is the sweet spot
@@ -397,7 +377,6 @@ const schedule = (iterator) => {
 
 export const getScheduledWarnings = (container, setState, setComplete) => {
   const analyses = {
-    // tooWide: schedule(getTooWideWarnings(container)),
     tapHighlight: schedule(getTapHighlightWarnings(container)),
     srcset: schedule(getSrcsetWarnings(container)),
     backgroundImg: schedule(getBackgroundImageWarnings(container)),

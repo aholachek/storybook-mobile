@@ -486,35 +486,6 @@ const InputTypeNumberWarnings = ({ warnings }) => {
   )
 }
 
-// const TooWideWarnings = ({ warnings }) => {
-//   if (!warnings || !warnings.length) return null
-
-//   const title = `Element${
-//     warnings.length > 1 ? 's' : ''
-//   } introducing horizontal overflow`
-
-//   return (
-//     <Spacer>
-//       <Hint />
-//       <h3>{title}</h3>
-//       <p>
-//         The following element{warnings.length > 1 ? 's' : ''} had a width that
-//         exceeded that of the page, possibly introducing a horizontal scroll.
-//         While this may be intentional, please verify that this is not an error.
-//       </p>
-//       <LogToConsole title={title} els={warnings.map((w) => w.el)} />
-//       <div>
-//         {warnings.map(({ path }, i) => (
-//             <ListEntry key={i} style={{ marginBottom: '1rem' }} as="div">
-//               <code>{path}</code>
-//             </ListEntry>
-//           )
-//         )}
-//       </div>
-//     </Spacer>
-//   )
-// }
-
 const HeightWarnings = ({ warnings }) => {
   if (!warnings || !warnings.length) return null
   return (
@@ -524,13 +495,12 @@ const HeightWarnings = ({ warnings }) => {
         Usage of <code>100vh</code> CSS
       </h3>
       <p>
-        Viewport units are{' '}
-        <a
+         <a
           href="https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html"
           target="_blank"
           rel="noopener noreferrer"
         >
-          tricky on mobile.
+        Viewport units are tricky on mobile.
         </a>{' '}
         On some mobile browers, depending on scroll position, <code>100vh</code>{' '}
         might take up more than 100% of screen height due to browser chrome like
@@ -829,14 +799,13 @@ const Hints = ({ container, theme }) => {
         </StyledBanner>
         <TouchTargetWarnings warnings={warnings.touchTarget} />
         <AutocompleteWarnings warnings={warnings.autocomplete} />
-        {/* <TooWideWarnings warnings={warnings.tooWide} container={container} /> */}
         <InputTypeWarnings warnings={warnings.inputType} />
         <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
-        <HeightWarnings warnings={warnings.height} />
         <TapWarnings warnings={warnings.tapHighlight} />
         <ActiveWarnings warnings={warnings.active} />
         <SrcsetWarnings warnings={warnings.srcset} />
         <BackgroundImageWarnings warnings={warnings.backgroundImg} />
+        <HeightWarnings warnings={warnings.height} />
       </Container>
     </ThemeProvider>
   )
