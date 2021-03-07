@@ -495,12 +495,12 @@ const HeightWarnings = ({ warnings }) => {
         Usage of <code>100vh</code> CSS
       </h3>
       <p>
-         <a
+        <a
           href="https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html"
           target="_blank"
           rel="noopener noreferrer"
         >
-        Viewport units are tricky on mobile.
+          Viewport units are tricky on mobile.
         </a>{' '}
         On some mobile browers, depending on scroll position, <code>100vh</code>{' '}
         might take up more than 100% of screen height due to browser chrome like
@@ -707,6 +707,9 @@ const TouchTargetWarnings = ({ warnings }) => {
 
 const convertToBool = (num) => (num > 0 ? 1 : 0)
 
+const getIssuesFound = (warningCount) =>
+  `${warningCount} issue${warningCount !== 1 ? 's' : ''} found`
+
 const Wrapper = ({ theme, children }) => {
   return (
     <ThemeProvider theme={theme}>
@@ -774,13 +777,15 @@ const Hints = ({ container, theme }) => {
     )
   }
 
+  const issuesFound = getIssuesFound(warningCount)
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <StyledBanner>
           {scanComplete ? (
             <Fragment>
-              <span>Scan complete! {warningCount} issues found.</span>
+              <span>Scan complete! {issuesFound}.</span>
               <StyledRescanButton onClick={onRescanClick} type="button">
                 Rescan
               </StyledRescanButton>
@@ -790,7 +795,7 @@ const Hints = ({ container, theme }) => {
               <Spinner />
               <span>
                 {warningCount > 0
-                  ? `Running scan - ${warningCount} issues found so far`
+                  ? `Running scan - ${issuesFound} so far`
                   : 'Running scan'}
                 ...
               </span>
