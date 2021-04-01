@@ -1,6 +1,6 @@
 {
   "name": "storybook-mobile",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "This addon offers suggestions on how you can improve the HTML, CSS and UX of your components to be more mobile-friendly.",
   "source": "src/register.js",
   "main": "register.js",
