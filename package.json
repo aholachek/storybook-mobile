@@ -45,12 +45,11 @@
     "eslint-plugin-prettier": "^3.3.1",
     "evergreen-ui": "^4.29.1",
     "microbundle": "^0.13.0",
-    "prettier": "^2.2.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "prettier": "^2.2.1"
   },
   "peerDependencies": {
-    "react": "*"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "dependencies": {
     "@storybook/addons": "^5.3.18",
