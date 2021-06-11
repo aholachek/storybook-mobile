@@ -33,3 +33,9 @@ This addon works best along with the [@storybook/addon-viewport](https://github.
 ## Contributing
 
 If you have any suggestions or find any bugs, please make an issue or a pr!
+
+**NOTE**: While developing this addon locally you'll need to manually install `peerDependencies` like so:
+
+```bash
+npm install --no-save react react-dom
+```
