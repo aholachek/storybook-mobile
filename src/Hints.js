@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react'
-import styled, { ThemeProvider } from 'styled-components'
-import { withTheme } from 'emotion-theming'
+import { styled } from "@storybook/theming";
 import {
   getInstantWarnings,
   getScheduledWarnings,
@@ -710,24 +709,16 @@ const convertToBool = (num) => (num > 0 ? 1 : 0)
 const getIssuesFound = (warningCount) =>
   `${warningCount} issue${warningCount !== 1 ? 's' : ''} found`
 
-const Wrapper = ({ theme, children }) => {
-  return (
-    <ThemeProvider theme={theme}>
-      <Container>{children}</Container>
-    </ThemeProvider>
-  )
-}
 
-export const Loading = withTheme(({ theme }) => (
-  <Wrapper theme={theme}>
-    <StyledBanner>
-      <Spinner />
-      <span>Running scan...</span>
-    </StyledBanner>
-  </Wrapper>
-))
 
-const Hints = ({ container, theme }) => {
+export const Loading = () => (
+  <StyledBanner>
+    <Spinner />
+    <span>Running scan...</span>
+  </StyledBanner>
+)
+
+const Hints = ({ container }) => {
   const [warnings, setWarnings] = React.useState(undefined)
   const [scanComplete, setScanComplete] = React.useState(false)
   const [rescan, setRescan] = React.useState(0)
@@ -742,17 +733,17 @@ const Hints = ({ container, theme }) => {
     () =>
       warnings
         ? Object.keys(warnings).reduce((acc, key) => {
-            const curr = warnings[key]
-            const count = Array.isArray(curr)
-              ? convertToBool(curr.length)
-              : //touchTarget returns an object not an array
-                Object.keys(curr)
-                  .map((key) => curr[key])
-                  .reduce((acc, curr) => {
-                    return acc + convertToBool(curr.length)
-                  }, 0)
-            return acc + count
-          }, 0)
+          const curr = warnings[key]
+          const count = Array.isArray(curr)
+            ? convertToBool(curr.length)
+            : //touchTarget returns an object not an array
+            Object.keys(curr)
+              .map((key) => curr[key])
+              .reduce((acc, curr) => {
+                return acc + convertToBool(curr.length)
+              }, 0)
+          return acc + count
+        }, 0)
         : 0,
     [warnings]
   )
@@ -766,21 +757,18 @@ const Hints = ({ container, theme }) => {
 
   if (warningCount === 0 && scanComplete) {
     return (
-      <Wrapper theme={theme}>
-        <StyledBanner>
-          <span>Scan complete! No issues found.</span>
-          <StyledRescanButton onClick={onRescanClick} type="button">
-            Rescan
-          </StyledRescanButton>
-        </StyledBanner>
-      </Wrapper>
+      <StyledBanner>
+        <span>Scan complete! No issues found.</span>
+        <StyledRescanButton onClick={onRescanClick} type="button">
+          Rescan
+        </StyledRescanButton>
+      </StyledBanner>
     )
   }
 
   const issuesFound = getIssuesFound(warningCount)
 
   return (
-    <ThemeProvider theme={theme}>
       <Container>
         <StyledBanner>
           {scanComplete ? (
@@ -812,8 +800,7 @@ const Hints = ({ container, theme }) => {
         <BackgroundImageWarnings warnings={warnings.backgroundImg} />
         <HeightWarnings warnings={warnings.height} />
       </Container>
-    </ThemeProvider>
   )
 }
 
-export default withTheme(Hints)
+export default Hints
