@@ -3,8 +3,7 @@ import { addons, types } from '@storybook/addons';
 import { STORY_RENDERED } from '@storybook/core-events';
 import { useAddonState, useChannel } from '@storybook/api';
 import { AddonPanel } from '@storybook/components';
-import styled, { ThemeProvider } from 'styled-components';
-import { withTheme } from 'emotion-theming';
+import { styled } from '@storybook/theming';
 import { createScheduler } from 'lrt';
 
 function _extends() {
@@ -67,7 +66,7 @@ const getStylesheetRules = (sheets, k) => {
   let rules = [];
 
   try {
-    rules = sheets[k].rules || sheets[k].cssRules;
+    rules = Array.from(sheets[k].rules || sheets[k].cssRules);
   } catch (e) {//
   }
 
@@ -844,24 +843,12 @@ const TouchTargetWarnings = ({
 
 const convertToBool = num => num > 0 ? 1 : 0;
 
-const Wrapper = ({
-  theme,
-  children
-}) => {
-  return /*#__PURE__*/React.createElement(ThemeProvider, {
-    theme: theme
-  }, /*#__PURE__*/React.createElement(Container, null, children));
-};
+const getIssuesFound = warningCount => `${warningCount} issue${warningCount !== 1 ? 's' : ''} found`;
 
-const Loading = withTheme(({
-  theme
-}) => /*#__PURE__*/React.createElement(Wrapper, {
-  theme: theme
-}, /*#__PURE__*/React.createElement(StyledBanner, null, /*#__PURE__*/React.createElement(Spinner, null), /*#__PURE__*/React.createElement("span", null, "Running scan..."))));
+const Loading = () => /*#__PURE__*/React.createElement(StyledBanner, null, /*#__PURE__*/React.createElement(Spinner, null), /*#__PURE__*/React.createElement("span", null, "Running scan..."));
 
 const Hints = ({
-  container,
-  theme
+  container
 }) => {
   const [warnings, setWarnings] = React.useState(undefined);
   const [scanComplete, setScanComplete] = React.useState(false);
@@ -887,20 +874,17 @@ const Hints = ({
   const onRescanClick = () => setRescan(prev => prev + 1);
 
   if (warningCount === 0 && scanComplete) {
-    return /*#__PURE__*/React.createElement(Wrapper, {
-      theme: theme
-    }, /*#__PURE__*/React.createElement(StyledBanner, null, /*#__PURE__*/React.createElement("span", null, "Scan complete! No issues found."), /*#__PURE__*/React.createElement(StyledRescanButton, {
+    return /*#__PURE__*/React.createElement(StyledBanner, null, /*#__PURE__*/React.createElement("span", null, "Scan complete! No issues found."), /*#__PURE__*/React.createElement(StyledRescanButton, {
       onClick: onRescanClick,
       type: "button"
-    }, "Rescan")));
+    }, "Rescan"));
   }
 
-  return /*#__PURE__*/React.createElement(ThemeProvider, {
-    theme: theme
-  }, /*#__PURE__*/React.createElement(Container, null, /*#__PURE__*/React.createElement(StyledBanner, null, scanComplete ? /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement("span", null, "Scan complete! ", warningCount, " issues found."), /*#__PURE__*/React.createElement(StyledRescanButton, {
+  const issuesFound = getIssuesFound(warningCount);
+  return /*#__PURE__*/React.createElement(Container, null, /*#__PURE__*/React.createElement(StyledBanner, null, scanComplete ? /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement("span", null, "Scan complete! ", issuesFound, "."), /*#__PURE__*/React.createElement(StyledRescanButton, {
     onClick: onRescanClick,
     type: "button"
-  }, "Rescan")) : /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement(Spinner, null), /*#__PURE__*/React.createElement("span", null, warningCount > 0 ? `Running scan - ${warningCount} issues found so far` : 'Running scan', "..."))), /*#__PURE__*/React.createElement(TouchTargetWarnings, {
+  }, "Rescan")) : /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement(Spinner, null), /*#__PURE__*/React.createElement("span", null, warningCount > 0 ? `Running scan - ${issuesFound} so far` : 'Running scan', "..."))), /*#__PURE__*/React.createElement(TouchTargetWarnings, {
     warnings: warnings.touchTarget
   }), /*#__PURE__*/React.createElement(AutocompleteWarnings, {
     warnings: warnings.autocomplete
@@ -918,10 +902,8 @@ const Hints = ({
     warnings: warnings.backgroundImg
   }), /*#__PURE__*/React.createElement(HeightWarnings, {
     warnings: warnings.height
-  })));
+  }));
 };
-
-var Hints$1 = withTheme(Hints);
 
 const ADDON_ID = 'mobile-hints';
 const PARAM_KEY = 'mobile-hints';
@@ -1009,7 +991,7 @@ const MyPanel = ({
     return /*#__PURE__*/React.createElement(Loading, null);
   }
 
-  return /*#__PURE__*/React.createElement(Hints$1, {
+  return /*#__PURE__*/React.createElement(Hints, {
     container: container
   });
 };

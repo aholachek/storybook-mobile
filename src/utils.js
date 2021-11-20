@@ -7,7 +7,7 @@ const getElements = (container, tag) =>
 const getStylesheetRules = (sheets, k) => {
   let rules = []
   try {
-    rules = sheets[k].rules || sheets[k].cssRules
+    rules = Array.from(sheets[k].rules || sheets[k].cssRules)
   } catch (e) {
     //
   }
