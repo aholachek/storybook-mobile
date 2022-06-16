@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { styled } from "@storybook/theming";
+import { styled } from '@storybook/theming'
 import {
   getInstantWarnings,
   getScheduledWarnings,
@@ -709,8 +709,6 @@ const convertToBool = (num) => (num > 0 ? 1 : 0)
 const getIssuesFound = (warningCount) =>
   `${warningCount} issue${warningCount !== 1 ? 's' : ''} found`
 
-
-
 export const Loading = () => (
   <StyledBanner>
     <Spinner />
@@ -733,17 +731,17 @@ const Hints = ({ container }) => {
     () =>
       warnings
         ? Object.keys(warnings).reduce((acc, key) => {
-          const curr = warnings[key]
-          const count = Array.isArray(curr)
-            ? convertToBool(curr.length)
-            : //touchTarget returns an object not an array
-            Object.keys(curr)
-              .map((key) => curr[key])
-              .reduce((acc, curr) => {
-                return acc + convertToBool(curr.length)
-              }, 0)
-          return acc + count
-        }, 0)
+            const curr = warnings[key]
+            const count = Array.isArray(curr)
+              ? convertToBool(curr.length)
+              : //touchTarget returns an object not an array
+                Object.keys(curr)
+                  .map((key) => curr[key])
+                  .reduce((acc, curr) => {
+                    return acc + convertToBool(curr.length)
+                  }, 0)
+            return acc + count
+          }, 0)
         : 0,
     [warnings]
   )
@@ -769,37 +767,37 @@ const Hints = ({ container }) => {
   const issuesFound = getIssuesFound(warningCount)
 
   return (
-      <Container>
-        <StyledBanner>
-          {scanComplete ? (
-            <Fragment>
-              <span>Scan complete! {issuesFound}.</span>
-              <StyledRescanButton onClick={onRescanClick} type="button">
-                Rescan
-              </StyledRescanButton>
-            </Fragment>
-          ) : (
-            <Fragment>
-              <Spinner />
-              <span>
-                {warningCount > 0
-                  ? `Running scan - ${issuesFound} so far`
-                  : 'Running scan'}
-                ...
-              </span>
-            </Fragment>
-          )}
-        </StyledBanner>
-        <TouchTargetWarnings warnings={warnings.touchTarget} />
-        <AutocompleteWarnings warnings={warnings.autocomplete} />
-        <InputTypeWarnings warnings={warnings.inputType} />
-        <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
-        <TapWarnings warnings={warnings.tapHighlight} />
-        <ActiveWarnings warnings={warnings.active} />
-        <SrcsetWarnings warnings={warnings.srcset} />
-        <BackgroundImageWarnings warnings={warnings.backgroundImg} />
-        <HeightWarnings warnings={warnings.height} />
-      </Container>
+    <Container>
+      <StyledBanner>
+        {scanComplete ? (
+          <Fragment>
+            <span>Scan complete! {issuesFound}.</span>
+            <StyledRescanButton onClick={onRescanClick} type="button">
+              Rescan
+            </StyledRescanButton>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Spinner />
+            <span>
+              {warningCount > 0
+                ? `Running scan - ${issuesFound} so far`
+                : 'Running scan'}
+              ...
+            </span>
+          </Fragment>
+        )}
+      </StyledBanner>
+      <TouchTargetWarnings warnings={warnings.touchTarget} />
+      <AutocompleteWarnings warnings={warnings.autocomplete} />
+      <InputTypeWarnings warnings={warnings.inputType} />
+      <InputTypeNumberWarnings warnings={warnings.inputTypeNumber} />
+      <TapWarnings warnings={warnings.tapHighlight} />
+      <ActiveWarnings warnings={warnings.active} />
+      <SrcsetWarnings warnings={warnings.srcset} />
+      <BackgroundImageWarnings warnings={warnings.backgroundImg} />
+      <HeightWarnings warnings={warnings.height} />
+    </Container>
   )
 }
 
