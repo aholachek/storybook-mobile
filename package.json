@@ -1,6 +1,6 @@
 {
   "name": "storybook-mobile",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "This addon offers suggestions on how you can improve the HTML, CSS and UX of your components to be more mobile-friendly.",
   "source": "src/register.js",
   "main": "register.js",
@@ -33,30 +33,31 @@
   "author": "Alex Holachek",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@storybook/addon-essentials": "^6.3.12",
-    "@storybook/react": "^6.3.12",
-    "babel-loader": "^8.2.3",
-    "eslint": "^8.2.0",
-    "eslint-config-prettier": "^8.3.0",
+    "@babel/core": "^7.18.0",
+    "@storybook/addon-essentials": "^6.5.9",
+    "@storybook/react": "^6.5.9",
+    "babel-loader": "^8.2.5",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.27.1",
-    "evergreen-ui": "^6.6.1",
-    "microbundle": "^0.14.2",
-    "prettier": "^2.4.1"
+    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-storybook": "^0.5.12",
+    "evergreen-ui": "^6.9.11",
+    "microbundle": "^0.15.0",
+    "prettier": "^2.7.0"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   },
   "dependencies": {
-    "@storybook/addons": "^6.3.12",
-    "@storybook/api": "^6.3.12",
-    "@storybook/components": "^6.3.12",
-    "@storybook/core-events": "^6.3.12",
-    "@storybook/theming": "^6.3.12",
+    "@storybook/addons": "^6.5.9",
+    "@storybook/api": "^6.5.9",
+    "@storybook/components": "^6.5.9",
+    "@storybook/core-events": "^6.5.9",
+    "@storybook/theming": "^6.5.9",
     "lrt": "^3.1.0",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.5"
   },
   "storybook": {
     "icon": "https://user-images.githubusercontent.com/263385/101992264-ee369600-3c7f-11eb-8e9f-876d8b5ddff9.png",
