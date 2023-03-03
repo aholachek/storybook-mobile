@@ -2,6 +2,11 @@
 
 [![npm version](https://badge.fury.io/js/storybook-mobile.svg)](https://badge.fury.io/js/storybook-mobile)
 
+# Deprecated!
+
+**Mobile web best practices are constantly evolving, and I haven't had the time to make the necessary updates to keep the warnings and hints up-to-date.
+Please feel free to fork this library. I don't recommend using it for new projects. **
+
 
 This addon offers suggestions on how you can improve the HTML, CSS and UX of your components to be more mobile-friendly.
 
